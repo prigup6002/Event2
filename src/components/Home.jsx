@@ -1,1111 +1,1061 @@
+import { useEffect, useRef, useState } from "react";
+import { FiSearch, FiArrowUpRight, FiChevronDown, FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import gsap from "gsap";
+import earth from "../assets/earth.png";
 
-import { useLayoutEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import { gsap } from "gsap";
-import {
-  FiSearch,
-  FiArrowRight,
-  FiArrowUpRight,
-  FiChevronDown,
-  FiMapPin,
-  FiPlus,
-  FiMinus,
-  FiUsers
-} from "react-icons/fi";
 
-const tickets = [
+const events = [
+  "Designer Meetup",
+  "Freelancer Meetup",
+];
+
+function WhoWeAre() {
+  return (
+    <section
+      id="about"
+      className="relative overflow-hidden bg-[#f7f7f5] px-4 py-20 text-center text-[#111] sm:px-8 sm:py-24 lg:px-10 lg:py-28"
+    >
+      <span className="absolute bottom-5 left-[11%] text-3xl font-extralight text-black/20">
+        ✳
+      </span>
+
+      <span className="absolute right-[16%] top-10 text-xl text-black/20">
+        ◞
+      </span>
+
+      <div className="mx-auto max-w-[1000px]">
+        <h2 className="mb-7 text-3xl font-extrabold uppercase leading-tight tracking-[-0.04em] sm:text-4xl lg:text-[58px]">
+          Who We Are
+        </h2>
+
+        <p className="text-base font-normal uppercase leading-[1.9] tracking-[0.015em] text-[#777] sm:text-xl lg:text-[32px] lg:leading-[1.85]">
+          We are a passionate group of tech enthusiasts dedicated to fostering
+          knowledge exchange and collaboration within the tech industry. Our
+          meetup brings together experts from various fields to share insights,
+          experiences, and innovative ideas.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+
+const recentEvents = [
   {
-    number: "01",
-    status: "SOLD OUT",
-    title: "Early door with a drink",
-    description: "Entry from 19:00 and a glass of something.",
-    price: "₹1,499",
-    fee: "incl. ₹120 fees",
+    title: "Creative Gala",
+    category: "Corporate Events",
     image:
-      "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=900&q=85",
-    dark: true,
+      "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1000&q=90",
   },
   {
-    number: "02",
-    status: "9 LEFT",
-    title: "General admission",
-    description: "Standing, bar access. Doors 19:00.",
-    price: "₹2,199",
-    fee: "incl. ₹180 fees",
+    title: "Design Summit",
+    category: "Conferences",
+    image:
+      "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1000&q=90",
   },
   {
-    number: "03",
-    status: "6 LEFT",
-    title: "Table for two",
-    description: "Two seats at a wall table, by the stage. Tables are sold in pairs.",
-    price: "₹5,999",
-    fee: "for two, incl. ₹400 fees",
+    title: "Live Music Night",
+    category: "Entertainment",
+    image:
+      "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1000&q=90",
+  },
+  {
+    title: "Community Festival",
+    category: "Festivals",
+    image:
+      "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=1000&q=90",
+  },
+  {
+    title: "Business Forum",
+    category: "Networking",
+    image:
+      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1000&q=90",
+  },
+  {
+    title: "Art Exhibition",
+    category: "Art & Culture",
+    image:
+      "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=1000&q=90",
+  },
+  {
+    title: "Tech Conference",
+    category: "Technology",
+    image:
+      "https://images.unsplash.com/photo-1591115765373-5207764f72e7?auto=format&fit=crop&w=1000&q=90",
+  },
+  {
+    title: "Award Ceremony",
+    category: "Celebrations",
+    image:
+      "https://images.unsplash.com/photo-1507504031003-b417219a0fde?auto=format&fit=crop&w=1000&q=90",
+  },
+  {
+    title: "Luxury Wedding",
+    category: "Weddings",
+    image:
+      "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1000&q=90",
+  },
+  {
+    title: "Startup Meetup",
+    category: "Community",
+    image:
+      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1000&q=90",
   },
 ];
 
-function Tickets() {
-  const [quantity, setQuantity] = useState(2);
+function RecentWork() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const trackRef = useRef(null);
+  const animatingRef = useRef(false);
+
+  const moveGallery = (direction) => {
+    if (animatingRef.current) return;
+
+    const track = trackRef.current;
+    if (!track) return;
+
+    const cards = track.querySelectorAll(".recent-work-card");
+    if (!cards.length) return;
+
+    const maxIndex = recentEvents.length - 1;
+    const nextIndex = Math.max(
+      0,
+      Math.min(maxIndex, activeIndex + direction)
+    );
+
+    if (nextIndex === activeIndex) return;
+
+    animatingRef.current = true;
+
+    const card = cards[nextIndex];
+    const distance = card.offsetLeft;
+
+    gsap.to(track, {
+      x: -distance,
+      duration: 0.75,
+      ease: "power3.inOut",
+      onComplete: () => {
+        setActiveIndex(nextIndex);
+        animatingRef.current = false;
+      },
+    });
+
+    gsap.fromTo(
+      card,
+      { opacity: 0.55, scale: 0.97 },
+      {
+        opacity: 1,
+        scale: 1,
+        duration: 0.65,
+        ease: "power2.out",
+      }
+    );
+  };
 
   return (
-    <main className="min-h-screen bg-[#f4f1e9] text-[#171715]">
-      <div className="grid min-h-screen grid-cols-1 border-l border-black/[0.06] sm:grid-cols-2 lg:grid-cols-3">
-        {/* Heading */}
-        <div className="relative flex min-h-[220px] flex-col justify-between border-b border-r border-black/[0.07] p-6 sm:p-8 lg:min-h-[242px] lg:p-9">
-          <Link
-            to="/"
-            className="w-fit text-[9px] font-bold uppercase tracking-[.12em]"
-          >
-            ← Hither
-          </Link>
-
-          <p className="text-[9px] font-bold uppercase tracking-[.12em]">
-            ▪ [IN / TICKETS · ALL FEES INCLUDED]
-          </p>
-        </div>
-
-        <div className="flex min-h-[220px] items-center border-b border-r border-black/[0.07] px-6 py-8 sm:px-8 lg:min-h-[242px] lg:px-4">
-          <h1 className="font-['Space_Grotesk'] text-[clamp(54px,7vw,76px)] font-bold leading-[.86] tracking-[-.085em]">
-            Pick your
-            <br />
-            way in
-          </h1>
-        </div>
-
-        <div className="flex min-h-[120px] items-end border-b border-r border-black/[0.07] p-6 pb-8 sm:col-span-2 lg:col-span-1 lg:min-h-[242px] lg:p-8">
-          <p className="text-[9px] font-bold uppercase tracking-[.1em] text-black/55">
-            131 OF 140 SOLD · TABLES GO FIRST
-          </p>
-        </div>
-
-        {/* Ticket 1 */}
-        <article className="relative flex min-h-[335px] flex-col justify-between overflow-hidden border-b border-r border-black/[0.07] bg-black p-6 text-white sm:p-7 lg:min-h-[337px] lg:p-6">
-          <img
-            src={tickets[0].image}
-            alt="Jazz musicians performing"
-            className="absolute inset-0 h-full w-full object-cover opacity-45"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/30" />
-
-          <div className="relative">
-            <p className="text-[8px] font-medium uppercase tracking-[.1em] text-white/65">
-              01&nbsp;&nbsp; SOLD OUT
-            </p>
-            <h2 className="mt-3 max-w-[290px] font-['Space_Grotesk'] text-[clamp(27px,3vw,36px)] font-bold leading-[.96] tracking-[-.055em]">
-              Early door with
-              <br />
-              a drink
-            </h2>
-            <p className="mt-3 max-w-[270px] text-[11px] leading-[1.6] text-white/80">
-              Entry from 19:00 and a glass of something.
-            </p>
-          </div>
-
-          <button
-            disabled
-            className="relative flex w-fit items-center gap-3 text-left text-[11px] text-white/80"
-          >
-            <span className="grid h-10 w-10 place-items-center border border-white/50">
-              <FiArrowRight size={17} />
-            </span>
-            Join the waitlist
-          </button>
-        </article>
-
-        {/* Ticket 2 */}
-        <article className="flex min-h-[335px] flex-col justify-between border-b border-r border-black/[0.07] bg-[#d7ff3f] p-6 sm:p-7 lg:p-6">
-          <div>
-            <p className="text-[8px] font-bold uppercase tracking-[.1em]">
-              02&nbsp;&nbsp; 9 LEFT
-            </p>
-            <h2 className="mt-3 max-w-[260px] font-['Space_Grotesk'] text-[clamp(29px,3.1vw,37px)] font-bold leading-[.94] tracking-[-.06em]">
-              General
-              <br />
-              admission
-            </h2>
-            <p className="mt-3 text-[11px] leading-[1.6] text-black/70">
-              Standing, bar access. Doors 19:00.
-            </p>
-          </div>
-
-          <div>
-            <div className="flex items-end justify-between gap-2">
-              <div>
-                <p className="font-['Space_Grotesk'] text-[clamp(30px,3.2vw,39px)] font-bold leading-none tracking-[-.07em]">
-                  ₹2,199
-                </p>
-                <p className="mt-1 text-[9px] text-black/65">
-                  incl. ₹180 fees
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  aria-label="Decrease ticket quantity"
-                  disabled={quantity <= 1}
-                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="grid h-8 w-8 place-items-center border border-black/25 bg-white disabled:opacity-40"
-                >
-                  <FiMinus size={13} />
-                </button>
-                <span className="min-w-3 text-center text-[11px] font-bold">
-                  {quantity}
-                </span>
-                <button
-                  aria-label="Increase ticket quantity"
-                  disabled={quantity >= 9}
-                  onClick={() => setQuantity((q) => Math.min(9, q + 1))}
-                  className="grid h-8 w-8 place-items-center border border-black/25 bg-white disabled:opacity-40"
-                >
-                  <FiPlus size={13} />
-                </button>
-              </div>
-            </div>
-
-            <button
-              onClick={() =>
-                alert(
-                  `${quantity} ticket(s) selected. Total: ₹${(2199 * quantity).toLocaleString("en-IN")}. Connect your checkout to complete booking.`
-                )
-              }
-              className="mt-5 flex w-full items-center justify-between gap-2 bg-[#171715] px-3 py-3 text-[10px] font-bold text-white transition-colors hover:bg-black/75"
-            >
-              <span>Continue with {quantity}</span>
-              <FiArrowRight size={14} />
-              <span>₹{(2199 * quantity).toLocaleString("en-IN")}</span>
-            </button>
-          </div>
-        </article>
-
-        {/* Ticket 3 */}
-        <article className="flex min-h-[335px] flex-col justify-between border-b border-r border-black/[0.07] bg-white p-6 sm:p-7 lg:p-6">
-          <div>
-            <p className="text-[8px] font-bold uppercase tracking-[.1em] text-black/65">
-              03&nbsp;&nbsp; 6 LEFT
-            </p>
-            <h2 className="mt-3 font-['Space_Grotesk'] text-[clamp(28px,3vw,36px)] font-bold leading-[.95] tracking-[-.06em]">
-              Table for two
-            </h2>
-            <p className="mt-3 max-w-[270px] text-[11px] leading-[1.6] text-black/75">
-              Two seats at a wall table, by the stage. Tables are sold in pairs.
-            </p>
-          </div>
-
-          <div>
-            <p className="font-['Space_Grotesk'] text-[clamp(30px,3.2vw,39px)] font-bold leading-none tracking-[-.07em]">
-              ₹5,999
-            </p>
-            <p className="mt-1 text-[9px] text-black/60">
-              for two, incl. ₹400 fees
-            </p>
-
-            <button
-              onClick={() =>
-                alert("Table selection UI will connect to the booking system.")
-              }
-              className="mt-5 flex items-center gap-3 text-left text-[10px] font-medium"
-            >
-              <span className="grid h-10 w-10 place-items-center border border-black/40 transition-colors hover:bg-[#d7ff3f]">
-                <FiArrowRight size={17} />
-              </span>
-              Choose a table
-            </button>
-          </div>
-        </article>
-
-        {/* Footer note */}
-        <div className="flex items-start gap-2 border-b border-r border-black/[0.07] px-6 py-5 text-[10px] leading-[1.6] text-black/55 sm:col-span-2 lg:col-span-3 lg:px-8">
-          <FiUsers size={13} className="mt-0.5 shrink-0" />
-          Tickets land in Passes and your inbox straight away. Refunds up to 48 hours before.
-        </div>
-      </div>
-    </main>
-  );
-}
-
-function AboutNightPage() {
-  return (
-    <main className="min-h-screen overflow-hidden bg-[#f4f1e9] text-[#171715]">
-      <section className="grid min-h-screen grid-cols-1 border-l border-t border-black/[0.06] sm:grid-cols-2 lg:grid-cols-3">
-
-        {/* Left column */}
-        <div className="flex flex-col border-r border-black/[0.07] px-6 pb-8 pt-10 sm:px-8 lg:min-h-[660px] lg:px-[3.2vw]">
-          <p className="text-[10px] font-bold uppercase tracking-[.12em]">
-            ▪ [IN / ABOUT THE NIGHT]
-          </p>
-
-          <figure className="mt-20 sm:mt-32 lg:mt-auto">
-            <img
-              src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1000&q=90"
-              alt="Musicians performing together on stage"
-              className="aspect-[3/3.6] w-full max-w-[340px] object-cover object-center"
-            />
-
-            <figcaption className="mt-3 text-[10px] font-medium uppercase tracking-[.1em] text-black/55">
-              THE QUARTET · SOUNDCHECK
-            </figcaption>
-          </figure>
-        </div>
-
-        {/* Center column */}
-        <div className="border-r border-black/[0.07] px-6 pb-12 pt-12 sm:px-6 sm:pt-28 lg:px-4 lg:pt-[145px]">
-          <h1 className="max-w-[580px] font-['Space_Grotesk'] text-[clamp(48px,5.8vw,68px)] font-bold leading-[0.92] tracking-[-0.075em]">
-            Warm, patient and
-            <br />
-            a little bit{" "}
-            <span className="bg-[#d7ff3f] px-[2px]">
-              gospel.
-            </span>
-          </h1>
-
-          <p className="mt-9 max-w-[420px] text-[15px] leading-[1.8] text-black/80">
-            Amara Okafor grew up playing in the back room
-            of her uncle’s church in Peckham, and it shows.
-            Kindred, out on Brownswood this autumn, is her
-            first record as a leader.
-          </p>
-        </div>
-
-        {/* Right column */}
-        <div className="border-r border-black/[0.07] px-6 pb-12 pt-8 sm:col-span-2 sm:px-6 lg:col-span-1 lg:px-4 lg:pt-[286px]">
-          <p className="max-w-[400px] text-[15px] leading-[1.8] text-black/80">
-            Tonight the quartet plays it front to back, then
-            takes requests. The Listening Room holds 140
-            people, mostly standing, with twelve small
-            tables along the wall.
-          </p>
-        </div>
-
-      </section>
-    </main>
-  );
-}
-
-function LineupPage() {
-  const [activeArtist, setActiveArtist] = useState(0);
-
-  const artists = [
-    {
-      name: "Amara Okafor",
-      role: "TENOR SAXOPHONE · LEADER",
-      quote:
-        "“Kindred is the record I wanted to hear on a Thursday night. We play it the way it was written, then you pick.”",
-      image:
-        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=90",
-    },
-    {
-      name: "Dele Ajayi",
-      role: "PIANO",
-      quote:
-        "“Every night sounds different. That is what keeps the music alive.”",
-      image:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1000&q=90",
-    },
-    {
-      name: "Rosa Marin",
-      role: "DOUBLE BASS",
-      quote:
-        "“The best moments happen when you leave a little room for the unexpected.”",
-      image:
-        "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=1000&q=90",
-    },
-    {
-      name: "Tom Keane",
-      role: "DRUMS",
-      quote:
-        "“We find the groove together. The audience becomes part of it.”",
-      image:
-        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1000&q=90",
-    },
-  ];
-
-  const members = [
-    {
-      name: "Dele Ajayi",
-      role: "PIANO",
-      image:
-        "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&w=500&q=85",
-    },
-    {
-      name: "Rosa Marin",
-      role: "DOUBLE BASS",
-      image:
-        "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=500&q=85",
-    },
-    {
-      name: "Tom Keane",
-      role: "DRUMS",
-      image:
-        "https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=500&q=85",
-    },
-  ];
-
-  const artist = artists[activeArtist];
-
-  return (
-    <main className="min-h-screen overflow-hidden bg-[#111211] text-[#f5f3ed]">
-      <section className="grid min-h-screen grid-cols-1 border-l border-white/[0.07] sm:grid-cols-2 lg:grid-cols-3">
-
-        {/* Left column */}
-        <div className="flex flex-col justify-between border-r border-white/[0.08] px-6 pb-8 pt-10 sm:px-8 lg:min-h-screen lg:px-[3.2vw]">
-          <p className="text-[10px] font-bold uppercase tracking-[.12em] text-white/80">
-            <span className="mr-2 inline-block h-2 w-3 bg-[#d7ff3f]" />
-            [IN / THE QUARTET]
-          </p>
-
-          <div className="mt-12 grid grid-cols-3 gap-3 lg:mt-auto lg:pt-28">
-            {members.map((member) => (
-              <div key={member.name} className="min-w-0">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="aspect-[.78] w-full object-cover grayscale transition-all duration-300 hover:grayscale-0"
-                />
-                <p className="mt-3 truncate text-[10px] font-medium">
-                  {member.name}
-                </p>
-                <p className="mt-1 text-[8px] tracking-[.08em] text-white/45">
-                  {member.role}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-5 flex items-center gap-2">
-            <button
-              aria-label="Previous artist"
-              onClick={() =>
-                setActiveArtist((activeArtist + artists.length - 1) % artists.length)
-              }
-              className="grid h-10 w-10 place-items-center border border-white/25 text-lg transition-colors hover:bg-white hover:text-black"
-            >
-              ←
-            </button>
-
-            <button
-              aria-label="Next artist"
-              onClick={() =>
-                setActiveArtist((activeArtist + 1) % artists.length)
-              }
-              className="grid h-10 w-10 place-items-center bg-[#d7ff3f] text-xl text-black transition-colors hover:bg-white"
-            >
-              →
-            </button>
-          </div>
-        </div>
-
-        {/* Center column */}
-        <div className="flex flex-col border-r border-white/[0.08] px-6 pb-8 pt-12 sm:px-5 lg:px-3 lg:pt-[62px]">
-          <h1 className="mb-10 font-['Space_Grotesk'] text-[clamp(54px,7vw,76px)] font-bold leading-[.87] tracking-[-.085em] sm:mb-12">
-            Who’s on
-            <br />
-            stage
-          </h1>
-
-          <div className="relative mt-auto">
-            <img
-              key={artist.image}
-              src={artist.image}
-              alt={artist.name}
-              className="aspect-[.78] max-h-[520px] w-full object-cover object-center"
-            />
-
-            <div className="absolute bottom-0 left-0 flex">
-              <button
-                aria-label="Previous artist"
-                onClick={() =>
-                  setActiveArtist((activeArtist + artists.length - 1) % artists.length)
-                }
-                className="grid h-10 w-10 place-items-center bg-black/70 text-white"
-              >
-                ←
-              </button>
-              <button
-                aria-label="Next artist"
-                onClick={() =>
-                  setActiveArtist((activeArtist + 1) % artists.length)
-                }
-                className="grid h-10 w-10 place-items-center bg-[#d7ff3f] text-black"
-              >
-                →
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Right column */}
-        <div className="flex flex-col border-r border-white/[0.08] px-6 pb-10 pt-10 sm:col-span-2 sm:px-8 lg:col-span-1 lg:px-3 lg:pt-[245px]">
-          <h2 className="font-['Space_Grotesk'] text-[25px] font-bold leading-tight tracking-[-.045em]">
-            {artist.name}
+    <section className="overflow-hidden bg-[#f7f7f5] py-20 text-[#111] sm:py-24 lg:py-28">
+      <div className="px-5 sm:px-8 lg:px-10">
+        <div className="mb-8 grid grid-cols-1 gap-5 md:grid-cols-[1.2fr_0.8fr] md:items-start lg:mb-10">
+          <h2 className="text-3xl font-black uppercase leading-[1.05] tracking-[-0.045em] sm:text-4xl lg:text-[42px]">
+            See our recent work
           </h2>
 
-          <p className="mt-1 text-[8px] font-medium tracking-[.12em] text-white/45">
-            {artist.role}
-          </p>
-
-          <blockquote className="mt-6 text-[clamp(21px,2.3vw,26px)] leading-[1.13] tracking-[-.035em] text-white/90">
-            {artist.quote}
-          </blockquote>
-
-          <div className="mt-6 border-t border-white/15">
-            {members.map((member, index) => (
-              <button
-                key={member.name}
-                onClick={() => setActiveArtist(index + 1)}
-                className="flex w-full items-center justify-between gap-3 border-b border-white/15 py-3 text-left transition-colors hover:text-[#d7ff3f]"
-              >
-                <span className="text-[11px]">{member.name}</span>
-                <span className="text-[8px] text-white/50">
-                  {member.role}
-                </span>
-              </button>
-            ))}
-          </div>
-
-          <a
-            href="#follow-amara"
-            className="mt-6 flex w-fit items-center gap-3 text-[10px] transition-colors hover:text-[#d7ff3f]"
-          >
-            Follow Amara <span className="text-base">+</span>
-          </a>
-
-          <p className="mt-12 text-[9px] font-medium tracking-[.12em] text-white/45 lg:mt-16">
-            {String(activeArtist + 1).padStart(2, "0")} / {String(artists.length).padStart(2, "0")}
+          <p className="max-w-[440px] text-[12px] uppercase leading-[1.8] tracking-[0.025em] text-black/50 sm:text-[13px] md:justify-self-end">
+            Whether you're a seasoned design professional or an aspiring
+            enthusiast, our events promise inspiring experiences and
+            meaningful connections.
           </p>
         </div>
+      </div>
 
-      </section>
-    </main>
-  );
-}
-
-
-function RunningOrderPage() {
-  const schedule = [
-    {
-      time: "19:00",
-      title: "Doors and bar",
-      description: "Arrive early for a table by the stage.",
-    },
-    {
-      time: "19:45",
-      title: "First set",
-      description: "Kindred, sides A and B.",
-    },
-    {
-      time: "20:45",
-      title: "Interval",
-      description: "20 minutes. The bar reopens.",
-    },
-    {
-      time: "21:05",
-      title: "Second set",
-      description: "Requests, then two standards.",
-    },
-    {
-      time: "22:00",
-      title: "Close",
-      description: "Last trains from the venue until 00:15.",
-    },
-  ];
-
-  return (
-    <main className="min-h-screen overflow-hidden bg-[#f4f1e9] text-[#171715]">
-      <section className="grid min-h-screen grid-cols-1 border-l border-t border-black/[0.07] sm:grid-cols-2 lg:grid-cols-3">
-
-        {/* Header: left column */}
-        <div className="border-r border-black/[0.07] px-6 pt-10 sm:px-8 lg:min-h-[245px]">
-          <p className="text-[10px] font-bold uppercase tracking-[.12em]">
-            <span className="mr-2 inline-block h-2 w-3 bg-black" />
-            [IN / RUNNING ORDER]
-          </p>
-        </div>
-
-        {/* Main heading */}
-        <div className="border-r border-black/[0.07] px-6 pb-8 pt-10 sm:px-5 lg:min-h-[245px] lg:px-4">
-          <h1 className="font-['Space_Grotesk'] text-[clamp(48px,6.7vw,74px)] font-bold leading-[.87] tracking-[-.08em]">
-            How the
-            <br />
-            night runs
-          </h1>
-        </div>
-
-        {/* Header note */}
-        <div className="border-r border-black/[0.07] px-6 pb-8 pt-10 sm:col-span-2 lg:col-span-1 lg:px-4">
-          <p className="text-[9px] font-bold uppercase tracking-[.1em] text-black/55">
-            ALL TIMES IST · LAST TRAINS 00:15
-          </p>
-        </div>
-
-        {/* Live status and timeline */}
-        <div className="border-r border-black/[0.07] px-6 pb-3 pt-6 sm:col-span-2 sm:px-8 lg:col-span-3 lg:px-4">
-          <div className="flex items-center gap-3">
-            <span className="shrink-0 bg-[#d7ff3f] px-2 py-1.5 text-[9px] font-bold uppercase tracking-[.04em]">
-              NOW 18:40 · DOORS IN 20 MIN
-            </span>
-            <div className="h-[2px] flex-1 bg-black/60" />
-          </div>
-        </div>
-
-        {schedule.map((item) => (
-          <div
-            key={item.time}
-            className="grid min-h-[82px] grid-cols-1 border-b border-r border-black/[0.09] px-6 py-4 sm:col-span-2 sm:grid-cols-2 sm:px-8 lg:col-span-3 lg:min-h-[82px] lg:grid-cols-[1fr_1fr_1fr] lg:gap-0 lg:px-0 lg:py-0"
-          >
-            <div className="flex items-center lg:border-r lg:border-black/[0.07] lg:px-4">
-              <p className="font-['Space_Grotesk'] text-[clamp(32px,4vw,42px)] font-bold leading-none tracking-[-.065em]">
-                {item.time}
-              </p>
-            </div>
-
-            <div className="flex items-center py-2 lg:border-r lg:border-black/[0.07] lg:px-4 lg:py-0">
-              <h2 className="font-['Space_Grotesk'] text-[21px] font-bold tracking-[-.04em] sm:text-[23px]">
-                {item.title}
-              </h2>
-            </div>
-
-            <div className="flex items-center py-1 lg:px-4 lg:py-0">
-              <p className="text-[13px] leading-[1.6] text-black/70">
-                {item.description}
-              </p>
-            </div>
-          </div>
-        ))}
-
-        {/* Bottom grid space */}
-        <div className="hidden min-h-[70px] border-r border-black/[0.07] lg:block" />
-        <div className="hidden border-r border-black/[0.07] lg:block" />
-        <div className="hidden border-r border-black/[0.07] lg:block" />
-
-      </section>
-    </main>
-  );
-}
-
-
-
-function VenuePage() {
-  const details = [
-    {
-      icon: "⌖",
-      title: "The venue, Mumbai",
-      description: "Bandra West, Mumbai, Maharashtra",
-    },
-    {
-      icon: "▤",
-      title: "Bandra station, 10 min drive",
-      description: "Local trains and auto-rickshaws nearby",
-    },
-    {
-      icon: "♿",
-      title: "Accessibility",
-      description: "Contact the venue to confirm step-free access",
-    },
-    {
-      icon: "▣",
-      title: "Parking",
-      description: "Check nearby public parking before arrival",
-    },
-  ];
-
-  return (
-    <main className="min-h-screen bg-[#f4f1e9] text-[#171715]">
-      <section className="grid grid-cols-1 border-l border-t border-black/[0.07] sm:grid-cols-2 lg:grid-cols-3">
-
-        {/* Header: exact grid alignment */}
-        <div className="min-h-[180px] border-r border-b border-black/[0.07] px-4 pt-[72px] sm:px-6 lg:min-h-[242px] lg:px-8">
-          <p className="text-[9px] font-bold uppercase tracking-[.1em]">
-            <span className="mr-2 inline-block h-[7px] w-3 bg-black" />
-            [IN / GETTING THERE]
-          </p>
-        </div>
-
-        <div className="min-h-[180px] border-r border-b border-black/[0.07] px-4 pt-8 sm:px-5 lg:min-h-[242px] lg:px-4 lg:pt-[61px]">
-          <h1 className="font-['Space_Grotesk'] text-[clamp(48px,6.3vw,74px)] font-bold leading-[.91] tracking-[-.08em]">
-            14 Kingland
-            <br />
-            Road, Mumbai
-          </h1>
-        </div>
-
-        <div className="hidden border-r border-b border-black/[0.07] lg:block" />
-
-        {/* Image spans first two columns, with only 32px inset */}
-        <div className="border-r border-b border-black/[0.07] p-4 sm:col-span-2 sm:p-6 lg:col-span-2 lg:p-0 lg:pl-8 lg:pr-0 lg:pb-16">
-          <div className="relative">
-            <img
-              src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1600&q=90"
-              alt="Live music venue"
-              className="aspect-[1.5] w-full object-cover grayscale"
-            />
-
-            <span className="absolute left-5 top-5 bg-[#f4f1e9] px-3 py-2 text-[8px] font-bold uppercase tracking-[.08em]">
-              VENUE · MUMBAI
-            </span>
-          </div>
-        </div>
-
-        {/* Right column details */}
-        <div className="border-r border-b border-black/[0.07] lg:pt-0">
-          {details.map((item) => (
-            <div
-              key={item.title}
-              className="flex min-h-[65px] items-start gap-3 border-b border-black/[0.1] px-4 py-4 sm:px-5 lg:px-3"
-            >
-              <span className="w-4 shrink-0 text-center text-sm">
-                {item.icon}
-              </span>
-
-              <div>
-                <h2 className="text-[12px] font-bold leading-[1.4]">
-                  {item.title}
-                </h2>
-                <p className="mt-1 text-[10px] leading-[1.5] text-black/60">
-                  {item.description}
-                </p>
-              </div>
-            </div>
-          ))}
-
-          <a
-            href="https://www.google.com/maps/search/?api=1&query=live+music+venue+Bandra+Mumbai"
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-2 px-4 py-5 text-[11px] font-bold hover:text-black/55 lg:px-3"
-          >
-            Open in maps <span>→</span>
-          </a>
-        </div>
-
-        {/* Bottom grid lines */}
-        <div className="hidden min-h-[65px] border-r border-black/[0.07] lg:block" />
-        <div className="hidden border-r border-black/[0.07] lg:block" />
-        <div className="hidden border-r border-black/[0.07] lg:block" />
-
-      </section>
-    </main>
-  );
-}
-
-
-function BeforeYouGoPage() {
-  const faqs = [
-    {
-      icon: "ⓘ",
-      title: "18 and over",
-      description: "Photo ID checked at the door.",
-    },
-    {
-      icon: "↻",
-      title: "Refunds up to 48 hours before",
-      description: "After that, resell to the waitlist at face value.",
-    },
-    {
-      icon: "⇧",
-      title: "Doors close 21:00",
-      description: "Latecomers wait for the interval.",
-    },
-    {
-      icon: "♩",
-      title: "Quiet during sets",
-      description: "The bar pauses service while the band plays.",
-    },
-  ];
-
-  return (
-    <main className="min-h-[280px] bg-[#f4f1e9] text-[#171715]">
-      <section className="grid grid-cols-1 border-l border-t border-black/[0.07] sm:grid-cols-2 lg:grid-cols-3">
-
-        {/* Left column */}
-        <div className="min-h-[220px] border-r border-b border-black/[0.07] px-4 pt-6 sm:px-6 lg:min-h-[280px] lg:px-8">
-          <p className="text-[9px] font-bold uppercase tracking-[.1em]">
-            <span className="mr-2 inline-block h-[7px] w-3 bg-black" />
-            [IN / GOOD TO KNOW]
-          </p>
-
-          <h1 className="mt-4 font-['Space_Grotesk'] text-[clamp(38px,4.5vw,48px)] font-bold leading-[.91] tracking-[-.07em]">
-            Before
-            <br />
-            you go
-          </h1>
-        </div>
-
-        {/* Center column */}
-        <div className="grid grid-cols-1 border-r border-black/[0.07] sm:grid-cols-2 lg:col-span-2">
-          {faqs.map((faq, index) => (
-            <article
-              key={faq.title}
-              className={`min-h-[120px] border-b border-black/[0.07] px-4 py-6 sm:px-5 lg:min-h-[140px] lg:px-3 ${
-                index % 2 === 0 ? "sm:border-r sm:border-black/[0.07]" : ""
-              }`}
-            >
-              <span className="mb-2 block text-[18px] leading-none text-black/75">
-                {faq.icon}
-              </span>
-
-              <h2 className="text-[15px] font-bold leading-[1.3] tracking-[-.025em]">
-                {faq.title}
-              </h2>
-
-              <p className="mt-2 text-[11px] leading-[1.5] text-black/60">
-                {faq.description}
-              </p>
-            </article>
-          ))}
-        </div>
-
-      </section>
-    </main>
-  );
-}
-
-
-
-function MoreNightsPage() {
-  const events = [
-    {
-      day: "SUN 16",
-      venue: "LANTERN ROOM LIVE · 18:00",
-      title: "Soul Sundays with the Ferncliff Band",
-      price: "₹1,350",
-      image:
-        "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1000&q=85",
-    },
-    {
-      day: "THU 13",
-      venue: "THE BASEMENT COMEDY · 20:30",
-      title: "Late Laughs: new material night",
-      price: "₹999",
-      image:
-        "https://images.unsplash.com/photo-1585699324551-f6c309eedeca?auto=format&fit=crop&w=1000&q=85",
-    },
-    {
-      day: "THU 13",
-      venue: "UNIT 9 · 22:00",
-      title: "Warehouse Sessions with Selah K",
-      price: "₹1,499",
-      image:
-        "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1000&q=85",
-    },
-  ];
-
-  return (
-    <main className="min-h-screen overflow-hidden bg-[#f4f1e9] text-[#171715]">
-      <section className="border-l border-t border-black/[0.07]">
-
-        {/* Host strip */}
-        <div className="grid grid-cols-1 border-b border-black/[0.09] sm:grid-cols-3">
-          <div className="flex items-center gap-4 px-4 py-5 sm:col-span-2 sm:px-6 lg:px-3">
-            <img
-              src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=120&q=80"
-              alt="Lantern Room Live"
-              className="h-12 w-12 shrink-0 object-cover"
-            />
-
-            <div>
-              <p className="text-[8px] font-bold uppercase tracking-[.12em] text-black/50">
-                PRESENTED BY
-              </p>
-              <h2 className="mt-0.5 font-['Space_Grotesk'] text-[23px] font-bold leading-none tracking-[-.045em]">
-                Lantern Room Live
-              </h2>
-              <p className="mt-1 text-[11px] leading-[1.5] text-black/65">
-                Live jazz and soul in Mumbai. Discover independent artists
-                and intimate live shows.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center border-t border-black/[0.07] px-4 py-4 sm:justify-end sm:border-l sm:border-t-0 sm:px-6 lg:px-4">
-            <button className="bg-[#171715] px-4 py-2.5 text-[10px] font-bold text-white transition-colors hover:bg-black/75">
-              Follow Lantern Room
-            </button>
-          </div>
-        </div>
-
-        {/* Section heading */}
-        <div className="grid grid-cols-1 sm:grid-cols-3">
-          <div className="px-4 pt-12 sm:px-6 lg:px-3 lg:pt-[78px]">
-            <p className="text-[9px] font-bold uppercase tracking-[.1em]">
-              <span className="mr-2 inline-block h-[7px] w-3 bg-black" />
-              [IN / ALSO THIS WEEK]
-            </p>
-          </div>
-
-          <div className="px-4 pb-8 pt-10 sm:px-5 lg:px-3 lg:pt-[66px]">
-            <h1 className="font-['Space_Grotesk'] text-[clamp(48px,6.5vw,74px)] font-bold leading-[.87] tracking-[-.08em]">
-              More nights
-              <br />
-              like this
-            </h1>
-          </div>
-
-          <div className="flex items-end px-4 pb-9 sm:px-5 lg:px-3 lg:pb-[68px]">
-            <a
-              href="#all-shows"
-              className="flex items-center gap-2 text-[11px] font-bold hover:opacity-60"
-            >
-              All 12 shows <span>→</span>
-            </a>
-          </div>
-        </div>
-
-        {/* Event cards */}
+      <div className="overflow-hidden pl-5 sm:pl-8 lg:pl-10">
         <div
-          id="all-shows"
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+          ref={trackRef}
+          className="flex w-max gap-3 sm:gap-4"
         >
-          {events.map((event) => (
+          {recentEvents.map((event, index) => (
             <article
               key={event.title}
-              className="border-r border-t border-black/[0.09]"
+              className="recent-work-card group relative w-[78vw] max-w-[420px] shrink-0 sm:w-[44vw] lg:w-[28.5vw] lg:max-w-none"
             >
-              <div className="relative overflow-hidden">
+              <div className="relative aspect-[1.12/1] overflow-hidden bg-[#e5e5e2]">
                 <img
                   src={event.image}
                   alt={event.title}
-                  className="aspect-[1.15] w-full object-cover transition-transform duration-500 hover:scale-[1.03]"
+                  loading={index < 4 ? "eager" : "lazy"}
+                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.045]"
                 />
 
-                <span className="absolute left-4 top-4 bg-[#f4f1e9] px-2 py-1.5 text-[8px] font-bold uppercase tracking-[.08em]">
-                  {event.day}
-                </span>
+                <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
+
+                <div className="absolute bottom-0 left-0 bg-[#f7f7f5] px-3 py-2 text-[9px] font-semibold uppercase tracking-[0.08em]">
+                  {String(index + 1).padStart(2, "0")} / {event.category}
+                </div>
+
+                <button
+                  aria-label={`View ${event.title}`}
+                  onClick={() =>
+                    window.alert(`${event.title} — ${event.category}`)
+                  }
+                  className="absolute bottom-0 right-0 flex h-12 w-12 items-center justify-center border-l-[5px] border-t-[5px] border-[#f7f7f5] bg-[#111] text-white transition-colors duration-300 hover:bg-[#d5f34b] hover:text-black sm:h-[54px] sm:w-[54px]"
+                >
+                  <FiArrowUpRight size={25} strokeWidth={1.5} />
+                </button>
               </div>
 
-              <div className="min-h-[170px] px-4 py-4 lg:min-h-[180px] lg:px-3">
-                <p className="text-[8px] font-bold uppercase tracking-[.1em] text-black/55">
-                  {event.venue}
-                </p>
-
-                <h2 className="mt-2 max-w-[370px] font-['Space_Grotesk'] text-[clamp(22px,2.5vw,27px)] font-bold leading-[.98] tracking-[-.05em]">
-                  {event.title}
-                </h2>
-
-                <p className="mt-3 text-[12px] font-medium">
-                  {event.price}
-                </p>
+              <div className="flex items-start justify-between gap-3 py-4">
+                <div>
+                  <h3 className="text-lg font-bold uppercase leading-tight tracking-[-0.035em] sm:text-xl">
+                    {event.title}
+                  </h3>
+                  <p className="mt-1 text-[10px] uppercase tracking-[0.08em] text-black/45">
+                    {event.category}
+                  </p>
+                </div>
+                <span className="pt-1 text-xs text-black/45">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
               </div>
             </article>
           ))}
         </div>
+      </div>
 
-      </section>
-    </main>
+      <div className="mt-7 flex items-center justify-center gap-3">
+        <button
+          aria-label="Previous events"
+          onClick={() => moveGallery(-1)}
+          disabled={activeIndex === 0}
+          className="flex h-10 w-10 items-center justify-center bg-black/[0.05] transition-colors hover:bg-black/10 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <FiArrowLeft size={17} />
+        </button>
+
+        <button
+          aria-label="Next events"
+          onClick={() => moveGallery(1)}
+          disabled={activeIndex === recentEvents.length - 1}
+          className="flex h-10 w-10 items-center justify-center bg-[#111] text-white transition-colors hover:bg-[#d5f34b] hover:text-black disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <FiArrowRight size={17} />
+        </button>
+
+        <span className="ml-2 text-[10px] tracking-[0.12em] text-black/50">
+          {String(activeIndex + 1).padStart(2, "0")} /{" "}
+          {String(recentEvents.length).padStart(2, "0")}
+        </span>
+      </div>
+    </section>
+  );
+}
+
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+function EventStats() {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const counters = gsap.utils.toArray(".stat-number");
+
+      gsap.from(".stat-item", {
+        y: 35,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.18,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 85%",
+          once: true,
+        },
+      });
+
+      counters.forEach((counter) => {
+        const target = Number(counter.dataset.value);
+        const suffix = counter.dataset.suffix || "";
+        const state = { value: 0 };
+
+        gsap.to(state, {
+          value: target,
+          duration: 2,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 85%",
+            once: true,
+          },
+          onUpdate: () => {
+            counter.textContent =
+              Math.floor(state.value).toLocaleString("en-IN") + suffix;
+          },
+        });
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const stats = [
+    { value: 1, suffix: "M+", label: "Happy User" },
+    { value: 200, suffix: "+", label: "Event Completed" },
+    { value: 0.5, suffix: "M", label: "Our Community", decimal: true },
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      className="border-y-[3px] border-[#f7f7f5] bg-[#111] px-5 py-8 text-white sm:px-10 sm:py-9"
+    >
+      <div className="mx-auto grid max-w-[1100px] grid-cols-3">
+        {stats.map((stat) => (
+          <div
+            key={stat.label}
+            className="stat-item flex flex-col items-center justify-center gap-2 text-center"
+          >
+            <h2
+              className="stat-number text-2xl font-extrabold leading-none tracking-[-0.035em] sm:text-3xl lg:text-[32px]"
+              data-value={stat.value}
+              data-suffix={stat.suffix}
+            >
+              {stat.decimal ? "0.0M" : "0"}
+            </h2>
+
+            <p className="text-[9px] font-normal uppercase tracking-[0.02em] text-white/60 sm:text-sm">
+              {stat.label}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+gsap.registerPlugin(ScrollTrigger);
+
+const organizers = [
+  {
+    name: "Shakib Hasan",
+    role: "Head of Event",
+    image:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=90",
+    position: "left",
+  },
+  {
+    name: "Abdullah Masum",
+    role: "Junior Member",
+    image:
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=90",
+    position: "center",
+  },
+  {
+    name: "Shamim Hossain",
+    role: "Senior Member",
+    image:
+      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=90",
+    position: "right",
+  },
+];
+
+function Organizers() {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".organizer-heading", {
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%",
+          once: true,
+        },
+      });
+
+      gsap.from(".organizer-card", {
+        y: 45,
+        opacity: 0,
+        duration: 0.85,
+        stagger: 0.18,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".organizer-grid",
+          start: "top 82%",
+          once: true,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      id="organizers"
+      className="overflow-hidden bg-[#f7f7f5] px-5 py-20 text-[#111] sm:px-8 sm:py-24 lg:px-10 lg:py-28"
+    >
+      <div className="organizer-heading mx-auto mb-12 max-w-[760px] text-center sm:mb-16">
+        <h2 className="text-3xl font-black uppercase leading-tight tracking-[-0.04em] sm:text-4xl lg:text-[42px]">
+          Meet the Organizers
+        </h2>
+
+        <p className="mx-auto mt-4 max-w-[650px] text-[12px] uppercase leading-[1.9] tracking-[0.015em] text-black/50 sm:text-sm">
+          Our freelance/design meetup is organized by a team of dedicated
+          professionals with extensive experience in the creative industry.
+        </p>
+      </div>
+
+      <div className="organizer-grid mx-auto grid max-w-[1200px] grid-cols-1 items-start gap-12 sm:grid-cols-3 sm:gap-6 lg:gap-12">
+        {organizers.map((person) => (
+          <article
+            key={person.name}
+            className={`organizer-card flex flex-col items-center text-center ${
+              person.position === "center" ? "sm:mt-16" : "sm:mt-0"
+            }`}
+          >
+            <div className="group relative aspect-square w-[210px] max-w-full overflow-hidden rounded-full bg-white sm:w-full sm:max-w-[250px] lg:max-w-[280px]">
+              <img
+                src={person.image}
+                alt={person.name}
+                loading="lazy"
+                className="h-full w-full object-cover grayscale transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+            </div>
+
+            <h3 className="mt-5 text-sm font-semibold uppercase tracking-[-0.02em] sm:text-base">
+              {person.name}
+            </h3>
+
+            <p className="mt-1 text-[11px] uppercase tracking-[0.04em] text-black/45 sm:text-xs">
+              {person.role}
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 
 
-function HitherFooter() {
-  const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
-  const [plainView, setPlainView] = useState(false);
+import {
+  FiStar,
+} from "react-icons/fi";
 
-  const linkGroups = [
-    {
-      label: "EXPLORE",
-      links: ["Tonight", "This weekend", "Discover", "Free events", "Gift a ticket"],
-    },
-    {
-      label: "HOST",
-      links: ["Host an event", "Pricing", "Door app", "Payouts"],
-    },
-    {
-      label: "HITHER",
-      links: ["About", "Careers", "Press", "Help centre"],
-    },
-    {
-      label: "FOLLOW",
-      links: ["Instagram ↗", "TikTok ↗", "The Thursday playlist ↗"],
-    },
-  ];
+gsap.registerPlugin(ScrollTrigger);
 
-  function handleSubscribe(e) {
-    e.preventDefault();
-    if (!email.trim()) return;
-    setSubscribed(true);
-  }
+const testimonials = [
+  {
+    name: "Aarav Mehta",
+    role: "Product Designer",
+    company: "Independent Designer",
+    initials: "AM",
+    color: "#d8e2cc",
+    quote:
+      "I came in looking for inspiration and left with three new collaborators. The conversations here feel genuine, not transactional.",
+    event: "DESIGNER MEETUP · MUMBAI",
+  },
+  {
+    name: "Ananya Sharma",
+    role: "Creative Director",
+    company: "Studio A",
+    initials: "AS",
+    color: "#ead8ce",
+    quote:
+      "The best part is meeting people who are just as curious as you are. Every event has something unexpected to take home.",
+    event: "CREATIVE SOCIAL · DELHI",
+  },
+  {
+    name: "Rohan Kapoor",
+    role: "Freelance Developer",
+    company: "Independent",
+    initials: "RK",
+    color: "#d9dff0",
+    quote:
+      "No awkward networking, no forced introductions. Just good people, interesting ideas and conversations that continue afterwards.",
+    event: "COMMUNITY NIGHT · BENGALURU",
+  },
+  {
+    name: "Ishita Verma",
+    role: "Visual Artist",
+    company: "Independent Artist",
+    initials: "IV",
+    color: "#eee5b9",
+    quote:
+      "I met people from completely different fields, and that was exactly what I needed. The atmosphere makes it easy to join in.",
+    event: "ART & IDEAS · PUNE",
+  },
+];
+
+function Testimonials() {
+  const sectionRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [animating, setAnimating] = useState(false);
+
+  const active = testimonials[activeIndex];
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".testimonial-intro > *", {
+        y: 35,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.12,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 78%",
+          once: true,
+        },
+      });
+
+      gsap.from(".testimonial-feature", {
+        y: 45,
+        opacity: 0,
+        duration: 0.9,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".testimonial-feature",
+          start: "top 85%",
+          once: true,
+        },
+      });
+
+      gsap.from(".testimonial-small-card", {
+        y: 28,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.12,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: ".testimonial-small-grid",
+          start: "top 88%",
+          once: true,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const changeTestimonial = (direction) => {
+    if (animating) return;
+
+    setAnimating(true);
+
+    const nextIndex =
+      (activeIndex + direction + testimonials.length) % testimonials.length;
+
+    gsap.to(".testimonial-quote-content", {
+      opacity: 0,
+      y: 14,
+      duration: 0.22,
+      ease: "power2.in",
+      onComplete: () => {
+        setActiveIndex(nextIndex);
+
+        requestAnimationFrame(() => {
+          gsap.fromTo(
+            ".testimonial-quote-content",
+            { opacity: 0, y: 18 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.5,
+              ease: "power3.out",
+              onComplete: () => setAnimating(false),
+            }
+          );
+        });
+      },
+    });
+  };
+
+  return (
+    <section
+      ref={sectionRef}
+      id="testimonials"
+      className="overflow-hidden bg-[#f7f7f5] px-5 py-20 text-[#111] sm:px-8 sm:py-24 lg:px-10 lg:py-28 mt-10"
+    >
+      <div className="testimonial-intro mb-12 grid grid-cols-1 gap-6 md:grid-cols-[1fr_0.65fr] md:items-end lg:mb-16">
+        <div>
+
+          <h2 className="max-w-[750px] text-4xl font-black uppercase leading-[0.95] tracking-[-0.055em] sm:text-5xl lg:text-[68px]">
+            Good people.
+            <br />
+            <span className="text-black/25">Real experiences.</span>
+          </h2>
+        </div>
+
+        <p className="max-w-[390px] text-sm leading-7 text-black/60 md:justify-self-end lg:text-base">
+          Don't just take our word for it. Hear from the people who came for
+          an event and found a community.
+        </p>
+      </div>
+
+      <div className="testimonial-feature grid grid-cols-1 border border-black/10 lg:grid-cols-[0.72fr_1.28fr]">
+        <div className="flex min-h-[280px] flex-col justify-between bg-[#111111] p-6 sm:p-9 lg:min-h-[410px] lg:p-10  text-white">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.1em]">
+              Featured story
+            </span>
+            <FiArrowUpRight size={20} />
+          </div>
+
+          <div>
+            <div className="mb-5 flex gap-1 text-black">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <FiStar key={index} size={17} fill="currentColor" />
+              ))}
+            </div>
+
+            <div className="testimonial-quote-content">
+              <span className="mb-2 block text-6xl font-black leading-none tracking-[-0.08em]">
+                “
+              </span>
+
+              <blockquote className="max-w-[570px] text-2xl font-bold leading-[1.18] tracking-[-0.045em] sm:text-3xl lg:text-[38px]">
+                {active.quote}
+              </blockquote>
+
+              <div className="mt-8 flex items-center gap-3">
+                <div
+                  className="flex h-11 w-11 items-center justify-center rounded-full text-xs font-bold"
+                  style={{ backgroundColor: active.color }}
+                >
+                  {active.initials}
+                </div>
+
+                <div>
+                  <p className="text-sm font-bold">{active.name}</p>
+                  <p className="mt-1 text-[11px]  text-white">
+                    {active.role} · {active.company}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p className="mt-8 text-[9px] font-semibold uppercase tracking-[0.1em]  text-white">
+            {active.event}
+          </p>
+        </div>
+
+        <div className="flex flex-col justify-between bg-white p-6 sm:p-9 lg:p-10">
+          <div className="flex items-center justify-between">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-black/50">
+              A word from our community
+            </p>
+            <span className="text-xs tabular-nums text-black/45">
+              {String(activeIndex + 1).padStart(2, "0")} /{" "}
+              {String(testimonials.length).padStart(2, "0")}
+            </span>
+          </div>
+
+          <div className="my-12 lg:my-16">
+            <span className="mb-4 block text-sm uppercase tracking-[0.12em] text-black/40">
+              The experience
+            </span>
+
+            <p className="max-w-[520px] text-xl font-medium leading-[1.45] tracking-[-0.035em] sm:text-2xl lg:text-[30px]">
+              Every meetup starts with a conversation. Sometimes, that
+              conversation becomes the start of something bigger.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-end justify-between gap-5 border-t border-black/10 pt-6">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.1em] text-black/45">
+                Find your people
+              </p>
+              <p className="mt-2 text-lg font-bold tracking-[-0.035em]">
+                Your next story starts here.
+              </p>
+            </div>
+
+            <div className="flex gap-2">
+              <button
+                onClick={() => changeTestimonial(-1)}
+                disabled={animating}
+                aria-label="Previous testimonial"
+                className="flex h-11 w-11 items-center justify-center border border-black/15 transition-colors hover:bg-black hover:text-white disabled:opacity-40"
+              >
+                <FiArrowLeft size={18} />
+              </button>
+
+              <button
+                onClick={() => changeTestimonial(1)}
+                disabled={animating}
+                aria-label="Next testimonial"
+                className="flex h-11 w-11 items-center justify-center bg-[#111] text-white transition-colors hover:bg-[#d5f34b] hover:text-black disabled:opacity-40"
+              >
+                <FiArrowRight size={18} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="testimonial-small-grid mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {testimonials
+          .filter((_, index) => index !== activeIndex)
+          .slice(0, 3)
+          .map((item) => (
+            <button
+              key={item.name}
+              onClick={() => {
+                const index = testimonials.findIndex(
+                  (testimonial) => testimonial.name === item.name
+                );
+
+                setActiveIndex(index);
+              }}
+              className="testimonial-small-card group flex min-h-[185px] flex-col justify-between border border-black/10 bg-transparent p-5 text-left transition-colors duration-300 hover:bg-white sm:p-6"
+            >
+              <div>
+                <div className="mb-4 flex gap-1 text-black/65">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <FiStar key={index} size={12} fill="currentColor" />
+                  ))}
+                </div>
+
+                <p className="text-sm leading-6 text-black/75">
+                  “{item.quote}”
+                </p>
+              </div>
+
+              <div className="mt-6 flex items-center justify-between gap-3 border-t border-black/10 pt-4">
+                <div>
+                  <p className="text-xs font-bold uppercase">{item.name}</p>
+                  <p className="mt-1 text-[10px] text-black/45">{item.role}</p>
+                </div>
+
+                <FiArrowUpRight
+                  className="shrink-0 transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+                  size={18}
+                />
+              </div>
+            </button>
+          ))}
+      </div>
+
+      <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-black/10 pt-5">
+        <p className="text-[10px] uppercase tracking-[0.1em] text-black/45">
+          Shared by people who showed up
+        </p>
+
+        <a
+          href="#events"
+          className="inline-flex items-center gap-2 text-xs font-bold uppercase transition-colors hover:text-black/50"
+        >
+          Find your next event <FiArrowUpRight size={16} />
+        </a>
+      </div>
+    </section>
+  );
+}
+
+
+import { FiPlus, FiMinus,} from "react-icons/fi";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const faqs = [
+  {
+    question: "What is Event?",
+    answer:
+      "Event is a platform that brings people together through meetups, workshops and events where they can learn, connect and share ideas.",
+  },
+  {
+    question: "How can I register for an event?",
+    answer:
+      "Browse the available events, select the one you like and follow the registration or ticket booking process on its event page.",
+  },
+  {
+    question: "Are the events open to beginners?",
+    answer:
+      "Yes, many events welcome beginners as well as experienced professionals. Check the event description for any specific requirements.",
+  },
+  {
+    question: "Can I attend events alone?",
+    answer:
+      "Of course! You can attend independently, meet new people and take part in conversations and activities during the event.",
+  },
+  {
+    question: "Can I cancel my booking?",
+    answer:
+      "Cancellation and refund options depend on the event's policy. Please review the terms on the event page before booking.",
+  },
+  {
+    question: "How can I host an event?",
+    answer:
+      "Contact our team with your event idea, preferred location and expected audience. We'll help you understand the next steps.",
+  },
+];
+
+function FAQSection() {
+  const sectionRef = useRef(null);
+  const [openIndex, setOpenIndex] = useState(0);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".faq-heading, .faq-description, .faq-item", {
+        y: 22,
+        opacity: 0,
+        duration: 0.65,
+        stagger: 0.1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%",
+          once: true,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      id="faq"
+      className="bg-[#f7f7f5] px-5 py-16 text-[#111] sm:px-8 sm:py-20 lg:px-10 lg:py-24"
+    >
+      <div className="mx-auto max-w-4xl">
+        <div className="mb-10 text-center sm:mb-14">
+          <h2 className="faq-heading text-3xl font-extrabold uppercase tracking-tight sm:text-4xl lg:text-5xl">
+            Frequently Asked Questions
+          </h2>
+
+          <p className="faq-description mx-auto mt-4 max-w-xl text-sm leading-6 text-black/55 sm:text-base">
+            Have questions? Find answers to the most common queries about
+            our events and community.
+          </p>
+        </div>
+
+        <div className="border-t border-black/15">
+          {faqs.map((faq, index) => {
+            const isOpen = openIndex === index;
+
+            return (
+              <div
+                key={faq.question}
+                className="faq-item border-b border-black/15"
+              >
+                <button
+                  type="button"
+                  aria-expanded={isOpen}
+                  onClick={() => setOpenIndex(isOpen ? -1 : index)}
+                  className="flex w-full items-center justify-between gap-5 py-5 text-left sm:py-6"
+                >
+                  <span className="text-base font-semibold sm:text-lg">
+                    {faq.question}
+                  </span>
+
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-black/15 transition-colors duration-200">
+                    {isOpen ? <FiMinus size={16} /> : <FiPlus size={16} />}
+                  </span>
+                </button>
+
+                <div
+                  className="grid transition-[grid-template-rows] duration-300 ease-in-out"
+                  style={{
+                    gridTemplateRows: isOpen ? "1fr" : "0fr",
+                  }}
+                >
+                  <div className="overflow-hidden">
+                    <p className="max-w-3xl pb-5 pr-8 text-sm leading-7 text-black/60 sm:pb-6 sm:text-base">
+                      {faq.answer}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <p className="mt-8 text-center text-sm text-black/55">
+          Still have questions?{" "}
+          <a
+            href="#contact"
+            className="font-semibold text-black underline underline-offset-4 hover:text-black/60"
+          >
+            Contact us
+          </a>
+        </p>
+      </div>
+    </section>
+  );
+}
+
+
+import {
+  FiArrowUp,
+  FiInstagram,
+  FiLinkedin,
+  FiTwitter,
+} from "react-icons/fi";
+
+
+gsap.registerPlugin(ScrollTrigger);
+
+function Footer() {
+  const footerRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".footer-reveal", {
+        y: 35,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.12,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: "top 85%",
+        },
+      });
+
+      gsap.from(".footer-brand", {
+        y: 80,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: "top 75%",
+        },
+      });
+    }, footerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <footer
-      className={`overflow-hidden border-l border-t border-black/10 text-[#171715] ${
-        plainView ? "bg-[#f4f1e9]" : "bg-[#d7ff3f]"
-      }`}
+      ref={footerRef}
+      className="overflow-hidden bg-[#111111] px-5 pt-16 text-white sm:px-8 lg:px-10"
     >
-      {/* Newsletter section */}
-      <section className="grid grid-cols-1 border-b border-black/10 sm:grid-cols-3">
-        <div className="flex min-h-[180px] flex-col justify-between border-r border-black/10 px-5 py-8 sm:min-h-[320px] sm:px-6 lg:px-9">
-          <p className="text-[9px] font-bold uppercase tracking-[.1em]">
-            <span className="mr-2 inline-block h-[7px] w-3 bg-black" />
-            [IN / THE THURSDAY LIST]
-          </p>
-
-          <div className="mt-10">
-            <p className="text-[8px] font-medium uppercase tracking-[.1em]">
-              INDIA · NOW
-            </p>
-            <p className="font-['Space_Grotesk'] text-[32px] font-bold leading-none tracking-[-.06em]">
-              18:40
-            </p>
-            <p className="mt-1 text-[8px] uppercase tracking-[.08em]">
-              THU 13 NOV · CITY EVENTS
-            </p>
-            <p className="mt-1 text-[9px]">
-              Good nights start here.
-            </p>
-          </div>
-        </div>
-
-        <div className="border-r border-black/10 px-5 py-8 sm:col-span-2 sm:px-6 lg:px-3">
-          <h2 className="font-['Space_Grotesk'] text-[clamp(42px,6.2vw,68px)] font-bold leading-[.88] tracking-[-.08em]">
-            Six picks.
+      <div className="footer-reveal mb-16 flex flex-col justify-between gap-8 border-b border-white/20 pb-12 md:flex-row md:items-end">
+        <div>
+          <h2 className="max-w-2xl text-4xl font-medium leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            Good people.
             <br />
-            Every Thursday.
+            Great events.
+            <span className="text-[#d5f34b]"> Better stories.</span>
           </h2>
-
-          <p className="mt-5 max-w-[350px] text-[11px] leading-[1.6]">
-            Tonight’s best, picked by people who go out. One email at 08:00,
-            nothing else, and you can stop it in one tap.
-          </p>
-
-          <form
-            onSubmit={handleSubscribe}
-            className="mt-7 flex max-w-[560px] flex-col gap-3 sm:flex-row sm:items-end"
-          >
-            <label className="flex min-w-0 flex-1 items-center gap-2 border-b border-black/70 pb-2">
-              <span className="text-sm">✉</span>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Your email address"
-                className="w-full min-w-0 bg-transparent text-[11px] outline-none placeholder:text-black/65"
-              />
-            </label>
-
-            <button
-              type="submit"
-              className="flex shrink-0 items-center justify-between gap-4 bg-[#171715] px-4 py-3 text-[10px] font-bold text-white transition-opacity hover:opacity-75"
-            >
-              {subscribed ? "You're on the list!" : "Send me the list"}
-              <span>→</span>
-            </button>
-          </form>
-
-          <p className="mt-3 text-[8px] font-medium uppercase tracking-[.08em] text-black/65">
-            {subscribed
-              ? "Thanks for signing up."
-              : "NO SPAM · WE NEVER SHARE YOUR EMAIL"}
+          <p className="mt-5 max-w-md text-base leading-7 text-white/60 sm:text-lg">
+            Find your people, discover something new, and make every
+            moment count with Event.
           </p>
         </div>
-      </section>
 
-      {/* Footer navigation */}
-      <section className="grid grid-cols-2 border-b border-black/10 sm:grid-cols-3">
-        <div className="border-r border-black/10 px-5 py-7 sm:px-6 lg:px-9">
-          <p className="mb-5 text-[8px] font-bold uppercase tracking-[.12em] text-black/55">
-            EXPLORE
-          </p>
-          <div className="flex flex-col items-start gap-2.5">
-            {linkGroups[0].links.map((link) => (
-              <a
-                key={link}
-                href="#"
-                className="text-[12px] font-medium hover:underline"
-              >
-                {link}
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 border-r border-black/10">
-          {linkGroups.slice(1, 3).map((group) => (
-            <div
-              key={group.label}
-              className="border-r border-black/10 px-4 py-7 last:border-r-0 sm:px-5 lg:px-4"
-            >
-              <p className="mb-5 text-[8px] font-bold uppercase tracking-[.12em] text-black/55">
-                {group.label}
-              </p>
-              <div className="flex flex-col items-start gap-2.5">
-                {group.links.map((link) => (
-                  <a
-                    key={link}
-                    href="#"
-                    className="text-[12px] font-medium hover:underline"
-                  >
-                    {link}
-                  </a>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="border-r border-black/10 px-5 py-7 sm:col-span-1 sm:px-5 lg:px-4">
-          <p className="mb-5 text-[8px] font-bold uppercase tracking-[.12em] text-black/55">
-            FOLLOW
-          </p>
-          <div className="flex flex-col items-start gap-2.5">
-            {linkGroups[3].links.map((link) => (
-              <a
-                key={link}
-                href="#"
-                className="text-[12px] font-medium hover:underline"
-              >
-                {link}
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Legal row */}
-      <section className="flex flex-wrap items-center justify-between gap-4 border-b border-black/10 px-5 py-4 sm:px-6 lg:px-9">
-        <div className="flex flex-wrap gap-x-5 gap-y-2 text-[8px] font-bold uppercase tracking-[.08em]">
-          <span>© 2026 HITHER LTD</span>
-          <span>MADE IN INDIA</span>
-          <a href="#" className="hover:underline">Privacy</a>
-          <a href="#" className="hover:underline">Terms</a>
-          <a href="#" className="hover:underline">Cookies</a>
-          <a href="#" className="hover:underline">Accessibility</a>
-        </div>
-
-        <div className="flex items-center gap-4 text-[8px] font-bold uppercase tracking-[.08em]">
-          <button
-            onClick={() => setPlainView((v) => !v)}
-            className="flex items-center gap-2"
-          >
-            <span
-              className={`flex h-4 w-7 items-center rounded-full p-0.5 transition-colors ${
-                plainView ? "bg-black" : "bg-black/25"
-              }`}
-            >
-              <span
-                className={`h-3 w-3 rounded-full bg-white transition-transform ${
-                  plainView ? "translate-x-3" : ""
-                }`}
-              />
-            </span>
-            Plain view
-          </button>
-
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="hover:underline"
-          >
-            Back to top ↑
-          </button>
-        </div>
-      </section>
-
-      {/* Oversized brand */}
-      <div className="overflow-hidden px-3 pt-3 sm:px-5">
         <a
-          href="/"
-          className="block whitespace-nowrap font-['Space_Grotesk'] text-[27vw] font-bold leading-[.73] tracking-[-.105em]"
+          href="#events"
+          className="group flex w-fit items-center gap-4 rounded-full bg-[#white] px-6 py-4 font-medium text-black transition"
         >
-          Hither.
+          Explore events
+          <FiArrowUpRight
+            size={20}
+            className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
+          />
+        </a>
+      </div>
+
+      <div className="grid grid-cols-2 gap-10 pb-16 md:grid-cols-4">
+        <div className="footer-reveal col-span-2 md:col-span-1">
+          <a href="/" className="text-4xl font-bold tracking-tight">
+            Event<span className="text-[#d5f34b]">.</span>
+          </a>
+          <p className="mt-4 max-w-xs text-sm leading-6 text-white/50">
+            Your next favourite memory starts with showing up.
+          </p>
+
+          <div className="mt-6 flex gap-3">
+            {[
+              { icon: FiInstagram, href: "#instagram" },
+              { icon: FiLinkedin, href: "#linkedin" },
+              { icon: FiTwitter, href: "#twitter" },
+            ].map(({ icon: Icon, href }) => (
+              <a
+                key={href}
+                href={href}
+                aria-label={href.slice(1)}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 transition hover:border-[#d5f34b] hover:bg-[#d5f34b] hover:text-black"
+              >
+                <Icon size={18} />
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div className="footer-reveal">
+          <h3 className="mb-5 text-sm font-semibold uppercase tracking-widest text-white/40">
+            Discover
+          </h3>
+          <div className="flex flex-col items-start gap-4 text-sm text-white/75">
+            <a href="#events" className="transition hover:text-[#d5f34b]">All events</a>
+            <a href="#events" className="transition hover:text-[#d5f34b]">Workshops</a>
+            <a href="#events" className="transition hover:text-[#d5f34b]">Meetups</a>
+            <a href="#events" className="transition hover:text-[#d5f34b]">Experiences</a>
+          </div>
+        </div>
+
+        <div className="footer-reveal">
+          <h3 className="mb-5 text-sm font-semibold uppercase tracking-widest text-white/40">
+            Event
+          </h3>
+          <div className="flex flex-col items-start gap-4 text-sm text-white/75">
+            <a href="#about" className="transition hover:text-[#d5f34b]">About us</a>
+            <a href="#organizers" className="transition hover:text-[#d5f34b]">For organizers</a>
+            <a href="#testimonials" className="transition hover:text-[#d5f34b]">Community</a>
+            <a href="#faq" className="transition hover:text-[#d5f34b]">FAQs</a>
+          </div>
+        </div>
+
+        <div className="footer-reveal">
+          <h3 className="mb-5 text-sm font-semibold uppercase tracking-widest text-white/40">
+            Get in touch
+          </h3>
+          <a
+            href="mailto:hello@Event.in"
+            className="group flex w-fit items-center gap-2 text-sm text-black/75 transition hover:text-[#d5f34b]"
+          >
+            hello@Event.in
+            <FiArrowUpRight className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+          </a>
+          <p className="mt-4 text-sm leading-6 text-white/40">
+            Have an event in mind?
+            <br />
+            Let’s make it happen.
+          </p>
+        </div>
+      </div>
+
+      <div className="overflow-hidden border-t border-white/15 pt-5">
+        <div className="footer-brand select-none text-center text-[25vw] font-semibold leading-[0.78] tracking-[-0.09em] text-white sm:text-[24vw]">
+          Event
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4 py-6 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
+        <p>© {new Date().getFullYear()} Event. All rights reserved.</p>
+
+        <div className="flex gap-6">
+          <a href="#privacy" className="transition hover:text-white">Privacy policy</a>
+          <a href="#terms" className="transition hover:text-white">Terms of use</a>
+        </div>
+
+        <a
+          href="#top"
+          className="flex w-fit items-center gap-2 transition hover:text-[#d5f34b]"
+        >
+          Back to top <FiArrowUp size={15} />
         </a>
       </div>
     </footer>
@@ -1114,26 +1064,80 @@ function HitherFooter() {
 
 
 
+
+
+
+
 export default function Home() {
   const pageRef = useRef(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".hero-title", {
-        y: 45,
-        opacity: 0,
-        duration: 0.9,
-        ease: "power3.out",
-        delay: 0.15,
+      const tl = gsap.timeline({
+        defaults: { ease: "power3.out" },
       });
 
-      gsap.from(".hero-info > *", {
-        y: 20,
+      tl.from(".nav-item", {
+        y: -12,
         opacity: 0,
-        duration: 0.65,
-        stagger: 0.12,
-        ease: "power2.out",
-        delay: 0.25,
+        duration: 0.6,
+        stagger: 0.07,
+      })
+        .from(
+          ".hero-word",
+          {
+            y: 45,
+            opacity: 0,
+            duration: 0.85,
+            stagger: 0.08,
+          },
+          "-=0.25"
+        )
+        .from(
+          ".globe-wrap",
+          {
+            opacity: 0,
+            scale: 0.88,
+            duration: 1.1,
+            ease: "power2.out",
+          },
+          "-=0.45"
+        )
+        .from(
+          ".event-link",
+          {
+            x: 28,
+            opacity: 0,
+            duration: 0.65,
+            stagger: 0.14,
+          },
+          "-=0.5"
+        )
+        .from(
+          ".see-events",
+          {
+            y: 12,
+            opacity: 0,
+            duration: 0.45,
+          },
+          "-=0.25"
+        );
+
+      gsap.to(".globe-wrap", {
+        y: -8,
+        duration: 3.5,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+
+      gsap.to(".globe-pin", {
+        y: -5,
+        duration: 1.8,
+        repeat: -1,
+        yoyo: true,
+        stagger: 0.25,
+        ease: "sine.inOut",
       });
     }, pageRef);
 
@@ -1142,221 +1146,127 @@ export default function Home() {
 
   return (
     <div>
-        <main
+      <main
       ref={pageRef}
-      className="relative min-h-screen overflow-hidden bg-[#171819] font-['DM_Sans'] text-white"
+      className="min-h-screen overflow-hidden bg-[#f7f7f5] px-4 text-[#111] sm:px-6 lg:px-10"
     >
-      {/* Background image */}
-      <div className="absolute inset-0">
-        <img
-          src="https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=2200&q=90"
-          alt="Live jazz saxophone performance"
-          className="h-full min-h-screen w-full object-cover object-center"
-        />
-
-        <div className="absolute inset-0 bg-gradient-to-r from-[#171819]/35 via-[#171819]/15 to-[#171819]/80" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#111212]/80 via-transparent to-[#111212]/35" />
-      </div>
-
       {/* Navigation */}
-      <header className="relative z-20 grid h-[56px] grid-cols-2 border-b border-white/10 bg-[#171819]/35 backdrop-blur-[3px] lg:grid-cols-[1fr_1.45fr_1fr]">
-        <Link
-          to="/"
-          className="flex items-center border-r border-white/10 px-5 font-['Space_Grotesk'] text-[17px] font-bold tracking-[-1px] sm:px-8"
+      <header className="flex h-[72px] items-center justify-between border-b border-black/[0.04]">
+        <a
+          href="/"
+          className="nav-item flex items-center gap-2 font-['Arial'] text-[19px] font-black tracking-[-1px]"
         >
-          Hither<span className="text-[#d7ff3f]">.</span>
-        </Link>
+          <span className="text-[22px]">♟</span>
+          Event
+        </a>
 
-        <nav className="hidden items-center justify-center gap-5 border-r border-white/10 text-[11px] text-white/75 lg:flex">
-          <a href="#tonight" className="transition-colors hover:text-[#d7ff3f]">Tonight</a>
-          <a href="#weekend" className="transition-colors hover:text-[#d7ff3f]">This weekend</a>
-          <a href="#discover" className="transition-colors hover:text-[#d7ff3f]">Discover</a>
-          <a href="#organizers" className="transition-colors hover:text-[#d7ff3f]">Organizers</a>
+        <nav className="hidden items-center gap-8 md:flex">
+          <a className="nav-item text-[9px] font-medium uppercase" href="#events">
+            Book now
+          </a>
+          <a className="nav-item text-[9px] font-medium uppercase" href="#about">
+            About us
+          </a>
+          <a className="nav-item text-[9px] font-medium uppercase" href="#contact">
+            Contact
+          </a>
+          <a className="nav-item flex items-center gap-1 text-[9px] font-medium uppercase" href="#packages">
+            Packages <FiChevronDown size={10} />
+          </a>
         </nav>
 
-        <div className="flex items-center justify-end gap-4 px-4 text-[10px] text-white/80 sm:px-7">
-          <button className="hidden items-center gap-1 sm:flex">
-            Mumbai <FiChevronDown size={12} />
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          className="nav-item hidden w-[200px] items-center border-b border-black/10 pb-1 lg:flex"
+        >
+          <input
+            aria-label="Search location"
+            placeholder="Search location here..."
+            className="w-full bg-transparent text-[9px] outline-none placeholder:text-black/30"
+          />
+          <button aria-label="Search">
+            <FiSearch size={15} />
           </button>
-          <button aria-label="Search events" className="hover:text-[#d7ff3f]">
-            <FiSearch size={16} />
-          </button>
-          <a href="#host" className="hidden whitespace-nowrap sm:block">Host an event</a>
-          <a href="#tickets" className="flex items-center gap-1 whitespace-nowrap">
-            Passes
-          </a>
-          <div className="hidden h-7 w-7 overflow-hidden rounded-full border border-white/30 sm:block">
-            <img
-              src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80"
-              alt="Profile"
-            />
-          </div>
-        </div>
+        </form>
+
+        <button className="nav-item md:hidden" aria-label="Search">
+          <FiSearch size={18} />
+        </button>
       </header>
 
-      {/* Main hero layout */}
-      <section
-        id="tonight"
-        className="relative z-10 grid min-h-[calc(100vh-56px)] grid-cols-1 lg:grid-cols-[2fr_1fr]"
-      >
-        {/* Left: event title */}
-        <div className="relative flex min-h-[490px] flex-col justify-between border-b border-white/15 px-5 pb-9 pt-10 sm:px-8 lg:min-h-[calc(100vh-56px)] lg:border-b-0 lg:border-r lg:px-[4.2vw] lg:pb-12 lg:pt-11">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-2 text-[9px] font-medium uppercase tracking-[.13em] text-white/85 sm:text-[10px]">
-              <span className="h-2 w-3 bg-[#d7ff3f]" />
-              <span>IN / TONIGHT</span>
-              <span className="text-white/35">·</span>
-              <span>JAZZ</span>
-              <span className="text-white/35">·</span>
-              <span>LIVE MUSIC</span>
-            </div>
+      {/* Main headline */}
+      <section className="pt-16 sm:pt-20 lg:pt-[70px]">
+        <div className="flex flex-wrap items-center gap-x-3">
+          <h1 className="hero-word font-['Arial'] text-[clamp(42px,7vw,126px)] font-black uppercase leading-[.95] tracking-[-.055em]">
+            Coll
+          </h1>
+
+          <div className="hero-word relative flex min-w-[100px] flex-1 items-center">
+            <span className="mt-16.5 -ml-[10px] lg:h-[19px] w-full bg-black sm:h-[9px]" />
           </div>
 
-          <div className="mt-10 flex flex-wrap gap-1.5 lg:mt-0">
-            <span className="bg-[#d7ff3f] px-3 py-1.5 text-[10px] font-bold text-black">
-              9 LEFT
-            </span>
-            <span className="bg-white px-3 py-1.5 text-[10px] font-bold text-black">
-              18+
-            </span>
-          </div>
-
-          <div className="hero-title mt-auto pt-16 lg:pt-0">
-            <div className="mb-4 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.15em] text-white/65 lg:hidden">
-              <FiMapPin size={12} /> Mumbai, India
-            </div>
-
-            <h1 className="max-w-[950px] font-['Space_Grotesk'] text-[clamp(53px,9.3vw,130px)] font-bold leading-[.79] tracking-[-.085em]">
-              Amara Okafor
-              <br />
-              Quartet
-            </h1>
-          </div>
+          <h1 className="hero-word font-['Arial'] text-[clamp(38px,7vw,126px)] font-black uppercase leading-[.95] tracking-[-.055em]">
+            Aboration
+          </h1>
         </div>
 
-        {/* Right: ticket and event information */}
-        <aside className="hero-info relative flex flex-col bg-[#171819]/55 backdrop-blur-[2px] lg:min-h-[calc(100vh-56px)]">
-          <div className="flex flex-1 flex-col justify-center px-5 py-9 sm:px-8 lg:justify-start lg:px-6 lg:pb-8 lg:pt-[46px] xl:px-[3vw]">
-            <p className="max-w-[390px] text-[13px] leading-[1.65] text-white/80 sm:text-[14px]">
-              Soulful jazz from Mumbai’s live music scene, playing a special
-              set with warm vocals, deep grooves and a sound made for the night.
-            </p>
-
-            <a
-              id="tickets"
-              href="#event-details"
-              className="mt-9 flex w-full max-w-[360px] items-center justify-between gap-3 bg-[#d7ff3f] px-4 py-3.5 text-[12px] font-bold text-[#171819] transition-colors hover:bg-white sm:px-5"
-            >
-              <span>Get tickets</span>
-              <FiArrowRight size={16} />
-              <span>₹1,499</span>
-            </a>
-
-            <div className="mt-4 flex items-center gap-3">
-              <div className="flex -space-x-2">
-                {[
-                  "photo-1534528741775-53994a69daeb",
-                  "photo-1500648767791-00dcc994a43e",
-                  "photo-1506794778202-cad84cf45f1d",
-                ].map((photo) => (
-                  <div
-                    key={photo}
-                    className="h-6 w-6 overflow-hidden rounded-full border border-[#171819]"
-                  >
-                    <img
-                      src={`https://images.unsplash.com/${photo}?auto=format&fit=crop&w=60&q=80`}
-                      alt="Event attendee"
-                    />
-                  </div>
-                ))}
-              </div>
-              <p className="text-[9px] text-white/70">
-                Priya, Aman and 129 others are going
-              </p>
-            </div>
-          </div>
-
-          {/* Details panel */}
-          <div id="event-details" className="border-t border-white/15">
-            <div className="grid grid-cols-[48px_1fr] gap-3 border-b border-white/10 px-5 py-5 sm:px-8 lg:px-6 xl:px-[3vw]">
-              <span className="pt-1 text-[8px] font-medium uppercase tracking-[.12em] text-white/40">
-                WHEN
-              </span>
-              <div>
-                <p className="text-[12px] font-medium">Sat, 25 Oct, 19:30</p>
-                <p className="mt-1 text-[10px] text-white/55">
-                  Doors 18:30 · Ends 22:00
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-[48px_1fr] gap-3 border-b border-white/10 px-5 py-5 sm:px-8 lg:px-6 xl:px-[3vw]">
-              <span className="pt-1 text-[8px] font-medium uppercase tracking-[.12em] text-white/40">
-                WHERE
-              </span>
-              <div>
-                <p className="text-[12px] font-medium">The Listening Room</p>
-                <p className="mt-1 text-[10px] leading-[1.6] text-white/55">
-                  Bandra West, Mumbai, Maharashtra
-                </p>
-                <a
-                  href="https://www.google.com/maps/search/?api=1&query=live+music+venue+Bandra+West+Mumbai"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-2 inline-flex items-center gap-1 text-[9px] text-[#d7ff3f]"
-                >
-                  View location <FiArrowUpRight size={11} />
-                </a>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-[48px_1fr] gap-3 border-b border-white/10 px-5 py-5 sm:px-8 lg:px-6 xl:px-[3vw]">
-              <span className="pt-1 text-[8px] font-medium uppercase tracking-[.12em] text-white/40">
-                PRICE
-              </span>
-              <div>
-                <p className="text-[12px] font-medium">From ₹599</p>
-                <p className="mt-1 text-[10px] text-white/55">
-                  Booking fees may apply
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-[48px_1fr] gap-3 px-5 py-5 sm:px-8 lg:px-6 xl:px-[3vw]">
-              <span className="pt-1 text-[8px] font-medium uppercase tracking-[.12em] text-white/40">
-                HOST
-              </span>
-              <div>
-                <p className="text-[12px] font-medium">Hither Live</p>
-                <p className="mt-1 text-[10px] text-white/55">
-                  Live music · Mumbai
-                </p>
-              </div>
-            </div>
-          </div>
-        </aside>
+        <p className="hero-word mt-5 text-right font-['Arial'] text-[clamp(20px,3.8vw,37px)] font-normal italic uppercase leading-tight tracking-[-.035em]">
+          With creative people
+        </p>
       </section>
 
-      {/* Bottom location strip */}
-      <div className="relative z-10 flex items-center justify-between gap-3 border-t border-white/10 bg-[#171819] px-5 py-3 text-[8px] tracking-[.08em] text-white/45 sm:px-8 lg:px-[4.2vw]">
-        <span className="flex items-center gap-2"><FiMapPin size={11} /> MUMBAI, INDIA</span>
-        <span className="hidden sm:block">GOOD MUSIC. GOOD PEOPLE.</span>
-        <a href="#tickets" className="flex items-center gap-1 text-white/80 hover:text-[#d7ff3f]">
-          BOOK YOUR PASS <FiArrowRight size={12} />
-        </a>
-      </div>
+      {/* Globe + event links */}
+      <section
+        id="events"
+        className="grid grid-cols-1 items-center gap-10 pb-16 pt-8 sm:pt-12 lg:grid-cols-[1fr_1fr] lg:gap-14 lg:pb-20 lg:pt-6"
+      >
+        {/* Globe visual */}
+        <div className="globe-wrap relative mx-auto flex aspect-square w-full max-w-[440px] items-center justify-center">
+          <img
+            src={earth}
+            alt="Earth globe"
+            className="h-full w-full rounded-full object-cover grayscale opacity-75"
+          />
 
+        </div>
+
+        {/* Event list */}
+        <div className="flex w-full flex-col" id="about">
+          {events.map((event) => (
+            <a
+              key={event}
+              href="#contact"
+              className="event-link group flex min-h-[90px] items-center justify-between border-b border-black/10 py-5 sm:min-h-[100px]"
+            >
+              <span className="text-[clamp(23px,3.4vw,32px)] font-light uppercase tracking-[-.045em] text-black/15 transition-colors duration-300 group-hover:text-black">
+                {event}
+              </span>
+              <FiArrowUpRight
+                className="shrink-0 text-black/15 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-black"
+                size={34}
+                strokeWidth={1}
+              />
+            </a>
+          ))}
+
+          <a
+            href="#contact"
+            className="see-events mt-10 flex min-h-[58px] items-center justify-center gap-2 bg-[#111] px-5 text-[20px] font-medium uppercase transition-colors duration-300 hover:bg-[#383838]"
+          >
+            See more events <FiArrowUpRight size={14} />
+          </a>
+        </div>
+      </section>
     </main>
-    <Tickets />
-    <AboutNightPage />
-    <LineupPage />
-    <RunningOrderPage />
-    <VenuePage />
-    <BeforeYouGoPage />
-    <MoreNightsPage />
-    <HitherFooter />
+    <WhoWeAre />
+    <RecentWork />
+    <EventStats />
+    <Organizers />
+    <Testimonials />
+    <FAQSection />
+    <Footer />
     </div>
-    
     
   );
 }
+
