@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { FiSearch, FiArrowUpRight, FiChevronDown, FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import gsap from "gsap";
 import earth from "../assets/earth.png";
+import { Link } from "react-router-dom";
 
 
 const events = [
@@ -1159,21 +1160,21 @@ export default function Home() {
           <span className="text-[22px]">♟</span>
           Event
         </a>
-
-        <nav className="hidden items-center gap-8 md:flex">
-          <a className="nav-item text-[9px] font-medium uppercase" href="#events">
+        <nav className="flex items-center gap-15">
+          <Link to="/booking" className="nav-item text-[9px] font-medium uppercase">
             Book now
-          </a>
-          <a className="nav-item text-[9px] font-medium uppercase" href="#about">
+          </Link>
+          <Link className="nav-item text-[9px] font-medium uppercase" to="/about">
             About us
-          </a>
+          </Link>
           <a className="nav-item text-[9px] font-medium uppercase" href="#contact">
             Contact
           </a>
-          <a className="nav-item flex items-center gap-1 text-[9px] font-medium uppercase" href="#packages">
+          <Link className="nav-item flex items-center gap-1 text-[9px] font-medium uppercase" to="#packages">
             Packages <FiChevronDown size={10} />
-          </a>
+          </Link>
         </nav>
+        
 
         <form
           onSubmit={(e) => e.preventDefault()}
