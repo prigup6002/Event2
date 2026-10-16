@@ -1,392 +1,94 @@
+
 import { useEffect, useRef, useState } from "react";
-import { FiSearch, FiArrowUpRight, FiChevronDown, FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import gsap from "gsap";
-import earth from "../assets/earth.png";
-import { Link } from "react-router-dom";
-
-
-const events = [
-  "Designer Meetup",
-  "Freelancer Meetup",
-];
-
-function WhoWeAre() {
-  return (
-    <section
-      id="about"
-      className="relative overflow-hidden bg-[#f7f7f5] px-4 py-20 text-center text-[#111] sm:px-8 sm:py-24 lg:px-10 lg:py-28"
-    >
-      <span className="absolute bottom-5 left-[11%] text-3xl font-extralight text-black/20">
-        ✳
-      </span>
-
-      <span className="absolute right-[16%] top-10 text-xl text-black/20">
-        ◞
-      </span>
-
-      <div className="mx-auto max-w-[1000px]">
-        <h2 className="mb-7 text-3xl font-extrabold uppercase leading-tight tracking-[-0.04em] sm:text-4xl lg:text-[58px]">
-          Who We Are
-        </h2>
-
-        <p className="text-base font-normal uppercase leading-[1.9] tracking-[0.015em] text-[#777] sm:text-xl lg:text-[32px] lg:leading-[1.85]">
-          We are a passionate group of tech enthusiasts dedicated to fostering
-          knowledge exchange and collaboration within the tech industry. Our
-          meetup brings together experts from various fields to share insights,
-          experiences, and innovative ideas.
-        </p>
-      </div>
-    </section>
-  );
-}
-
-
-const recentEvents = [
-  {
-    title: "Creative Gala",
-    category: "Corporate Events",
-    image:
-      "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1000&q=90",
-  },
-  {
-    title: "Design Summit",
-    category: "Conferences",
-    image:
-      "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1000&q=90",
-  },
-  {
-    title: "Live Music Night",
-    category: "Entertainment",
-    image:
-      "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1000&q=90",
-  },
-  {
-    title: "Community Festival",
-    category: "Festivals",
-    image:
-      "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=1000&q=90",
-  },
-  {
-    title: "Business Forum",
-    category: "Networking",
-    image:
-      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1000&q=90",
-  },
-  {
-    title: "Art Exhibition",
-    category: "Art & Culture",
-    image:
-      "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=1000&q=90",
-  },
-  {
-    title: "Tech Conference",
-    category: "Technology",
-    image:
-      "https://images.unsplash.com/photo-1591115765373-5207764f72e7?auto=format&fit=crop&w=1000&q=90",
-  },
-  {
-    title: "Award Ceremony",
-    category: "Celebrations",
-    image:
-      "https://images.unsplash.com/photo-1507504031003-b417219a0fde?auto=format&fit=crop&w=1000&q=90",
-  },
-  {
-    title: "Luxury Wedding",
-    category: "Weddings",
-    image:
-      "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1000&q=90",
-  },
-  {
-    title: "Startup Meetup",
-    category: "Community",
-    image:
-      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1000&q=90",
-  },
-];
-
-function RecentWork() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const trackRef = useRef(null);
-  const animatingRef = useRef(false);
-
-  const moveGallery = (direction) => {
-    if (animatingRef.current) return;
-
-    const track = trackRef.current;
-    if (!track) return;
-
-    const cards = track.querySelectorAll(".recent-work-card");
-    if (!cards.length) return;
-
-    const maxIndex = recentEvents.length - 1;
-    const nextIndex = Math.max(
-      0,
-      Math.min(maxIndex, activeIndex + direction)
-    );
-
-    if (nextIndex === activeIndex) return;
-
-    animatingRef.current = true;
-
-    const card = cards[nextIndex];
-    const distance = card.offsetLeft;
-
-    gsap.to(track, {
-      x: -distance,
-      duration: 0.75,
-      ease: "power3.inOut",
-      onComplete: () => {
-        setActiveIndex(nextIndex);
-        animatingRef.current = false;
-      },
-    });
-
-    gsap.fromTo(
-      card,
-      { opacity: 0.55, scale: 0.97 },
-      {
-        opacity: 1,
-        scale: 1,
-        duration: 0.65,
-        ease: "power2.out",
-      }
-    );
-  };
-
-  return (
-    <section className="overflow-hidden bg-[#f7f7f5] py-20 text-[#111] sm:py-24 lg:py-28">
-      <div className="px-5 sm:px-8 lg:px-10">
-        <div className="mb-8 grid grid-cols-1 gap-5 md:grid-cols-[1.2fr_0.8fr] md:items-start lg:mb-10">
-          <h2 className="text-3xl font-black uppercase leading-[1.05] tracking-[-0.045em] sm:text-4xl lg:text-[42px]">
-            See our recent work
-          </h2>
-
-          <p className="max-w-[440px] text-[12px] uppercase leading-[1.8] tracking-[0.025em] text-black/50 sm:text-[13px] md:justify-self-end">
-            Whether you're a seasoned design professional or an aspiring
-            enthusiast, our events promise inspiring experiences and
-            meaningful connections.
-          </p>
-        </div>
-      </div>
-
-      <div className="overflow-hidden pl-5 sm:pl-8 lg:pl-10">
-        <div
-          ref={trackRef}
-          className="flex w-max gap-3 sm:gap-4"
-        >
-          {recentEvents.map((event, index) => (
-            <article
-              key={event.title}
-              className="recent-work-card group relative w-[78vw] max-w-[420px] shrink-0 sm:w-[44vw] lg:w-[28.5vw] lg:max-w-none"
-            >
-              <div className="relative aspect-[1.12/1] overflow-hidden bg-[#e5e5e2]">
-                <img
-                  src={event.image}
-                  alt={event.title}
-                  loading={index < 4 ? "eager" : "lazy"}
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.045]"
-                />
-
-                <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
-
-                <div className="absolute bottom-0 left-0 bg-[#f7f7f5] px-3 py-2 text-[9px] font-semibold uppercase tracking-[0.08em]">
-                  {String(index + 1).padStart(2, "0")} / {event.category}
-                </div>
-
-                <button
-                  aria-label={`View ${event.title}`}
-                  onClick={() =>
-                    window.alert(`${event.title} — ${event.category}`)
-                  }
-                  className="absolute bottom-0 right-0 flex h-12 w-12 items-center justify-center border-l-[5px] border-t-[5px] border-[#f7f7f5] bg-[#111] text-white transition-colors duration-300 hover:bg-[#d5f34b] hover:text-black sm:h-[54px] sm:w-[54px]"
-                >
-                  <FiArrowUpRight size={25} strokeWidth={1.5} />
-                </button>
-              </div>
-
-              <div className="flex items-start justify-between gap-3 py-4">
-                <div>
-                  <h3 className="text-lg font-bold uppercase leading-tight tracking-[-0.035em] sm:text-xl">
-                    {event.title}
-                  </h3>
-                  <p className="mt-1 text-[10px] uppercase tracking-[0.08em] text-black/45">
-                    {event.category}
-                  </p>
-                </div>
-                <span className="pt-1 text-xs text-black/45">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-7 flex items-center justify-center gap-3">
-        <button
-          aria-label="Previous events"
-          onClick={() => moveGallery(-1)}
-          disabled={activeIndex === 0}
-          className="flex h-10 w-10 items-center justify-center bg-black/[0.05] transition-colors hover:bg-black/10 disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          <FiArrowLeft size={17} />
-        </button>
-
-        <button
-          aria-label="Next events"
-          onClick={() => moveGallery(1)}
-          disabled={activeIndex === recentEvents.length - 1}
-          className="flex h-10 w-10 items-center justify-center bg-[#111] text-white transition-colors hover:bg-[#d5f34b] hover:text-black disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          <FiArrowRight size={17} />
-        </button>
-
-        <span className="ml-2 text-[10px] tracking-[0.12em] text-black/50">
-          {String(activeIndex + 1).padStart(2, "0")} /{" "}
-          {String(recentEvents.length).padStart(2, "0")}
-        </span>
-      </div>
-    </section>
-  );
-}
-
+import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  ArrowDownRight,
+  ArrowRight,
+  ChevronDown,
+  Maximize2,
+  Menu,
+} from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function EventStats() {
+
+const EventExperiences = () => {
   const sectionRef = useRef(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const counters = gsap.utils.toArray(".stat-number");
-
-      gsap.from(".stat-item", {
-        y: 35,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.18,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 85%",
-          once: true,
-        },
-      });
-
-      counters.forEach((counter) => {
-        const target = Number(counter.dataset.value);
-        const suffix = counter.dataset.suffix || "";
-        const state = { value: 0 };
-
-        gsap.to(state, {
-          value: target,
-          duration: 2,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 85%",
-            once: true,
-          },
-          onUpdate: () => {
-            counter.textContent =
-              Math.floor(state.value).toLocaleString("en-IN") + suffix;
-          },
-        });
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  const stats = [
-    { value: 1, suffix: "M+", label: "Happy User" },
-    { value: 200, suffix: "+", label: "Event Completed" },
-    { value: 0.5, suffix: "M", label: "Our Community", decimal: true },
+  const events = [
+    {
+      number: "01",
+      category: "ART & CREATIVITY",
+      title: "Pottery & Chai",
+      description:
+        "Get your hands messy, make something beautiful, and meet creative people.",
+      date: "SAT, 24 OCT",
+      price: "₹599 onwards",
+      location: "Studio in the City",
+      image:
+        "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=800&q=85",
+    },
+    {
+      number: "02",
+      category: "MEET NEW PEOPLE",
+      title: "The Rooftop Social",
+      description:
+        "Golden hour conversations, good music, and strangers who feel like friends.",
+      date: "SAT, 24 OCT",
+      price: "₹399 onwards",
+      location: "Rooftop · City Centre",
+      image:
+        "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=85",
+    },
+    {
+      number: "03",
+      category: "MUSIC & CULTURE",
+      title: "Live & Unplugged",
+      description:
+        "An intimate evening of live music, new artists, and unforgettable vibes.",
+      date: "SUN, 25 OCT",
+      price: "₹499 onwards",
+      location: "The Listening Room",
+      image:
+        "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=800&q=85",
+    },
+    {
+      number: "04",
+      category: "FOOD & DISCOVERY",
+      title: "The Local Food Walk",
+      description:
+        "Explore hidden food spots, discover local favourites, and eat your way around town.",
+      date: "SUN, 25 OCT",
+      price: "₹299 onwards",
+      location: "Old City Streets",
+      image:
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=85",
+    },
   ];
 
-  return (
-    <section
-      ref={sectionRef}
-      className="border-y-[3px] border-[#f7f7f5] bg-[#111] px-5 py-8 text-white sm:px-10 sm:py-9"
-    >
-      <div className="mx-auto grid max-w-[1100px] grid-cols-3">
-        {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="stat-item flex flex-col items-center justify-center gap-2 text-center"
-          >
-            <h2
-              className="stat-number text-2xl font-extrabold leading-none tracking-[-0.035em] sm:text-3xl lg:text-[32px]"
-              data-value={stat.value}
-              data-suffix={stat.suffix}
-            >
-              {stat.decimal ? "0.0M" : "0"}
-            </h2>
-
-            <p className="text-[9px] font-normal uppercase tracking-[0.02em] text-white/60 sm:text-sm">
-              {stat.label}
-            </p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-gsap.registerPlugin(ScrollTrigger);
-
-const organizers = [
-  {
-    name: "Shakib Hasan",
-    role: "Head of Event",
-    image:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=90",
-    position: "left",
-  },
-  {
-    name: "Abdullah Masum",
-    role: "Junior Member",
-    image:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=90",
-    position: "center",
-  },
-  {
-    name: "Shamim Hossain",
-    role: "Senior Member",
-    image:
-      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=90",
-    position: "right",
-  },
-];
-
-function Organizers() {
-  const sectionRef = useRef(null);
-
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".organizer-heading", {
-        y: 30,
+      gsap.from(".experience-heading", {
+        y: 35,
         opacity: 0,
         duration: 0.8,
         ease: "power3.out",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top 80%",
-          once: true,
         },
       });
 
-      gsap.from(".organizer-card", {
-        y: 45,
+      gsap.from(".experience-card", {
+        y: 65,
         opacity: 0,
         duration: 0.85,
-        stagger: 0.18,
+        stagger: 0.16,
         ease: "power3.out",
         scrollTrigger: {
-          trigger: ".organizer-grid",
+          trigger: ".experience-grid",
           start: "top 82%",
-          once: true,
         },
       });
     }, sectionRef);
@@ -397,877 +99,748 @@ function Organizers() {
   return (
     <section
       ref={sectionRef}
-      id="organizers"
-      className="overflow-hidden bg-[#f7f7f5] px-5 py-20 text-[#111] sm:px-8 sm:py-24 lg:px-10 lg:py-28"
+      className="relative overflow-hidden bg-white px-5 pb-24 pt-14 text-[#49413f] sm:px-8 lg:px-[5.4%] lg:pb-32 lg:pt-20"
     >
-      <div className="organizer-heading mx-auto mb-12 max-w-[760px] text-center sm:mb-16">
-        <h2 className="text-3xl font-black uppercase leading-tight tracking-[-0.04em] sm:text-4xl lg:text-[42px]">
-          Meet the Organizers
+      {/* Soft oversized background graphic */}
+      <div className="pointer-events-none absolute -right-36 top-20 h-[780px] w-[780px] rounded-full border-[90px] border-[#f6f5f5] opacity-90" />
+
+      <div className="experience-heading relative z-10 mx-auto mb-12 max-w-3xl text-center sm:mb-16">
+        <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#96877a] sm:text-xs">
+          A little something for everyone
+        </p>
+
+        <h2 className="font-display text-[clamp(2.2rem,4.5vw,3.6rem)] leading-[1.12] tracking-[-0.025em]">
+          Find your kind of
+          <span className="block italic text-[#928985]">
+            unforgettable.
+          </span>
         </h2>
 
-        <p className="mx-auto mt-4 max-w-[650px] text-[12px] uppercase leading-[1.9] tracking-[0.015em] text-black/50 sm:text-sm">
-          Our freelance/design meetup is organized by a team of dedicated
-          professionals with extensive experience in the creative industry.
+        <p className="mx-auto mt-4 max-w-lg text-sm leading-6 text-[#817a76] sm:text-base">
+          From creative afternoons to spontaneous nights out, there’s always
+          something worth showing up for.
         </p>
       </div>
 
-      <div className="organizer-grid mx-auto grid max-w-[1200px] grid-cols-1 items-start gap-12 sm:grid-cols-3 sm:gap-6 lg:gap-12">
-        {organizers.map((person) => (
+      {/* Event cards */}
+      <div className="experience-grid relative z-10 mx-auto grid max-w-[1500px] grid-cols-1 items-start gap-5 sm:grid-cols-2 xl:grid-cols-4 xl:gap-[18px]">
+        {events.map((event, index) => (
           <article
-            key={person.name}
-            className={`organizer-card flex flex-col items-center text-center ${
-              person.position === "center" ? "sm:mt-16" : "sm:mt-0"
+            key={event.number}
+            className={`experience-card group rounded-[23px] bg-[#f6f6f0] p-[15px] transition-shadow duration-300 hover:shadow-[0_15px_45px_rgba(57,45,35,0.08)] sm:p-[18px] ${
+              index % 2 === 1 ? "xl:mt-8" : "xl:mt-0"
             }`}
           >
-            <div className="group relative aspect-square w-[210px] max-w-full overflow-hidden rounded-full bg-white sm:w-full sm:max-w-[250px] lg:max-w-[280px]">
-              <img
-                src={person.image}
-                alt={person.name}
-                loading="lazy"
-                className="h-full w-full object-cover grayscale transition-transform duration-700 ease-out group-hover:scale-105"
-              />
+            <div className="mb-4 flex justify-center">
+              <span className="grid size-[34px] place-items-center rounded-full bg-[#fffce8] text-[13px] text-[#93897a]">
+                {event.number}
+              </span>
             </div>
 
-            <h3 className="mt-5 text-sm font-semibold uppercase tracking-[-0.02em] sm:text-base">
-              {person.name}
+            <p className="mb-2 text-center text-[9px] font-semibold tracking-[0.17em] text-[#9a897a] sm:text-[10px]">
+              {event.category}
+            </p>
+
+            <h3 className="text-center font-display text-[23px] leading-tight sm:text-[25px]">
+              {event.title}
             </h3>
 
-            <p className="mt-1 text-[11px] uppercase tracking-[0.04em] text-black/45 sm:text-xs">
-              {person.role}
+            <p className="mx-auto mb-5 mt-3 min-h-[60px] max-w-[300px] text-center text-[13px] leading-[1.55] text-[#69615d] sm:text-[14px]">
+              {event.description}
             </p>
+
+            <div className="relative overflow-hidden rounded-[11px]">
+              <img
+                src={event.image}
+                alt={event.title}
+                loading="lazy"
+                className="aspect-[4/4.5] w-full object-cover transition-transform duration-700 group-hover:scale-[1.045]"
+              />
+
+              <span className="absolute left-3 top-3 rounded-full bg-[#fff9e9] px-3 py-1.5 text-[10px] font-semibold text-[#49413f]">
+                {event.date}
+              </span>
+            </div>
+
+            <div className="px-1 pb-1 pt-4">
+              <div className="mb-3 flex items-center justify-between gap-2 text-[11px] text-[#817873]">
+                <span className="truncate">{event.location}</span>
+                <span className="shrink-0 font-semibold text-[#49413f]">
+                  {event.price}
+                </span>
+              </div>
+
+              <a
+                href="#all-events"
+                className="group/link flex items-center justify-center gap-2 py-2 text-[13px] font-semibold underline decoration-[#a79b90] underline-offset-4 transition-colors hover:text-[#9a7050]"
+              >
+                Explore event
+                <span className="transition-transform group-hover/link:translate-x-1">
+                  →
+                </span>
+              </a>
+            </div>
           </article>
         ))}
       </div>
+
+      <div className="relative z-10 mt-12 flex justify-center">
+        <a
+          id="all-events"
+          href="/events"
+          className="inline-flex min-h-[50px] items-center gap-3 rounded-[7px] bg-[#49413f] px-7 text-sm font-semibold text-white transition-colors hover:bg-[#675850]"
+        >
+          Explore all events <span>→</span>
+        </a>
+      </div>
     </section>
   );
-}
+};
 
 
-import {
-  FiStar,
-} from "react-icons/fi";
+const EventDiscoveryCarousel = () => {
+  const [activeIndex, setActiveIndex] = useState(1);
+  const [touchStart, setTouchStart] = useState(null);
 
-gsap.registerPlugin(ScrollTrigger);
+  const events = [
+    {
+      category: "ART & CREATIVITY",
+      title: "Make Something Beautiful",
+      description: "A hands-on pottery workshop, good music, and new creative friends.",
+      image: "photo-1565193566173-7a0ee3dbe261",
+      tag: "Creative Workshop",
+      place: "Art Studio",
+      date: "24 OCT",
+    },
+    {
+      category: "SOCIAL & COMMUNITY",
+      title: "Meet Your Kind of People",
+      description: "Leave the small talk behind. Find your people over conversations that actually matter.",
+      image: "photo-1528605248644-14dd04022da1",
+      tag: "Community Meetup",
+      place: "The Social Club",
+      date: "24 OCT",
+    },
+    {
+      category: "MUSIC & NIGHTLIFE",
+      title: "An Evening of Live Music",
+      description: "Discover independent artists and enjoy an intimate night of live performances.",
+      image: "photo-1501386761578-eac5c94b800a",
+      tag: "Live Music",
+      place: "The Listening Room",
+      date: "25 OCT",
+    },
+    {
+      category: "FOOD & DRINKS",
+      title: "The Great Food Walk",
+      description: "Find hidden food gems, taste local favourites, and explore your city differently.",
+      image: "photo-1517248135467-4c7edcad34c4",
+      tag: "Food Experience",
+      place: "Old City",
+      date: "25 OCT",
+    },
+    {
+      category: "OUTDOORS & NATURE",
+      title: "Sunrise, Slow Mornings",
+      description: "Start your day with an easy morning walk, fresh air, and lovely company.",
+      image: "photo-1470252649378-9c29740c9fa8",
+      tag: "Outdoor Meetup",
+      place: "City Park",
+      date: "26 OCT",
+    },
+    {
+      category: "COFFEE & CONVERSATIONS",
+      title: "Coffee With Strangers",
+      description: "One table, good coffee, and conversations with people you have yet to meet.",
+      image: "photo-1445116572660-236099ec97a0",
+      tag: "Coffee Social",
+      place: "Neighbourhood Café",
+      date: "26 OCT",
+    },
+    {
+      category: "WELLNESS & MINDFULNESS",
+      title: "Pause, Breathe, Reset",
+      description: "Unwind with a beginner-friendly mindfulness session in a calm setting.",
+      image: "photo-1506126613408-eca07ce68773",
+      tag: "Wellness Session",
+      place: "The Quiet Space",
+      date: "31 OCT",
+    },
+    {
+      category: "GAMES & FUN",
+      title: "Game Night, Anyone?",
+      description: "Board games, friendly competition, and the kind of laughs you remember.",
+      image: "photo-1528605248644-14dd04022da1",
+      tag: "Game Night",
+      place: "The Playroom",
+      date: "31 OCT",
+    },
+    {
+      category: "PHOTOGRAPHY & DESIGN",
+      title: "See Your City Differently",
+      description: "Explore street photography with a creative group and fresh perspectives.",
+      image: "photo-1452587925148-ce544e77e70d",
+      tag: "Photo Walk",
+      place: "Arts District",
+      date: "01 NOV",
+    },
+    {
+      category: "CULTURE & DISCOVERY",
+      title: "A Little Local Adventure",
+      description: "Discover cultural corners, local stories, and places you never knew existed.",
+      image: "photo-1519608487953-e999c86e7455",
+      tag: "City Experience",
+      place: "City Centre",
+      date: "01 NOV",
+    },
+  ];
 
-const testimonials = [
-  {
-    name: "Aarav Mehta",
-    role: "Product Designer",
-    company: "Independent Designer",
-    initials: "AM",
-    color: "#d8e2cc",
-    quote:
-      "I came in looking for inspiration and left with three new collaborators. The conversations here feel genuine, not transactional.",
-    event: "DESIGNER MEETUP · MUMBAI",
-  },
-  {
-    name: "Ananya Sharma",
-    role: "Creative Director",
-    company: "Studio A",
-    initials: "AS",
-    color: "#ead8ce",
-    quote:
-      "The best part is meeting people who are just as curious as you are. Every event has something unexpected to take home.",
-    event: "CREATIVE SOCIAL · DELHI",
-  },
-  {
-    name: "Rohan Kapoor",
-    role: "Freelance Developer",
-    company: "Independent",
-    initials: "RK",
-    color: "#d9dff0",
-    quote:
-      "No awkward networking, no forced introductions. Just good people, interesting ideas and conversations that continue afterwards.",
-    event: "COMMUNITY NIGHT · BENGALURU",
-  },
-  {
-    name: "Ishita Verma",
-    role: "Visual Artist",
-    company: "Independent Artist",
-    initials: "IV",
-    color: "#eee5b9",
-    quote:
-      "I met people from completely different fields, and that was exactly what I needed. The atmosphere makes it easy to join in.",
-    event: "ART & IDEAS · PUNE",
-  },
-];
+  const getIndex = (index) =>
+    (index + events.length) % events.length;
 
-function Testimonials() {
-  const sectionRef = useRef(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [animating, setAnimating] = useState(false);
+  const goTo = (index) => setActiveIndex(getIndex(index));
 
-  const active = testimonials[activeIndex];
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(".testimonial-intro > *", {
-        y: 35,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.12,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 78%",
-          once: true,
-        },
-      });
-
-      gsap.from(".testimonial-feature", {
-        y: 45,
-        opacity: 0,
-        duration: 0.9,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".testimonial-feature",
-          start: "top 85%",
-          once: true,
-        },
-      });
-
-      gsap.from(".testimonial-small-card", {
-        y: 28,
-        opacity: 0,
-        duration: 0.7,
-        stagger: 0.12,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: ".testimonial-small-grid",
-          start: "top 88%",
-          once: true,
-        },
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  const changeTestimonial = (direction) => {
-    if (animating) return;
-
-    setAnimating(true);
-
-    const nextIndex =
-      (activeIndex + direction + testimonials.length) % testimonials.length;
-
-    gsap.to(".testimonial-quote-content", {
-      opacity: 0,
-      y: 14,
-      duration: 0.22,
-      ease: "power2.in",
-      onComplete: () => {
-        setActiveIndex(nextIndex);
-
-        requestAnimationFrame(() => {
-          gsap.fromTo(
-            ".testimonial-quote-content",
-            { opacity: 0, y: 18 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.5,
-              ease: "power3.out",
-              onComplete: () => setAnimating(false),
-            }
-          );
-        });
-      },
-    });
-  };
+  const visibleCards = [
+    { event: events[getIndex(activeIndex - 1)], position: "side" },
+    { event: events[activeIndex], position: "center" },
+    { event: events[getIndex(activeIndex + 1)], position: "side" },
+  ];
 
   return (
-    <section
-      ref={sectionRef}
-      id="testimonials"
-      className="overflow-hidden bg-[#f7f7f5] px-5 py-20 text-[#111] sm:px-8 sm:py-24 lg:px-10 lg:py-28 mt-10"
-    >
-      <div className="testimonial-intro mb-12 grid grid-cols-1 gap-6 md:grid-cols-[1fr_0.65fr] md:items-end lg:mb-16">
-        <div>
+    <section className="relative overflow-hidden bg-[#f6f5ef] px-5 pb-20 pt-16 text-[#49413f] sm:px-8 sm:pt-20 lg:px-[5.4%]">
+      <div className="pointer-events-none absolute -right-48 top-40 h-[850px] w-[850px] rounded-full border-[100px] border-white/70" />
 
-          <h2 className="max-w-[750px] text-4xl font-black uppercase leading-[0.95] tracking-[-0.055em] sm:text-5xl lg:text-[68px]">
-            Good people.
-            <br />
-            <span className="text-black/25">Real experiences.</span>
-          </h2>
-        </div>
-
-        <p className="max-w-[390px] text-sm leading-7 text-black/60 md:justify-self-end lg:text-base">
-          Don't just take our word for it. Hear from the people who came for
-          an event and found a community.
+      <div className="relative z-10 mx-auto mb-10 max-w-3xl text-center sm:mb-12">
+        <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#96877a] sm:text-xs">
+          Find your next experience
         </p>
+
+        <h2 className="font-display text-[clamp(2.1rem,4.5vw,3.6rem)] leading-[1.12] tracking-[-0.025em]">
+          There's a place for you,
+          <span className="block italic text-[#928985]">
+            wherever you are.
+          </span>
+        </h2>
       </div>
 
-      <div className="testimonial-feature grid grid-cols-1 border border-black/10 lg:grid-cols-[0.72fr_1.28fr]">
-        <div className="flex min-h-[280px] flex-col justify-between bg-[#111111] p-6 sm:p-9 lg:min-h-[410px] lg:p-10  text-white">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.1em]">
-              Featured story
-            </span>
-            <FiArrowUpRight size={20} />
-          </div>
+      {/* Carousel */}
+      <div
+        className="relative z-10 mx-auto grid max-w-[1450px] grid-cols-1 items-stretch gap-5 md:grid-cols-[0.85fr_1.8fr_0.85fr] md:gap-[18px]"
+        onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
+        onTouchEnd={(e) => {
+          if (touchStart === null) return;
+          const distance = e.changedTouches[0].clientX - touchStart;
+          if (Math.abs(distance) > 45) {
+            goTo(activeIndex + (distance < 0 ? 1 : -1));
+          }
+          setTouchStart(null);
+        }}
+      >
+        {visibleCards.map(({ event, position }, index) => (
+          <article
+            key={`${event.title}-${activeIndex}-${index}`}
+            className={`group relative isolate min-h-[420px] overflow-hidden rounded-[22px] bg-[#ddd3c6] md:min-h-[480px] ${
+              position === "center"
+                ? "md:min-h-[530px]"
+                : "hidden md:block md:mt-0"
+            }`}
+          >
+            <img
+              src={`https://images.unsplash.com/${event.image}?auto=format&fit=crop&w=1200&q=85`}
+              alt={event.title}
+              loading="lazy"
+              className="absolute inset-0 -z-20 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
 
-          <div>
-            <div className="mb-5 flex gap-1 text-black">
-              {Array.from({ length: 5 }).map((_, index) => (
-                <FiStar key={index} size={17} fill="currentColor" />
-              ))}
-            </div>
+            <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#211b19]/85 via-[#211b19]/15 to-[#211b19]/10" />
 
-            <div className="testimonial-quote-content">
-              <span className="mb-2 block text-6xl font-black leading-none tracking-[-0.08em]">
-                “
+            {position === "center" && (
+              <span className="absolute left-5 top-5 rounded-full bg-[#fff8e8] px-4 py-2 text-[10px] font-semibold uppercase tracking-wider text-[#49413f] sm:left-8 sm:top-8">
+                {event.tag}
               </span>
+            )}
 
-              <blockquote className="max-w-[570px] text-2xl font-bold leading-[1.18] tracking-[-0.045em] sm:text-3xl lg:text-[38px]">
-                {active.quote}
-              </blockquote>
+            {position === "side" && (
+              <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1.5 text-[10px] font-semibold text-[#49413f]">
+                {event.date}
+              </span>
+            )}
 
-              <div className="mt-8 flex items-center gap-3">
-                <div
-                  className="flex h-11 w-11 items-center justify-center rounded-full text-xs font-bold"
-                  style={{ backgroundColor: active.color }}
-                >
-                  {active.initials}
-                </div>
-
-                <div>
-                  <p className="text-sm font-bold">{active.name}</p>
-                  <p className="mt-1 text-[11px]  text-white">
-                    {active.role} · {active.company}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <p className="mt-8 text-[9px] font-semibold uppercase tracking-[0.1em]  text-white">
-            {active.event}
-          </p>
-        </div>
-
-        <div className="flex flex-col justify-between bg-white p-6 sm:p-9 lg:p-10">
-          <div className="flex items-center justify-between">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-black/50">
-              A word from our community
-            </p>
-            <span className="text-xs tabular-nums text-black/45">
-              {String(activeIndex + 1).padStart(2, "0")} /{" "}
-              {String(testimonials.length).padStart(2, "0")}
-            </span>
-          </div>
-
-          <div className="my-12 lg:my-16">
-            <span className="mb-4 block text-sm uppercase tracking-[0.12em] text-black/40">
-              The experience
-            </span>
-
-            <p className="max-w-[520px] text-xl font-medium leading-[1.45] tracking-[-0.035em] sm:text-2xl lg:text-[30px]">
-              Every meetup starts with a conversation. Sometimes, that
-              conversation becomes the start of something bigger.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-end justify-between gap-5 border-t border-black/10 pt-6">
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.1em] text-black/45">
-                Find your people
+            <div className={`absolute inset-x-0 bottom-0 p-5 text-white sm:p-7 ${
+              position === "side" ? "md:p-5" : "md:p-8"
+            }`}>
+              <p className="mb-2 text-[9px] font-semibold tracking-[0.2em] text-white/80 sm:text-[10px]">
+                {event.category}
               </p>
-              <p className="mt-2 text-lg font-bold tracking-[-0.035em]">
-                Your next story starts here.
-              </p>
-            </div>
 
-            <div className="flex gap-2">
-              <button
-                onClick={() => changeTestimonial(-1)}
-                disabled={animating}
-                aria-label="Previous testimonial"
-                className="flex h-11 w-11 items-center justify-center border border-black/15 transition-colors hover:bg-black hover:text-white disabled:opacity-40"
-              >
-                <FiArrowLeft size={18} />
-              </button>
+              <h3 className={`font-display leading-[1.12] ${
+                position === "center"
+                  ? "text-[clamp(1.8rem,3vw,2.7rem)]"
+                  : "text-[25px] md:text-[21px] lg:text-[25px]"
+              }`}>
+                {event.title}
+              </h3>
 
-              <button
-                onClick={() => changeTestimonial(1)}
-                disabled={animating}
-                aria-label="Next testimonial"
-                className="flex h-11 w-11 items-center justify-center bg-[#111] text-white transition-colors hover:bg-[#d5f34b] hover:text-black disabled:opacity-40"
-              >
-                <FiArrowRight size={18} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="testimonial-small-grid mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {testimonials
-          .filter((_, index) => index !== activeIndex)
-          .slice(0, 3)
-          .map((item) => (
-            <button
-              key={item.name}
-              onClick={() => {
-                const index = testimonials.findIndex(
-                  (testimonial) => testimonial.name === item.name
-                );
-
-                setActiveIndex(index);
-              }}
-              className="testimonial-small-card group flex min-h-[185px] flex-col justify-between border border-black/10 bg-transparent p-5 text-left transition-colors duration-300 hover:bg-white sm:p-6"
-            >
-              <div>
-                <div className="mb-4 flex gap-1 text-black/65">
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <FiStar key={index} size={12} fill="currentColor" />
-                  ))}
-                </div>
-
-                <p className="text-sm leading-6 text-black/75">
-                  “{item.quote}”
+              {position === "center" && (
+                <p className="mt-3 max-w-lg text-[13px] leading-[1.6] text-white/90 sm:text-sm">
+                  {event.description}
                 </p>
-              </div>
+              )}
 
-              <div className="mt-6 flex items-center justify-between gap-3 border-t border-black/10 pt-4">
-                <div>
-                  <p className="text-xs font-bold uppercase">{item.name}</p>
-                  <p className="mt-1 text-[10px] text-black/45">{item.role}</p>
-                </div>
+              <div className="mt-4 flex items-center justify-between gap-2 border-t border-white/25 pt-3">
+                <span className="truncate text-[11px] text-white/85 sm:text-xs">
+                  {event.place} · {event.date}
+                </span>
 
-                <FiArrowUpRight
-                  className="shrink-0 transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
-                  size={18}
-                />
+                <a
+                  href="/events"
+                  aria-label={`Explore ${event.title}`}
+                  className="grid size-9 shrink-0 place-items-center rounded-full bg-[#fff8e8] text-[#49413f] transition-transform hover:scale-105"
+                >
+                  →
+                </a>
               </div>
-            </button>
-          ))}
+            </div>
+          </article>
+        ))}
       </div>
 
-      <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-black/10 pt-5">
-        <p className="text-[10px] uppercase tracking-[0.1em] text-black/45">
-          Shared by people who showed up
-        </p>
-
-        <a
-          href="#events"
-          className="inline-flex items-center gap-2 text-xs font-bold uppercase transition-colors hover:text-black/50"
+      {/* Navigation controls */}
+      <div className="relative z-10 mt-5 flex items-center justify-center gap-3">
+        <button
+          type="button"
+          onClick={() => goTo(activeIndex - 1)}
+          aria-label="Previous event"
+          className="grid size-12 place-items-center rounded-full border border-[#d8d5cd] bg-[#e7e5df] text-[#49413f] transition-colors hover:bg-[#49413f] hover:text-white"
         >
-          Find your next event <FiArrowUpRight size={16} />
-        </a>
+          <svg viewBox="0 0 24 24" fill="none" className="size-5" stroke="currentColor" strokeWidth="1.5">
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+        </button>
+
+        <span className="min-w-[60px] text-center text-xs tabular-nums text-[#827a74]">
+          {String(activeIndex + 1).padStart(2, "0")} / 10
+        </span>
+
+        <button
+          type="button"
+          onClick={() => goTo(activeIndex + 1)}
+          aria-label="Next event"
+          className="grid size-12 place-items-center rounded-full border border-[#d8d5cd] bg-[#e7e5df] text-[#49413f] transition-colors hover:bg-[#49413f] hover:text-white"
+        >
+          <svg viewBox="0 0 24 24" fill="none" className="size-5" stroke="currentColor" strokeWidth="1.5">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </button>
       </div>
-    </section>
-  );
-}
 
-
-import { FiPlus, FiMinus,} from "react-icons/fi";
-
-gsap.registerPlugin(ScrollTrigger);
-
-const faqs = [
-  {
-    question: "What is Event?",
-    answer:
-      "Event is a platform that brings people together through meetups, workshops and events where they can learn, connect and share ideas.",
-  },
-  {
-    question: "How can I register for an event?",
-    answer:
-      "Browse the available events, select the one you like and follow the registration or ticket booking process on its event page.",
-  },
-  {
-    question: "Are the events open to beginners?",
-    answer:
-      "Yes, many events welcome beginners as well as experienced professionals. Check the event description for any specific requirements.",
-  },
-  {
-    question: "Can I attend events alone?",
-    answer:
-      "Of course! You can attend independently, meet new people and take part in conversations and activities during the event.",
-  },
-  {
-    question: "Can I cancel my booking?",
-    answer:
-      "Cancellation and refund options depend on the event's policy. Please review the terms on the event page before booking.",
-  },
-  {
-    question: "How can I host an event?",
-    answer:
-      "Contact our team with your event idea, preferred location and expected audience. We'll help you understand the next steps.",
-  },
-];
-
-function FAQSection() {
-  const sectionRef = useRef(null);
-  const [openIndex, setOpenIndex] = useState(0);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(".faq-heading, .faq-description, .faq-item", {
-        y: 22,
-        opacity: 0,
-        duration: 0.65,
-        stagger: 0.1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          once: true,
-        },
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <section
-      ref={sectionRef}
-      id="faq"
-      className="bg-[#f7f7f5] px-5 py-16 text-[#111] sm:px-8 sm:py-20 lg:px-10 lg:py-24"
-    >
-      <div className="mx-auto max-w-4xl">
-        <div className="mb-10 text-center sm:mb-14">
-          <h2 className="faq-heading text-3xl font-extrabold uppercase tracking-tight sm:text-4xl lg:text-5xl">
-            Frequently Asked Questions
-          </h2>
-
-          <p className="faq-description mx-auto mt-4 max-w-xl text-sm leading-6 text-black/55 sm:text-base">
-            Have questions? Find answers to the most common queries about
-            our events and community.
-          </p>
-        </div>
-
-        <div className="border-t border-black/15">
-          {faqs.map((faq, index) => {
-            const isOpen = openIndex === index;
-
-            return (
-              <div
-                key={faq.question}
-                className="faq-item border-b border-black/15"
-              >
-                <button
-                  type="button"
-                  aria-expanded={isOpen}
-                  onClick={() => setOpenIndex(isOpen ? -1 : index)}
-                  className="flex w-full items-center justify-between gap-5 py-5 text-left sm:py-6"
-                >
-                  <span className="text-base font-semibold sm:text-lg">
-                    {faq.question}
-                  </span>
-
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-black/15 transition-colors duration-200">
-                    {isOpen ? <FiMinus size={16} /> : <FiPlus size={16} />}
-                  </span>
-                </button>
-
-                <div
-                  className="grid transition-[grid-template-rows] duration-300 ease-in-out"
-                  style={{
-                    gridTemplateRows: isOpen ? "1fr" : "0fr",
-                  }}
-                >
-                  <div className="overflow-hidden">
-                    <p className="max-w-3xl pb-5 pr-8 text-sm leading-7 text-black/60 sm:pb-6 sm:text-base">
-                      {faq.answer}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <p className="mt-8 text-center text-sm text-black/55">
-          Still have questions?{" "}
-          <a
-            href="#contact"
-            className="font-semibold text-black underline underline-offset-4 hover:text-black/60"
-          >
-            Contact us
-          </a>
+      <div className="relative z-10 mt-10 text-center">
+        <p className="font-display text-xl sm:text-2xl">
+          Your next favourite memory is out there.
+        </p>
+        <p className="mt-2 text-sm text-[#827a74]">
+          Ten ways to get out, explore, and connect.
         </p>
       </div>
     </section>
   );
-}
-
-
-import {
-  FiArrowUp,
-  FiInstagram,
-  FiLinkedin,
-  FiTwitter,
-} from "react-icons/fi";
-
-
-gsap.registerPlugin(ScrollTrigger);
-
-function Footer() {
-  const footerRef = useRef(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(".footer-reveal", {
-        y: 35,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.12,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: footerRef.current,
-          start: "top 85%",
-        },
-      });
-
-      gsap.from(".footer-brand", {
-        y: 80,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: footerRef.current,
-          start: "top 75%",
-        },
-      });
-    }, footerRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <footer
-      ref={footerRef}
-      className="overflow-hidden bg-[#111111] px-5 pt-16 text-white sm:px-8 lg:px-10"
-    >
-      <div className="footer-reveal mb-16 flex flex-col justify-between gap-8 border-b border-white/20 pb-12 md:flex-row md:items-end">
-        <div>
-          <h2 className="max-w-2xl text-4xl font-medium leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-            Good people.
-            <br />
-            Great events.
-            <span className="text-[#d5f34b]"> Better stories.</span>
-          </h2>
-          <p className="mt-5 max-w-md text-base leading-7 text-white/60 sm:text-lg">
-            Find your people, discover something new, and make every
-            moment count with Event.
-          </p>
-        </div>
-
-        <a
-          href="#events"
-          className="group flex w-fit items-center gap-4 rounded-full bg-[#white] px-6 py-4 font-medium text-black transition"
-        >
-          Explore events
-          <FiArrowUpRight
-            size={20}
-            className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
-          />
-        </a>
-      </div>
-
-      <div className="grid grid-cols-2 gap-10 pb-16 md:grid-cols-4">
-        <div className="footer-reveal col-span-2 md:col-span-1">
-          <a href="/" className="text-4xl font-bold tracking-tight">
-            Event<span className="text-[#d5f34b]">.</span>
-          </a>
-          <p className="mt-4 max-w-xs text-sm leading-6 text-white/50">
-            Your next favourite memory starts with showing up.
-          </p>
-
-          <div className="mt-6 flex gap-3">
-            {[
-              { icon: FiInstagram, href: "#instagram" },
-              { icon: FiLinkedin, href: "#linkedin" },
-              { icon: FiTwitter, href: "#twitter" },
-            ].map(({ icon: Icon, href }) => (
-              <a
-                key={href}
-                href={href}
-                aria-label={href.slice(1)}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 transition hover:border-[#d5f34b] hover:bg-[#d5f34b] hover:text-black"
-              >
-                <Icon size={18} />
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <div className="footer-reveal">
-          <h3 className="mb-5 text-sm font-semibold uppercase tracking-widest text-white/40">
-            Discover
-          </h3>
-          <div className="flex flex-col items-start gap-4 text-sm text-white/75">
-            <a href="#events" className="transition hover:text-[#d5f34b]">All events</a>
-            <a href="#events" className="transition hover:text-[#d5f34b]">Workshops</a>
-            <a href="#events" className="transition hover:text-[#d5f34b]">Meetups</a>
-            <a href="#events" className="transition hover:text-[#d5f34b]">Experiences</a>
-          </div>
-        </div>
-
-        <div className="footer-reveal">
-          <h3 className="mb-5 text-sm font-semibold uppercase tracking-widest text-white/40">
-            Event
-          </h3>
-          <div className="flex flex-col items-start gap-4 text-sm text-white/75">
-            <a href="#about" className="transition hover:text-[#d5f34b]">About us</a>
-            <a href="#organizers" className="transition hover:text-[#d5f34b]">For organizers</a>
-            <a href="#testimonials" className="transition hover:text-[#d5f34b]">Community</a>
-            <a href="#faq" className="transition hover:text-[#d5f34b]">FAQs</a>
-          </div>
-        </div>
-
-        <div className="footer-reveal">
-          <h3 className="mb-5 text-sm font-semibold uppercase tracking-widest text-white/40">
-            Get in touch
-          </h3>
-          <a
-            href="mailto:hello@Event.in"
-            className="group flex w-fit items-center gap-2 text-sm text-black/75 transition hover:text-[#d5f34b]"
-          >
-            hello@Event.in
-            <FiArrowUpRight className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-          </a>
-          <p className="mt-4 text-sm leading-6 text-white/40">
-            Have an event in mind?
-            <br />
-            Let’s make it happen.
-          </p>
-        </div>
-      </div>
-
-      <div className="overflow-hidden border-t border-white/15 pt-5">
-        <div className="footer-brand select-none text-center text-[25vw] font-semibold leading-[0.78] tracking-[-0.09em] text-white sm:text-[24vw]">
-          Event
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-4 py-6 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
-        <p>© {new Date().getFullYear()} Event. All rights reserved.</p>
-
-        <div className="flex gap-6">
-          <a href="#privacy" className="transition hover:text-white">Privacy policy</a>
-          <a href="#terms" className="transition hover:text-white">Terms of use</a>
-        </div>
-
-        <a
-          href="#top"
-          className="flex w-fit items-center gap-2 transition hover:text-[#d5f34b]"
-        >
-          Back to top <FiArrowUp size={15} />
-        </a>
-      </div>
-    </footer>
-  );
-}
-
-
-
-
-
+};
 
 
 export default function Home() {
-  const pageRef = useRef(null);
+  const heroRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        defaults: { ease: "power3.out" },
-      });
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       tl.from(".nav-item", {
-        y: -12,
+        y: -18,
         opacity: 0,
-        duration: 0.6,
-        stagger: 0.07,
+        duration: 0.7,
+        stagger: 0.09,
       })
         .from(
-          ".hero-word",
+          ".hero-title-line",
           {
-            y: 45,
+            y: 55,
             opacity: 0,
-            duration: 0.85,
-            stagger: 0.08,
+            duration: 1,
+            stagger: 0.16,
           },
           "-=0.25"
         )
         .from(
-          ".globe-wrap",
+          ".hero-copy, .hero-cta",
           {
+            y: 20,
             opacity: 0,
-            scale: 0.88,
-            duration: 1.1,
-            ease: "power2.out",
+            duration: 0.7,
+            stagger: 0.15,
           },
           "-=0.45"
         )
         .from(
-          ".event-link",
+          ".floating-preview",
           {
-            x: 28,
+            x: 45,
             opacity: 0,
-            duration: 0.65,
-            stagger: 0.14,
+            duration: 0.9,
           },
-          "-=0.5"
-        )
-        .from(
-          ".see-events",
-          {
-            y: 12,
-            opacity: 0,
-            duration: 0.45,
-          },
-          "-=0.25"
+          "-=0.6"
         );
 
-      gsap.to(".globe-wrap", {
-        y: -8,
-        duration: 3.5,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
+      gsap.to(".hero-background", {
+        scale: 1.06,
+        ease: "none",
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
       });
-
-      gsap.to(".globe-pin", {
-        y: -5,
-        duration: 1.8,
-        repeat: -1,
-        yoyo: true,
-        stagger: 0.25,
-        ease: "sine.inOut",
-      });
-    }, pageRef);
+    }, heroRef);
 
     return () => ctx.revert();
   }, []);
 
+
+const CommunitySection = () => {
+  const stats = [
+    {
+      icon: "chart",
+      title: "For every kind of vibe",
+      description: "From laid-back meetups to unforgettable experiences",
+    },
+    {
+      icon: "people",
+      title: "11,000+ people connecting",
+      description: "Finding their people, one event at a time",
+    },
+    {
+      icon: "community",
+      title: "A community that feels like you",
+      description: "Real connections, shared interests, lasting memories",
+    },
+  ];
+
+  const logos = [
+    "VOGUE",
+    "VANITY FAIR",
+    "ELLE",
+    "madame",
+    "marie claire",
+    "Gala",
+  ];
+
+  return (
+    <section className="relative overflow-hidden bg-white text-[#49413f]">
+      {/* Press / featured-in strip */}
+      <div className="mx-auto grid max-w-[1600px] grid-cols-2 items-center gap-y-8 px-6 py-16 sm:grid-cols-3 sm:gap-y-10 lg:grid-cols-6 lg:px-12 lg:py-[100px]">
+        {logos.map((logo, index) => (
+          <div
+            key={logo}
+            className={`text-center text-[#49413f] ${
+              index === 1
+                ? "font-display text-[23px] tracking-[-0.06em] sm:text-[27px]"
+                : index === 2
+                  ? "font-serif text-[26px] tracking-[0.28em] sm:text-[30px]"
+                  : index === 3
+                    ? "font-serif text-[26px] italic sm:text-[30px]"
+                    : index === 4
+                      ? "font-display text-[22px] tracking-[-0.06em] sm:text-[27px]"
+                      : index === 5
+                        ? "font-serif text-[29px] italic sm:text-[34px]"
+                        : "font-serif text-[28px] tracking-[-0.07em] sm:text-[34px]"
+            }`}
+          >
+            {logo}
+          </div>
+        ))}
+      </div>
+
+      {/* Community stats */}
+      <div className="mx-auto grid max-w-[1050px] grid-cols-1 gap-12 px-6 pb-20 pt-5 sm:grid-cols-3 sm:gap-8 lg:pb-24">
+        {stats.map((stat) => (
+          <div key={stat.title} className="flex flex-col items-center text-center">
+            <div className="mb-3 flex size-[78px] items-center justify-center rounded-full bg-[#49413f] text-[#fff8e7]">
+              {stat.icon === "chart" && (
+                <svg
+                  viewBox="0 0 40 40"
+                  fill="none"
+                  className="size-9"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                >
+                  <path d="M5 33h30M9 33V18h8v15M17 33V8h8v25M25 33V23h7v10" />
+                </svg>
+              )}
+
+              {stat.icon === "people" && (
+                <svg
+                  viewBox="0 0 40 40"
+                  fill="none"
+                  className="size-10"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                >
+                  <circle cx="20" cy="11" r="5" />
+                  <path d="M10 28c0-5 4-8 10-8s10 3 10 8-20 7-20 0Z" />
+                  <path d="M9 10a4 4 0 0 0 0 8M5 26c0-3 2-5 5-6M31 10a4 4 0 0 1 0 8M35 26c0-3-2-5-5-6" />
+                </svg>
+              )}
+
+              {stat.icon === "community" && (
+                <svg
+                  viewBox="0 0 40 40"
+                  fill="none"
+                  className="size-9"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                >
+                  <circle cx="19" cy="20" r="15" />
+                  <circle cx="19" cy="15" r="5" />
+                  <path d="M9 30c1-5 5-8 10-8s9 3 10 8M28 10l3 3 5-6" />
+                </svg>
+              )}
+            </div>
+
+            <h3 className="max-w-[260px] font-display text-[22px] leading-[1.25]">
+              {stat.title}
+            </h3>
+
+            <p className="mt-2 max-w-[240px] text-[15px] leading-[1.5] text-[#827b78]">
+              {stat.description}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* Heading with oversized background graphic */}
+      <div className="relative flex min-h-[300px] items-start justify-center overflow-hidden px-5 pb-24 pt-8 text-center sm:min-h-[330px] sm:pt-10 lg:min-h-[370px]">
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 850 500"
+          fill="none"
+          className="pointer-events-none absolute -bottom-[310px] left-1/2 w-[720px] max-w-none -translate-x-1/2 text-[#f5f4f4] sm:-bottom-[340px] sm:w-[850px] lg:-bottom-[400px] lg:w-[1000px]"
+        >
+          <path
+            d="M80 500C80 260 190 80 420 80C545 80 640 120 710 160L830 105V500H80Z"
+            stroke="currentColor"
+            strokeWidth="100"
+          />
+        </svg>
+
+        <div className="relative z-10 max-w-[760px]">
+          <h2 className="font-display text-[clamp(2.1rem,4vw,3.2rem)] leading-[1.15] tracking-[-0.025em]">
+            A world of experiences,
+            <span className="block italic text-[#918986]">
+              made to bring us together
+            </span>
+          </h2>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+
+
+
   return (
     <div>
-      <main
-      ref={pageRef}
-      className="min-h-screen overflow-hidden bg-[#f7f7f5] px-4 text-[#111] sm:px-6 lg:px-10"
-    >
-      {/* Navigation */}
-      <header className="flex h-[72px] items-center justify-between border-b border-black/[0.04]">
-        <a
-          href="/"
-          className="nav-item flex items-center gap-2 font-['Arial'] text-[19px] font-black tracking-[-1px]"
-        >
-          <span className="text-[22px]">♟</span>
-          Event
-        </a>
-        <nav className="flex items-center gap-15">
-          <Link to="/booking" className="nav-item text-[9px] font-medium uppercase">
-            Book now
-          </Link>
-          <Link className="nav-item text-[9px] font-medium uppercase" to="/about">
-            About us
-          </Link>
-          <a className="nav-item text-[9px] font-medium uppercase" href="#contact">
-            Contact
-          </a>
-          <Link className="nav-item flex items-center gap-1 text-[9px] font-medium uppercase" to="#packages">
-            Packages <FiChevronDown size={10} />
-          </Link>
-        </nav>
-        
-
-        <form
-          onSubmit={(e) => e.preventDefault()}
-          className="nav-item hidden w-[200px] items-center border-b border-black/10 pb-1 lg:flex"
-        >
-          <input
-            aria-label="Search location"
-            placeholder="Search location here..."
-            className="w-full bg-transparent text-[9px] outline-none placeholder:text-black/30"
-          />
-          <button aria-label="Search">
-            <FiSearch size={15} />
-          </button>
-        </form>
-
-        <button className="nav-item md:hidden" aria-label="Search">
-          <FiSearch size={18} />
-        </button>
-      </header>
-
-      {/* Main headline */}
-      <section className="pt-16 sm:pt-20 lg:pt-[70px]">
-        <div className="flex flex-wrap items-center gap-x-3">
-          <h1 className="hero-word font-['Arial'] text-[clamp(42px,7vw,126px)] font-black uppercase leading-[.95] tracking-[-.055em]">
-            Coll
-          </h1>
-
-          <div className="hero-word relative flex min-w-[100px] flex-1 items-center">
-            <span className="mt-16.5 -ml-[10px] lg:h-[19px] w-full bg-black sm:h-[9px]" />
-          </div>
-
-          <h1 className="hero-word font-['Arial'] text-[clamp(38px,7vw,126px)] font-black uppercase leading-[.95] tracking-[-.055em]">
-            Aboration
-          </h1>
-        </div>
-
-        <p className="hero-word mt-5 text-right font-['Arial'] text-[clamp(20px,3.8vw,37px)] font-normal italic uppercase leading-tight tracking-[-.035em]">
-          With creative people
-        </p>
-      </section>
-
-      {/* Globe + event links */}
+      <main className="min-h-screen bg-[#f8f6f0] text-white">
       <section
-        id="events"
-        className="grid grid-cols-1 items-center gap-10 pb-16 pt-8 sm:pt-12 lg:grid-cols-[1fr_1fr] lg:gap-14 lg:pb-20 lg:pt-6"
+        ref={heroRef}
+        className="event-hero relative isolate flex min-h-[calc(100svh-58px)] flex-col overflow-hidden"
       >
-        {/* Globe visual */}
-        <div className="globe-wrap relative mx-auto flex aspect-square w-full max-w-[440px] items-center justify-center">
+        {/* Hero background */}
+        <div className="hero-background absolute inset-0 -z-20">
           <img
-            src={earth}
-            alt="Earth globe"
-            className="h-full w-full rounded-full object-cover grayscale opacity-75"
+            src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=2400&q=90"
+            alt="Friends gathered together at a lively outdoor event"
+            className="h-full w-full object-cover object-center"
           />
-
         </div>
 
-        {/* Event list */}
-        <div className="flex w-full flex-col" id="about">
-          {events.map((event) => (
-            <a
-              key={event}
-              href="#contact"
-              className="event-link group flex min-h-[90px] items-center justify-between border-b border-black/10 py-5 sm:min-h-[100px]"
-            >
-              <span className="text-[clamp(23px,3.4vw,32px)] font-light uppercase tracking-[-.045em] text-black/15 transition-colors duration-300 group-hover:text-black">
-                {event}
-              </span>
-              <FiArrowUpRight
-                className="shrink-0 text-black/15 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-black"
-                size={34}
-                strokeWidth={1}
-              />
+        {/* Warm cinematic overlay */}
+        <div className="absolute inset-0 -z-10 bg-[#392c25]/35" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#342820]/60 via-[#342820]/15 to-transparent" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#281e18]/35 via-transparent to-[#211b17]/20" />
+
+        {/* Navigation */}
+        <header className="relative z-20 flex h-[84px] shrink-0 items-center justify-between border-b border-white/10 bg-[#40352f]/55 px-6 backdrop-blur-[3px] md:px-12 lg:px-[5.6%]">
+          <nav className="hidden items-center gap-7 lg:flex">
+            <a href="#experience" className="nav-item nav-link">
+              Discover <ChevronDown size={14} />
             </a>
-          ))}
+            <a href="#community" className="nav-item nav-link">
+              For you <ChevronDown size={14} />
+            </a>
+            <a href="#events" className="nav-item nav-link">
+              Our events <ChevronDown size={14} />
+            </a>
+          </nav>
+
+          <button
+            className="nav-item flex items-center gap-1 lg:hidden"
+            aria-label="Open navigation"
+          >
+            <Menu size={25} />
+          </button>
 
           <a
-            href="#contact"
-            className="see-events mt-10 flex min-h-[58px] items-center justify-center gap-2 bg-[#111] px-5 text-[20px] font-medium uppercase transition-colors duration-300 hover:bg-[#383838]"
+            href="#home"
+            className="nav-item absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center"
           >
-            See more events <FiArrowUpRight size={14} />
+            <span className="block font-display text-[25px] leading-[0.9] tracking-wide">
+              tog.ro
+            </span>
+            <span className="mt-1 block text-[8px] tracking-[0.24em]">
+              FIND YOUR PEOPLE
+            </span>
           </a>
+
+          <div className="hidden items-center gap-8 lg:flex">
+            <button className="nav-item text-sm font-medium">
+              EN <span className="mx-1 text-white/50">/</span> HI
+            </button>
+            <a href="#login" className="nav-item text-sm font-medium">
+              Log in
+            </a>
+            <a
+              href="#events"
+              className="nav-item flex h-[54px] min-w-[215px] items-center justify-center rounded-[10px] border border-white/75 px-6 text-sm font-semibold transition-colors hover:bg-white hover:text-[#43362f]"
+            >
+              Explore events <ArrowRight className="ml-2" size={16} />
+            </a>
+          </div>
+
+          <a
+            href="#events"
+            className="nav-item rounded-md border border-white/70 px-3 py-2 text-xs font-semibold sm:px-5 lg:hidden"
+          >
+            Explore
+          </a>
+        </header>
+
+        {/* Hero content */}
+        <div
+          id="home"
+          className="relative flex flex-1 items-center px-6 pb-28 pt-24 md:px-12 md:pb-24 lg:px-[5.6%]"
+        >
+          <div className="w-full max-w-[610px]">
+            <p className="hero-copy mb-5 text-[10px] font-semibold uppercase tracking-[0.28em] text-white/90 sm:text-xs">
+              Good people. Real moments. New stories.
+            </p>
+
+            <h1 className="font-display text-[clamp(3.4rem,7.2vw,6.8rem)] leading-[0.94] tracking-[-0.035em]">
+              <span className="hero-title-line block">Life is better</span>
+              <span className="hero-title-line block text-[#fff4d4]">
+                together.
+              </span>
+            </h1>
+
+            <p className="hero-copy mt-7 max-w-[410px] text-[14px] leading-[1.65] text-white/95 sm:text-[16px]">
+              Discover experiences around you, meet people who get you, and
+              turn an ordinary day into a story worth telling.
+            </p>
+
+            <div className="hero-cta mt-8 flex flex-wrap items-center gap-4">
+              <a
+                href="#events"
+                className="group inline-flex min-h-[54px] min-w-[230px] items-center justify-center gap-3 rounded-[7px] bg-[#fff9df] px-7 text-[14px] font-semibold text-[#44372f] transition-all duration-300 hover:bg-white"
+              >
+                Find your next moment
+                <ArrowRight
+                  size={17}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </a>
+              <a
+                href="#experience"
+                className="inline-flex items-center gap-2 text-sm text-white/95 transition-opacity hover:opacity-70"
+              >
+                Discover more <ArrowDownRight size={16} />
+              </a>
+            </div>
+          </div>
+
+          {/* Floating event preview */}
+          <a
+            href="#events"
+            className="floating-preview group absolute bottom-8 right-6 hidden w-[290px] overflow-hidden rounded-[20px] bg-[#f7f2e8] text-[#342a24] shadow-2xl sm:block md:bottom-12 md:right-12 md:w-[310px] lg:bottom-[9%] lg:right-[5.6%] lg:w-[345px]"
+          >
+            <div className="relative h-[180px] overflow-hidden md:h-[195px]">
+              <img
+                src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=900&q=85"
+                alt="An intimate outdoor gathering"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <span className="absolute left-4 top-4 rounded-full bg-[#fff9e8] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider">
+                Near you
+              </span>
+              <span className="absolute bottom-3 right-3 grid size-9 place-items-center rounded-lg bg-[#fff9e8]">
+                <Maximize2 size={15} />
+              </span>
+            </div>
+            <div className="flex items-center justify-between gap-3 px-5 py-4">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-[#8b796a]">
+                  This weekend · Social
+                </p>
+                <h2 className="mt-1 font-display text-lg leading-tight">
+                  The Sunday Social
+                </h2>
+                <p className="mt-1 text-xs text-[#7d6c5f]">
+                  Good coffee, better company.
+                </p>
+              </div>
+              <span className="grid size-10 shrink-0 place-items-center rounded-full border border-[#d8cdbb] transition-colors group-hover:bg-[#3e332c] group-hover:text-white">
+                <ArrowRight size={17} />
+              </span>
+            </div>
+          </a>
+
+          <div className="absolute bottom-5 left-6 flex items-center gap-3 text-[10px] uppercase tracking-[0.18em] text-white/75 md:left-12 lg:left-[5.6%]">
+            <span className="h-px w-9 bg-white/70" />
+            Your city, your people, your kind of fun
+          </div>
         </div>
       </section>
+
+      {/* Small transition strip beneath the hero */}
+      <section
+        id="experience"
+        className="flex min-h-[90px] flex-wrap items-center justify-between gap-4 px-6 py-6 text-[#40352e] md:px-12 lg:px-[5.6%]"
+      >
+        <p className="font-display text-xl sm:text-2xl">
+          Make room for something different.
+        </p>
+        <a
+          href="#events"
+          className="inline-flex items-center gap-2 text-sm font-semibold"
+        >
+          Explore experiences <ArrowRight size={16} />
+        </a>
+      </section>
+
+      {/* Following section anchor */}
+      <section id="community" className="sr-only">
+        Find your community through shared experiences.
+      </section>
+      <section id="login" className="sr-only">
+        Sign in to your account.
+      </section>
+      <section id="events" className="sr-only">
+        Browse upcoming events.
+      </section>
     </main>
-    <WhoWeAre />
-    <RecentWork />
-    <EventStats />
-    <Organizers />
-    <Testimonials />
-    <FAQSection />
-    <Footer />
+    <CommunitySection />
+    <EventExperiences />
+    <EventDiscoveryCarousel />
     </div>
     
   );
 }
-
