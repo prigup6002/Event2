@@ -1,934 +1,783 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
-  FiArrowLeft,
-  FiArrowUpRight,
-  FiCalendar,
-  FiClock,
-  FiMapPin,
-  FiSearch,
-  FiCheck,
-  FiUsers,
-  FiArrowRight,
-} from "react-icons/fi";
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  CheckCircle2,
+  Clock3,
+  LockKeyhole,
+  MapPin,
+  Minus,
+  Plus,
+  ShieldCheck,
+  Ticket,
+  Users,
+  X,
+} from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const events = [
-  {
-    id: 1,
-    title: "AI, Beyond the Hype",
-    category: "AI & ML",
-    type: "Conference",
-    date: "October 24, 2026",
-    time: "10:00 AM – 5:00 PM",
-    city: "Bengaluru",
-    venue: "The Lalit Ashok, Bengaluru",
-    price: 499,
-    duration: "7 hours",
-    seats: 180,
-    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1400&q=85",
-    description: "A full day exploring how artificial intelligence is changing the way we build, think, and solve real-world problems.",
-    about: "Move beyond AI buzzwords and explore the technologies shaping the next generation of products. Hear from engineers and builders working with machine learning, generative AI, and large language models. Whether you're experimenting with your first model or already building AI products, you'll leave with ideas you can actually use.",
-    highlights: ["Practical applications of generative AI", "LLMs, RAG and AI-powered products", "Live demonstrations and expert Q&A", "Networking with developers and founders"],
-    schedule: [["10:00 AM", "Registration & welcome"], ["11:00 AM", "AI in the real world"], ["01:00 PM", "Lunch & networking"], ["02:00 PM", "Live demos and panel discussion"], ["04:30 PM", "Community networking"]],
-    organizer: "Togro Tech Community",
-    tag: "AI / ML",
+const events = {
+  "1": {
+    id: "1",
+    title: "AFTER HOURS",
+    subtitle: "A night beyond ordinary.",
+    category: "MUSIC / NIGHTLIFE",
+    date: "SAT, 14 NOV 2026",
+    time: "7:00 PM onwards",
+    location: "Kanpur, India",
+    venue: "The Underground",
+    price: 1499,
+    image:
+      "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1400&q=90",
+    accent: "#b6ff00",
+    availability: "Limited tickets available",
   },
-  {
-    id: 2,
-    title: "Build Something That Matters",
-    category: "Hackathon",
-    type: "Hackathon",
-    date: "October 25, 2026",
-    time: "9:00 AM – 9:00 PM",
-    city: "Delhi",
-    venue: "India Habitat Centre, New Delhi",
-    price: 0,
-    duration: "12 hours",
-    seats: 120,
-    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1400&q=85",
-    description: "Twelve hours, a team, and one idea worth bringing to life. Build, experiment, and ship something real.",
-    about: "Bring your ideas, meet your teammates, and turn a rough concept into a working prototype. This buildathon welcomes developers, designers, and curious problem-solvers who want to learn by making.",
-    highlights: ["Team-based project building", "Mentorship from experienced developers", "Prototype demos and feedback", "Meet other ambitious builders"],
-    schedule: [["09:00 AM", "Check-in and team formation"], ["10:00 AM", "Problem statements announced"], ["01:00 PM", "Mentoring sessions"], ["05:00 PM", "Prototype checkpoint"], ["08:00 PM", "Final demos"]],
-    organizer: "Build Club India",
-    tag: "BUILD",
+  "2": {
+    id: "2",
+    title: "THE FREQUENCY",
+    subtitle: "Feel every beat.",
+    category: "LIVE MUSIC",
+    date: "SUN, 22 NOV 2026",
+    time: "6:00 PM onwards",
+    location: "Kanpur, India",
+    venue: "The Main Stage",
+    price: 999,
+    image:
+      "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1400&q=90",
+    accent: "#9225ff",
+    availability: "Tickets selling fast",
   },
-  {
-    id: 3,
-    title: "The Art of Full Stack",
-    category: "Web Development",
-    type: "Meetup",
-    date: "October 27, 2026",
-    time: "5:30 PM – 8:00 PM",
-    city: "Noida",
-    venue: "91Springboard, Noida",
-    price: 199,
-    duration: "2.5 hours",
-    seats: 80,
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=85",
-    description: "From the first component to production APIs — a meetup for people who love building for the web.",
-    about: "Explore the decisions behind modern full-stack applications, from frontend architecture and backend APIs to databases, authentication, and deployment.",
-    highlights: ["Modern React architecture", "Designing maintainable REST APIs", "Database and deployment patterns", "Open community discussion"],
-    schedule: [["05:30 PM", "Welcome and introductions"], ["06:00 PM", "Frontend architecture"], ["06:45 PM", "Backend and deployment"], ["07:30 PM", "Open discussion"]],
-    organizer: "Web Builders NCR",
-    tag: "WEB",
+  "3": {
+    id: "3",
+    title: "SUNDAY SOCIAL",
+    subtitle: "Good people. Better plans.",
+    category: "COMMUNITY / SOCIAL",
+    date: "SUN, 29 NOV 2026",
+    time: "4:00 PM onwards",
+    location: "Kanpur, India",
+    venue: "The Social House",
+    price: 799,
+    image:
+      "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=1400&q=90",
+    accent: "#b6ff00",
+    availability: "A few spots left",
   },
-  {
-    id: 4,
-    title: "Inside the Hacker's Mind",
-    category: "Cybersecurity",
-    type: "Workshop",
-    date: "October 29, 2026",
-    time: "11:00 AM – 3:00 PM",
-    city: "Pune",
-    venue: "Innovation Centre, Pune",
-    price: 299,
-    duration: "4 hours",
-    seats: 65,
-    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1400&q=85",
-    description: "Understand security from the other side and learn how responsible testing helps build safer software.",
-    about: "An introductory, defensive security workshop covering threat modelling, common web vulnerabilities, and safe testing practices in controlled environments.",
-    highlights: ["Understanding common web vulnerabilities", "Threat modelling fundamentals", "Hands-on lab in a safe environment", "Security-first development practices"],
-    schedule: [["11:00 AM", "Security fundamentals"], ["12:00 PM", "Vulnerability walkthrough"], ["01:00 PM", "Hands-on lab"], ["02:30 PM", "Review and Q&A"]],
-    organizer: "Secure Stack Community",
-    tag: "SECURITY",
-  },
-  {
-    id: 5,
-    title: "Clouds, Containers & Scale",
-    category: "Cloud Computing",
-    type: "Conference",
-    date: "October 31, 2026",
-    time: "10:30 AM – 4:30 PM",
-    city: "Hyderabad",
-    venue: "T-Hub, Hyderabad",
-    price: 599,
-    duration: "6 hours",
-    seats: 150,
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1400&q=85",
-    description: "A practical look at cloud infrastructure, containers, distributed systems, and scaling applications.",
-    about: "Understand the infrastructure decisions that keep modern applications running. Explore cloud-native architecture, containers, Kubernetes, and production reliability.",
-    highlights: ["Cloud-native architecture", "Containers and orchestration", "Scalable system design", "Monitoring and reliability"],
-    schedule: [["10:30 AM", "Opening session"], ["11:30 AM", "Containers in production"], ["01:00 PM", "Lunch"], ["02:00 PM", "Designing for scale"], ["03:30 PM", "Expert panel"]],
-    organizer: "Cloud Native Hyderabad",
-    tag: "CLOUD",
-  },
-  {
-    id: 6,
-    title: "Make Data Tell a Story",
-    category: "Data Science",
-    type: "Workshop",
-    date: "November 2, 2026",
-    time: "2:00 PM – 6:00 PM",
-    city: "Mumbai",
-    venue: "WeWork, BKC Mumbai",
-    price: 249,
-    duration: "4 hours",
-    seats: 70,
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=85",
-    description: "Transform raw datasets into meaningful insights using Python, visualisation, and analytical thinking.",
-    about: "Work through the journey from messy data to useful conclusions. Learn how analysts explore datasets, communicate findings, and avoid misleading visualisations.",
-    highlights: ["Exploratory data analysis", "Python data workflows", "Data visualisation principles", "Communicating insights clearly"],
-    schedule: [["02:00 PM", "Introduction to datasets"], ["03:00 PM", "Hands-on analysis"], ["04:00 PM", "Visualising insights"], ["05:00 PM", "Project review"]],
-    organizer: "Data People Mumbai",
-    tag: "DATA",
-  },
-  {
-    id: 7,
-    title: "Open Source, Open Doors",
-    category: "Open Source",
-    type: "Meetup",
-    date: "November 4, 2026",
-    time: "11:00 AM – 2:00 PM",
-    city: "Jaipur",
-    venue: "Startup Oasis, Jaipur",
-    price: 0,
-    duration: "3 hours",
-    seats: 90,
-    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1400&q=85",
-    description: "Find your first open-source issue, collaborate with contributors, and learn how communities build software.",
-    about: "Learn how to discover projects, read contribution guidelines, submit pull requests, and collaborate with maintainers in a welcoming environment.",
-    highlights: ["Finding beginner-friendly issues", "Git and pull request workflows", "Project maintainer AMA", "Contribution sprint"],
-    schedule: [["11:00 AM", "Getting started"], ["11:30 AM", "Git workflow walkthrough"], ["12:00 PM", "Contribution sprint"], ["01:30 PM", "Show and tell"]],
-    organizer: "Open Source Jaipur",
-    tag: "OSS",
-  },
-  {
-    id: 8,
-    title: "Design That Just Works",
-    category: "Design",
-    type: "Workshop",
-    date: "November 6, 2026",
-    time: "12:00 PM – 4:00 PM",
-    city: "Bengaluru",
-    venue: "DesignUp Studio, Bengaluru",
-    price: 349,
-    duration: "4 hours",
-    seats: 55,
-    image: "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=1400&q=85",
-    description: "Explore typography, reusable components, and the small details that make digital products feel right.",
-    about: "A practical UI/UX session on translating user needs into clear interfaces. Work with layout, hierarchy, design tokens, and reusable components.",
-    highlights: ["Visual hierarchy and typography", "Building component libraries", "Design systems and tokens", "Critique and iteration"],
-    schedule: [["12:00 PM", "Design foundations"], ["01:00 PM", "Component systems"], ["02:00 PM", "Hands-on redesign"], ["03:30 PM", "Feedback session"]],
-    organizer: "Design Folks BLR",
-    tag: "DESIGN",
-  },
-  {
-    id: 9,
-    title: "Decentralised by Design",
-    category: "Blockchain",
-    type: "Conference",
-    date: "November 8, 2026",
-    time: "10:00 AM – 3:00 PM",
-    city: "Pune",
-    venue: "Baner Tech Park, Pune",
-    price: 399,
-    duration: "5 hours",
-    seats: 110,
-    image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1400&q=85",
-    description: "Understand smart contracts, decentralised applications, and the engineering behind blockchain systems.",
-    about: "Explore blockchain fundamentals beyond cryptocurrency, including smart contract architecture, decentralised applications, and practical design trade-offs.",
-    highlights: ["Blockchain architecture", "Smart contract fundamentals", "Decentralised application design", "Security considerations"],
-    schedule: [["10:00 AM", "Blockchain fundamentals"], ["11:00 AM", "Smart contracts"], ["01:00 PM", "DApp walkthrough"], ["02:00 PM", "Panel and Q&A"]],
-    organizer: "Web3 Pune",
-    tag: "WEB3",
-  },
-  {
-    id: 10,
-    title: "Ship It: DevOps Edition",
-    category: "DevOps",
-    type: "Workshop",
-    date: "November 10, 2026",
-    time: "9:30 AM – 1:30 PM",
-    city: "Delhi",
-    venue: "Delhi Technical Hub",
-    price: 499,
-    duration: "4 hours",
-    seats: 60,
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=85",
-    description: "Learn how teams automate testing, deployments, and infrastructure to release software with confidence.",
-    about: "Build an understanding of CI/CD, deployment workflows, containers, and infrastructure automation using practical examples.",
-    highlights: ["CI/CD pipeline fundamentals", "Deployment automation", "Infrastructure as code", "Monitoring and rollback strategies"],
-    schedule: [["09:30 AM", "DevOps fundamentals"], ["10:30 AM", "Pipeline walkthrough"], ["11:30 AM", "Hands-on deployment"], ["12:45 PM", "Review and questions"]],
-    organizer: "DevOps Delhi",
-    tag: "DEVOPS",
-  },
-  {
-    id: 11,
-    title: "Generative AI After Hours",
-    category: "AI & ML",
-    type: "Meetup",
-    date: "November 12, 2026",
-    time: "6:00 PM – 9:00 PM",
-    city: "Noida",
-    venue: "Sector 62 Innovation Hub",
-    price: 0,
-    duration: "3 hours",
-    seats: 100,
-    image: "https://images.unsplash.com/photo-1676299081847-824916de030a?auto=format&fit=crop&w=1400&q=85",
-    description: "Bring your AI experiments, share your favourite tools, and meet people building with language models.",
-    about: "A casual technical meetup for builders exploring LLM applications, retrieval-augmented generation, agents, and evaluation.",
-    highlights: ["Community project demos", "RAG and agentic workflows", "Lessons from real experiments", "Open networking"],
-    schedule: [["06:00 PM", "Welcome and networking"], ["06:30 PM", "Community demos"], ["07:30 PM", "Technical discussion"], ["08:15 PM", "Open networking"]],
-    organizer: "GenAI Builders NCR",
-    tag: "GEN AI",
-  },
-  {
-    id: 12,
-    title: "The Competitive Edge",
-    category: "Programming",
-    type: "Hackathon",
-    date: "November 14, 2026",
-    time: "10:00 AM – 5:00 PM",
-    city: "Kanpur",
-    venue: "IIT Kanpur Innovation Centre",
-    price: 149,
-    duration: "7 hours",
-    seats: 100,
-    image: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1400&q=85",
-    description: "Challenge your problem-solving skills with algorithmic contests, debugging rounds, and team challenges.",
-    about: "A coding-focused day for students and developers who want to strengthen their approach to data structures, algorithms, and timed problem-solving.",
-    highlights: ["Algorithmic challenges", "Problem-solving strategies", "Live coding rounds", "Peer learning and review"],
-    schedule: [["10:00 AM", "Registration"], ["10:30 AM", "Coding round one"], ["01:00 PM", "Team challenge"], ["03:00 PM", "Final round"], ["04:30 PM", "Results and discussion"]],
-    organizer: "Code Kanpur",
-    tag: "DSA",
-  },
-  {
-    id: 13,
-    title: "Apps from Scratch",
-    category: "App Development",
-    type: "Workshop",
-    date: "November 16, 2026",
-    time: "11:00 AM – 4:00 PM",
-    city: "Chennai",
-    venue: "Guindy Tech Campus, Chennai",
-    price: 299,
-    duration: "5 hours",
-    seats: 70,
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=1400&q=85",
-    description: "Go from a blank screen to a working mobile prototype with a guided app development session.",
-    about: "Understand mobile application structure, reusable UI, navigation, API integration, and the steps involved in preparing an app for release.",
-    highlights: ["Mobile app architecture", "Navigation and state", "Connecting APIs", "Prototype walkthrough"],
-    schedule: [["11:00 AM", "Setup and introduction"], ["12:00 PM", "Building screens"], ["01:00 PM", "Lunch"], ["02:00 PM", "API integration"], ["03:30 PM", "Demo time"]],
-    organizer: "Mobile Makers Chennai",
-    tag: "MOBILE",
-  },
-  {
-    id: 14,
-    title: "Machines That Move",
-    category: "Robotics",
-    type: "Conference",
-    date: "November 18, 2026",
-    time: "10:00 AM – 4:00 PM",
-    city: "Hyderabad",
-    venue: "BITS Innovation Centre, Hyderabad",
-    price: 699,
-    duration: "6 hours",
-    seats: 130,
-    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1400&q=85",
-    description: "Discover robotics, embedded systems, intelligent sensors, and the future of physical automation.",
-    about: "Meet engineers and enthusiasts working with robotics systems. Explore how sensors, control systems, embedded hardware, and intelligent software come together.",
-    highlights: ["Robotics system design", "Sensors and embedded computing", "Autonomous systems demonstrations", "Industry applications"],
-    schedule: [["10:00 AM", "Opening keynote"], ["11:00 AM", "Robotics demonstrations"], ["01:00 PM", "Lunch and networking"], ["02:00 PM", "Panel discussion"], ["03:30 PM", "Project showcase"]],
-    organizer: "Robotics Hyderabad",
-    tag: "ROBOTICS",
-  },
-  {
-    id: 15,
-    title: "Women Who Build Tech",
-    category: "Networking",
-    type: "Networking",
-    date: "November 20, 2026",
-    time: "4:00 PM – 7:00 PM",
-    city: "Mumbai",
-    venue: "WeWork, Andheri Mumbai",
-    price: 0,
-    duration: "3 hours",
-    seats: 100,
-    image: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=85",
-    description: "An evening for women in technology to exchange ideas, share experiences, and make new connections.",
-    about: "Connect with engineers, designers, founders, and students in an inclusive community space built around conversation and shared learning.",
-    highlights: ["Career stories and discussions", "Small-group networking", "Community connections", "Mentorship conversations"],
-    schedule: [["04:00 PM", "Welcome"], ["04:30 PM", "Community conversations"], ["05:30 PM", "Networking circles"], ["06:30 PM", "Closing discussion"]],
-    organizer: "Women in Tech Mumbai",
-    tag: "CONNECT",
-  },
-  {
-    id: 16,
-    title: "Under the Database",
-    category: "Databases",
-    type: "Meetup",
-    date: "November 22, 2026",
-    time: "3:00 PM – 6:00 PM",
-    city: "Bengaluru",
-    venue: "Koramangala Tech Space",
-    price: 199,
-    duration: "3 hours",
-    seats: 75,
-    image: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&w=1400&q=85",
-    description: "Get into indexing, query planning, data modelling, and the decisions that keep databases fast.",
-    about: "An engineering meetup about practical database design. Explore indexing, query performance, schema decisions, and trade-offs between storage approaches.",
-    highlights: ["Indexing and query optimisation", "Data modelling", "Performance troubleshooting", "Engineering case studies"],
-    schedule: [["03:00 PM", "Introduction"], ["03:30 PM", "Query performance"], ["04:30 PM", "Schema design discussion"], ["05:30 PM", "Q&A and networking"]],
-    organizer: "Database Bengaluru",
-    tag: "DATABASE",
-  },
-  {
-    id: 17,
-    title: "A New Dimension",
-    category: "AR / VR",
-    type: "Workshop",
-    date: "November 24, 2026",
-    time: "11:00 AM – 3:00 PM",
-    city: "Pune",
-    venue: "XR Lab Pune",
-    price: 449,
-    duration: "4 hours",
-    seats: 50,
-    image: "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=1400&q=85",
-    description: "Explore immersive experiences and learn how spatial interfaces change the way we interact with technology.",
-    about: "Discover the fundamentals of augmented and virtual reality, from immersive interface design to interaction patterns and prototyping.",
-    highlights: ["AR and VR fundamentals", "Spatial interface principles", "Interactive prototype concepts", "Emerging industry use cases"],
-    schedule: [["11:00 AM", "XR introduction"], ["12:00 PM", "Interaction design"], ["01:00 PM", "Prototype lab"], ["02:30 PM", "Demo and discussion"]],
-    organizer: "XR Makers Pune",
-    tag: "XR",
-  },
-  {
-    id: 18,
-    title: "Engineering for Scale",
-    category: "Engineering",
-    type: "Conference",
-    date: "November 26, 2026",
-    time: "10:00 AM – 5:00 PM",
-    city: "Delhi",
-    venue: "Pragati Maidan, New Delhi",
-    price: 599,
-    duration: "7 hours",
-    seats: 160,
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1400&q=85",
-    description: "A closer look at system design, reliability, testing, and the engineering behind products used at scale.",
-    about: "Learn from engineering case studies covering distributed systems, reliability, testing strategy, and architectural decision-making.",
-    highlights: ["System design case studies", "Testing and release quality", "Reliability engineering", "Engineering leadership discussions"],
-    schedule: [["10:00 AM", "Opening keynote"], ["11:00 AM", "System design"], ["01:00 PM", "Lunch"], ["02:00 PM", "Reliability and testing"], ["04:00 PM", "Panel and Q&A"]],
-    organizer: "Engineering India",
-    tag: "SYSTEMS",
-  },
-  {
-    id: 19,
-    title: "Everything Connected",
-    category: "IoT",
-    type: "Workshop",
-    date: "November 28, 2026",
-    time: "1:00 PM – 5:00 PM",
-    city: "Jaipur",
-    venue: "Jaipur Tech Lab",
-    price: 349,
-    duration: "4 hours",
-    seats: 60,
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=85",
-    description: "Connect hardware, sensors, and software to understand how intelligent connected devices work.",
-    about: "Explore IoT architecture, device communication, sensor data, and the path from a simple prototype to a connected application.",
-    highlights: ["Sensor and device fundamentals", "Data communication patterns", "IoT prototyping concepts", "Connected product examples"],
-    schedule: [["01:00 PM", "Introduction to IoT"], ["02:00 PM", "Devices and sensors"], ["03:00 PM", "Connectivity walkthrough"], ["04:00 PM", "Prototype discussion"]],
-    organizer: "IoT Jaipur",
-    tag: "IoT",
-  },
-  {
-    id: 20,
-    title: "From Idea to First Users",
-    category: "Startups",
-    type: "Networking",
-    date: "November 30, 2026",
-    time: "5:00 PM – 8:00 PM",
-    city: "Bengaluru",
-    venue: "91Springboard, Bengaluru",
-    price: 249,
-    duration: "3 hours",
-    seats: 90,
-    image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1400&q=85",
-    description: "A room full of builders discussing MVPs, early customers, product decisions, and startup lessons.",
-    about: "Join developers, founders, and product-minded people to discuss the practical challenges of building a startup, validating an idea, and finding your first users.",
-    highlights: ["Validating a product idea", "Building and shipping an MVP", "Early user feedback", "Founder and builder networking"],
-    schedule: [["05:00 PM", "Introductions"], ["05:30 PM", "Founder stories"], ["06:30 PM", "Small-group discussions"], ["07:30 PM", "Networking"]],
-    organizer: "Startup Builders BLR",
-    tag: "STARTUP",
-  },
-];
+};
 
-const categories = [
-  "All events",
-  "AI & ML",
-  "Hackathon",
-  "Web Development",
-  "Cybersecurity",
-  "Cloud Computing",
-  "Data Science",
-  "Open Source",
-  "Design",
-  "Blockchain",
-  "DevOps",
-  "Programming",
-  "App Development",
-  "Robotics",
-  "Networking",
-  "Databases",
-  "AR / VR",
-  "Engineering",
-  "IoT",
-  "Startups",
-];
-
-const imageHeights = [
-  "h-64 sm:h-80",
-  "h-56 sm:h-64",
-  "h-64 sm:h-80 lg:h-[420px]",
-  "h-56 sm:h-64",
-  "h-64 sm:h-80",
-  "h-56 sm:h-64",
-  "h-60 sm:h-72",
-  "h-64 sm:h-80",
-  "h-56 sm:h-64",
-  "h-56 sm:h-64",
-  "h-64 sm:h-80",
-  "h-56 sm:h-64",
-  "h-64 sm:h-80 lg:h-[420px]",
-  "h-60 sm:h-72",
-  "h-64 sm:h-80",
-  "h-56 sm:h-64",
-  "h-60 sm:h-72",
-  "h-64 sm:h-80",
-  "h-56 sm:h-64",
-  "h-64 sm:h-80",
-];
-
-const gridSizes = [
-  "sm:col-span-2",
-  "",
-  "lg:row-span-2",
-  "",
-  "sm:col-span-2",
-  "",
-  "",
-  "lg:col-span-2",
-  "",
-  "",
-  "",
-  "",
-  "lg:row-span-2",
-  "",
-  "sm:col-span-2",
-  "",
-  "",
-  "sm:col-span-2",
-  "",
-  "lg:col-span-2",
-];
+const money = (amount) =>
+  new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(amount);
 
 export default function Booking() {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const pageRef = useRef(null);
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All events");
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [sort, setSort] = useState("Featured");
-  const [bookingDone, setBookingDone] = useState(false);
 
-  const filteredEvents = useMemo(() => {
-    let result = events.filter((event) => {
-      const query = search.toLowerCase().trim();
+  const event = events[id] || events["1"];
 
-      const matchesSearch =
-        !query ||
-        event.title.toLowerCase().includes(query) ||
-        event.description.toLowerCase().includes(query) ||
-        event.category.toLowerCase().includes(query) ||
-        event.city.toLowerCase().includes(query);
+  const [quantity, setQuantity] = useState(1);
+  const [attendee, setAttendee] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+  const [agreed, setAgreed] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
+  const [bookingId, setBookingId] = useState("");
+  const [error, setError] = useState("");
 
-      return (
-        matchesSearch &&
-        (category === "All events" || event.category === category)
-      );
-    });
+  const subtotal = event.price * quantity;
+  const bookingFee = Math.round(subtotal * 0.02);
+  const total = subtotal + bookingFee;
 
-    if (sort === "Name A–Z") {
-      result = [...result].sort((a, b) =>
-        a.title.localeCompare(b.title)
-      );
-    } else if (sort === "Free first") {
-      result = [...result].sort((a, b) => a.price - b.price);
-    }
-
-    return result;
-  }, [search, category, sort]);
-
-  useEffect(() => {
-    if (selectedEvent) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  }, [selectedEvent]);
+  const formattedTotal = useMemo(() => money(total), [total]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".booking-heading", {
-        y: 30,
+      gsap.from(".booking-reveal", {
+        y: 28,
         opacity: 0,
-        duration: 0.75,
+        duration: 0.8,
+        stagger: 0.09,
+        ease: "power3.out",
+        clearProps: "all",
+      });
+
+      gsap.from(".booking-image", {
+        scale: 1.08,
+        duration: 1.2,
         ease: "power3.out",
       });
 
-      gsap.from(".masonry-card", {
-        y: 24,
-        opacity: 0,
-        duration: 0.55,
-        stagger: 0.045,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: ".masonry-grid",
-          start: "top 90%",
-        },
+      gsap.utils.toArray(".booking-scroll-reveal").forEach((element) => {
+        gsap.from(element, {
+          y: 24,
+          opacity: 0,
+          duration: 0.7,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: element,
+            start: "top 88%",
+            once: true,
+          },
+        });
       });
     }, pageRef);
 
     return () => ctx.revert();
-  }, [selectedEvent, filteredEvents.length]);
+  }, [confirmed]);
 
-  function openEvent(event) {
-    setBookingDone(false);
-    setSelectedEvent(event);
-  }
+  const updateAttendee = (field, value) => {
+    setAttendee((previous) => ({
+      ...previous,
+      [field]: value,
+    }));
+    setError("");
+  };
 
-  function goBack() {
-    setSelectedEvent(null);
-    setBookingDone(false);
+  const handleBooking = (e) => {
+    e.preventDefault();
+
+    if (!attendee.name.trim() || !attendee.email.trim() || !attendee.phone.trim()) {
+      setError("Please complete all attendee details.");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(attendee.email)) {
+      setError("Enter a valid email address.");
+      return;
+    }
+
+    if (!/^[0-9+\-\s()]{10,15}$/.test(attendee.phone.trim())) {
+      setError("Enter a valid phone number.");
+      return;
+    }
+
+    if (!agreed) {
+      setError("Please accept the booking terms to continue.");
+      return;
+    }
+
+    const newBookingId = `MDNT-${Date.now().toString().slice(-8)}`;
+
+    const booking = {
+      bookingId: newBookingId,
+      eventId: event.id,
+      eventTitle: event.title,
+      quantity,
+      attendee,
+      subtotal,
+      bookingFee,
+      total,
+      status: "DEMO - NOT PAID",
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      const existingBookings = JSON.parse(
+        localStorage.getItem("mdntBookings") || "[]"
+      );
+
+      localStorage.setItem(
+        "mdntBookings",
+        JSON.stringify([...existingBookings, booking])
+      );
+    } catch {
+      setError("Unable to save your demo booking in this browser.");
+      return;
+    }
+
+    setBookingId(newBookingId);
+    setConfirmed(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  if (confirmed) {
+    return (
+      <main
+        className="min-h-screen bg-[#090909] px-5 py-8 text-white sm:px-8 lg:px-12"
+        style={{ "--lime": "#b6ff00" }}
+      >
+        <nav className="flex items-center justify-between border-b border-white/10 pb-6">
+          <Link to="/events" className="text-2xl font-black tracking-tight">
+            MDNT<span className="text-[#b6ff00]">.</span>
+          </Link>
+          <span className="text-[10px] uppercase tracking-[0.24em] text-white/40">
+            Booking preview
+          </span>
+        </nav>
+
+        <section className="mx-auto flex min-h-[75vh] max-w-2xl items-center justify-center py-14">
+          <div className="booking-reveal w-full border border-white/10 bg-[#101010] p-6 sm:p-10">
+            <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-full bg-[#b6ff00] text-black">
+              <Check size={30} strokeWidth={2.5} />
+            </div>
+
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.24em] text-[#b6ff00]">
+              Demo booking created
+            </p>
+
+            <h1 className="text-4xl font-black leading-none tracking-tight sm:text-6xl">
+              YOU'RE ON
+              <br />
+              THE LIST<span className="text-[#b6ff00]">.</span>
+            </h1>
+
+            <p className="mt-5 max-w-lg text-sm leading-7 text-white/55">
+              Your booking details have been saved in this browser. This is a
+              frontend demo only — your ticket is not paid for or confirmed for
+              entry.
+            </p>
+
+            <div className="my-8 border border-white/10 p-5">
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-xs uppercase tracking-widest text-white/40">
+                  Reference
+                </span>
+                <span className="text-sm font-bold text-[#b6ff00]">
+                  {bookingId}
+                </span>
+              </div>
+              <div className="my-4 h-px bg-white/10" />
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-xs uppercase tracking-widest text-white/40">
+                  Event
+                </span>
+                <span className="text-right text-sm font-bold">
+                  {event.title}
+                </span>
+              </div>
+              <div className="my-4 h-px bg-white/10" />
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-xs uppercase tracking-widest text-white/40">
+                  Tickets
+                </span>
+                <span className="text-sm font-bold">{quantity}</span>
+              </div>
+              <div className="my-4 h-px bg-white/10" />
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-xs uppercase tracking-widest text-white/40">
+                  Demo total
+                </span>
+                <span className="text-xl font-black">{formattedTotal}</span>
+              </div>
+            </div>
+
+            <div className="mb-7 flex gap-3 border border-[#b6ff00]/20 bg-[#b6ff00]/5 p-4 text-xs leading-6 text-white/65">
+              <ShieldCheck className="mt-1 shrink-0 text-[#b6ff00]" size={18} />
+              No payment has been collected. A backend and payment verification
+              flow are needed for real ticket purchases.
+            </div>
+
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <button
+                onClick={() => navigate("/events")}
+                className="flex flex-1 items-center justify-center gap-3 bg-[#b6ff00] px-6 py-4 text-xs font-black uppercase tracking-widest text-black transition hover:bg-white"
+              >
+                Explore events <ArrowRight size={16} />
+              </button>
+              <button
+                onClick={() => {
+                  setConfirmed(false);
+                  setQuantity(1);
+                  setAttendee({ name: "", email: "", phone: "" });
+                  setAgreed(false);
+                  setError("");
+                }}
+                className="border border-white/15 px-6 py-4 text-xs font-bold uppercase tracking-widest transition hover:border-white"
+              >
+                Book again
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    );
   }
 
   return (
     <main
       ref={pageRef}
-      id="top"
-      className="min-h-screen w-full overflow-x-clip bg-white text-[#111111]"
+      className="min-h-screen overflow-hidden bg-[#090909] text-white"
+      style={{ "--lime": "#b6ff00", "--purple": "#9225ff" }}
     >
-      {/* Reuse your existing Togro navbar here. */}
+      {/* Navigation */}
+      <nav className="relative z-20 flex items-center justify-between border-b border-white/10 px-5 py-5 sm:px-8 lg:px-12">
+        <Link
+          to="/events"
+          className="text-2xl font-black tracking-tight sm:text-3xl"
+        >
+          MDNT<span className="text-[#b6ff00]">.</span>
+        </Link>
 
-      {selectedEvent ? (
-        <section className="w-full px-5 pb-20 pt-8 sm:px-8 lg:px-10">
-          <button
-            onClick={goBack}
-            className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-black/60 transition hover:text-black"
-          >
-            <FiArrowLeft />
-            Back to all events
-          </button>
+        <div className="hidden items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-white/55 sm:flex">
+          <Link className="transition hover:text-[#b6ff00]" to="/events">
+            Events
+          </Link>
+          <Link className="transition hover:text-[#b6ff00]" to="/contact">
+            Contact
+          </Link>
+        </div>
 
-          <div className="grid w-full grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_370px] lg:gap-14">
-            <div className="min-w-0">
-              <div className="relative h-[260px] w-full overflow-hidden bg-[#f0f0f0] sm:h-[400px] lg:h-[520px]">
-                <img
-                  src={selectedEvent.image}
-                  alt={selectedEvent.title}
-                  className="h-full w-full object-cover"
-                />
-              </div>
+        <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-white/60">
+          <LockKeyhole size={14} className="text-[#b6ff00]" />
+          Secure checkout
+        </div>
+      </nav>
 
-              <div className="mt-8">
-                <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-black/45">
-                  {selectedEvent.category} / {selectedEvent.type} / {selectedEvent.city}
-                </p>
+      {/* Heading */}
+      <section className="px-5 pb-10 pt-9 sm:px-8 sm:pb-14 sm:pt-14 lg:px-12">
+        <Link
+          to={`/events/${event.id}`}
+          className="booking-reveal mb-9 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white/45 transition hover:text-[#b6ff00]"
+        >
+          <ArrowLeft size={14} /> Back to event
+        </Link>
 
-                <h1 className="max-w-4xl text-4xl font-semibold leading-[1.04] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
-                  {selectedEvent.title}
-                </h1>
+        <div className="grid gap-7 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div>
+            <p className="booking-reveal mb-4 text-[10px] font-bold uppercase tracking-[0.3em] text-[#b6ff00]">
+              YOUR NEXT GREAT NIGHT STARTS HERE
+            </p>
+            <h1 className="booking-reveal max-w-4xl text-5xl font-black leading-[0.9] tracking-[-0.055em] sm:text-7xl lg:text-8xl">
+              MAKE IT
+              <br />
+              <span className="text-[#b6ff00]">HAPPEN.</span>
+            </h1>
+          </div>
 
-                <p className="mt-6 max-w-3xl text-lg leading-8 text-black/60 sm:text-xl sm:leading-9">
-                  {selectedEvent.description}
-                </p>
-              </div>
-
-              <div className="mt-12 border-t border-black/10 pt-8">
-                <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                  About this event
-                </h2>
-                <p className="mt-5 max-w-3xl text-base leading-8 text-black/65 sm:text-lg">
-                  {selectedEvent.about}
-                </p>
-              </div>
-
-              <div className="mt-12 border-t border-black/10 pt-8">
-                <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                  What you'll experience
-                </h2>
-
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  {selectedEvent.highlights.map((item) => (
-                    <div
-                      key={item}
-                      className="flex items-start gap-3 bg-[#f6f6f6] p-4"
-                    >
-                      <FiCheck className="mt-1 shrink-0" size={18} />
-                      <span className="text-sm leading-6 text-black/75 sm:text-base">
-                        {item}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-12 border-t border-black/10 pt-8">
-                <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                  Event schedule
-                </h2>
-
-                <div className="mt-6">
-                  {selectedEvent.schedule.map(([time, activity]) => (
-                    <div
-                      key={time}
-                      className="grid grid-cols-[100px_minmax(0,1fr)] gap-4 border-b border-black/10 py-5 sm:grid-cols-[130px_minmax(0,1fr)]"
-                    >
-                      <span className="text-sm font-medium text-black/45">
-                        {time}
-                      </span>
-                      <div className="flex gap-3">
-                        <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-black" />
-                        <span className="text-sm font-medium sm:text-base">
-                          {activity}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-12 border-t border-black/10 pt-8">
-                <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                  Organised by
-                </h2>
-
-                <div className="mt-5 flex items-center gap-4">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-black text-xl font-semibold text-white">
-                    {selectedEvent.organizer.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="font-semibold">{selectedEvent.organizer}</p>
-                    <p className="mt-1 text-sm text-black/45">Event organiser</p>
-                  </div>
-                </div>
-              </div>
+          <div className="booking-reveal flex items-center gap-3 lg:pb-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15">
+              <Ticket size={17} className="text-[#b6ff00]" />
             </div>
+            <div>
+              <p className="text-xs font-bold">Your ticket, your moment.</p>
+              <p className="mt-1 text-[10px] text-white/40">
+                A few details and you're done.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-            <aside className="h-fit lg:sticky lg:top-8">
-              <div className="border border-black/10 bg-white p-5 sm:p-7">
-                <p className="text-sm text-black/45">Registration fee</p>
+      {/* Main checkout */}
+      <section className="px-5 pb-20 sm:px-8 lg:px-12">
+        <form
+          onSubmit={handleBooking}
+          className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_370px] xl:grid-cols-[minmax(0,1fr)_420px] xl:gap-12"
+        >
+          {/* Left side */}
+          <div className="min-w-0 space-y-7">
+            {/* Event card */}
+            <section className="booking-reveal overflow-hidden border border-white/10 bg-[#101010]">
+              <div className="relative h-64 overflow-hidden sm:h-[360px]">
+                <img
+                  src={event.image}
+                  alt={event.title}
+                  className="booking-image h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-black/5" />
 
-                <div className="mt-2 flex items-baseline gap-2">
-                  <span className="text-4xl font-semibold tracking-tight">
-                    {selectedEvent.price === 0 ? "Free" : `₹${selectedEvent.price}`}
+                <div className="absolute left-5 top-5 flex items-center gap-2 bg-[#b6ff00] px-3 py-2 text-[9px] font-black uppercase tracking-[0.18em] text-black sm:left-7 sm:top-7">
+                  <span className="h-1.5 w-1.5 rounded-full bg-black" />
+                  {event.category}
+                </div>
+
+                <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
+                  <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-[#b6ff00]">
+                    THE EVENT
+                  </p>
+                  <h2 className="text-4xl font-black leading-[0.9] tracking-tight sm:text-6xl">
+                    {event.title}
+                    <span className="text-[#b6ff00]">.</span>
+                  </h2>
+                  <p className="mt-3 text-sm text-white/65">{event.subtitle}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-0 sm:grid-cols-3">
+                <div className="flex items-start gap-3 border-b border-white/10 p-5 sm:border-b-0 sm:border-r">
+                  <Clock3 size={17} className="mt-0.5 shrink-0 text-[#b6ff00]" />
+                  <div>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-white/35">
+                      Date & time
+                    </p>
+                    <p className="mt-2 text-xs font-bold">{event.date}</p>
+                    <p className="mt-1 text-xs text-white/45">{event.time}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 border-b border-white/10 p-5 sm:border-b-0 sm:border-r">
+                  <MapPin size={17} className="mt-0.5 shrink-0 text-[#b6ff00]" />
+                  <div>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-white/35">
+                      Location
+                    </p>
+                    <p className="mt-2 text-xs font-bold">{event.venue}</p>
+                    <p className="mt-1 text-xs text-white/45">{event.location}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-5">
+                  <Ticket size={17} className="mt-0.5 shrink-0 text-[#b6ff00]" />
+                  <div>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-white/35">
+                      Ticket price
+                    </p>
+                    <p className="mt-2 text-xl font-black">{money(event.price)}</p>
+                    <p className="mt-1 text-xs text-white/45">Per person</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Quantity */}
+            <section className="booking-scroll-reveal border border-white/10 bg-[#101010] p-5 sm:p-7">
+              <div className="mb-6 flex items-start justify-between gap-4">
+                <div>
+                  <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.25em] text-[#b6ff00]">
+                    STEP 01
+                  </p>
+                  <h3 className="text-2xl font-black tracking-tight sm:text-3xl">
+                    PICK YOUR TICKETS
+                  </h3>
+                  <p className="mt-2 text-xs text-white/45">
+                    Good nights are better shared.
+                  </p>
+                </div>
+                <Ticket size={23} className="mt-1 text-white/40" />
+              </div>
+
+              <div className="flex flex-col gap-5 border border-white/10 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+                <div>
+                  <p className="text-sm font-bold">General admission</p>
+                  <p className="mt-1 text-xs text-white/40">
+                    Standard entry · 1 person per ticket
+                  </p>
+                  <p className="mt-3 text-lg font-black text-[#b6ff00]">
+                    {money(event.price)}
+                    <span className="ml-1 text-[10px] font-normal text-white/40">
+                      / ticket
+                    </span>
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <button
+                    type="button"
+                    aria-label="Remove one ticket"
+                    disabled={quantity <= 1}
+                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                    className="flex h-10 w-10 items-center justify-center border border-white/15 transition hover:border-[#b6ff00] hover:text-[#b6ff00] disabled:cursor-not-allowed disabled:opacity-25"
+                  >
+                    <Minus size={15} />
+                  </button>
+
+                  <span className="w-5 text-center text-lg font-black tabular-nums">
+                    {quantity}
                   </span>
-                  {selectedEvent.price > 0 && (
-                    <span className="text-sm text-black/40">/ person</span>
-                  )}
+
+                  <button
+                    type="button"
+                    aria-label="Add one ticket"
+                    disabled={quantity >= 10}
+                    onClick={() => setQuantity((q) => Math.min(10, q + 1))}
+                    className="flex h-10 w-10 items-center justify-center bg-[#b6ff00] text-black transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-25"
+                  >
+                    <Plus size={15} />
+                  </button>
+                </div>
+              </div>
+
+              <p className="mt-3 text-[10px] text-white/35">
+                Maximum 10 tickets per booking.
+              </p>
+            </section>
+
+            {/* Attendee information */}
+            <section className="booking-scroll-reveal border border-white/10 bg-[#101010] p-5 sm:p-7">
+              <div className="mb-7 flex items-start justify-between gap-4">
+                <div>
+                  <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.25em] text-[#b6ff00]">
+                    STEP 02
+                  </p>
+                  <h3 className="text-2xl font-black tracking-tight sm:text-3xl">
+                    WHO'S COMING?
+                  </h3>
+                  <p className="mt-2 text-xs text-white/45">
+                    We'll use these details for your booking.
+                  </p>
+                </div>
+                <Users size={23} className="mt-1 text-white/40" />
+              </div>
+
+              <div className="space-y-5">
+                <div>
+                  <label
+                    htmlFor="attendee-name"
+                    className="mb-2 block text-[10px] font-bold uppercase tracking-[0.16em] text-white/60"
+                  >
+                    Full name
+                  </label>
+                  <input
+                    id="attendee-name"
+                    type="text"
+                    autoComplete="name"
+                    required
+                    maxLength={100}
+                    value={attendee.name}
+                    onChange={(e) => updateAttendee("name", e.target.value)}
+                    placeholder="Your full name"
+                    className="w-full border border-white/10 bg-[#090909] px-4 py-4 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-[#b6ff00]"
+                  />
                 </div>
 
-                <div className="my-7 space-y-5 border-y border-black/10 py-6">
-                  <div className="flex gap-3">
-                    <FiCalendar className="mt-1 shrink-0" size={19} />
-                    <div>
-                      <p className="text-sm font-medium">{selectedEvent.date}</p>
-                      <p className="mt-1 text-sm text-black/45">Event date</p>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3">
-                    <FiClock className="mt-1 shrink-0" size={19} />
-                    <div>
-                      <p className="text-sm font-medium">{selectedEvent.time}</p>
-                      <p className="mt-1 text-sm text-black/45">{selectedEvent.duration}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3">
-                    <FiMapPin className="mt-1 shrink-0" size={19} />
-                    <div>
-                      <p className="text-sm font-medium">{selectedEvent.venue}</p>
-                      <p className="mt-1 text-sm text-black/45">{selectedEvent.city}, India</p>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3">
-                    <FiUsers className="mt-1 shrink-0" size={19} />
-                    <div>
-                      <p className="text-sm font-medium">{selectedEvent.seats} places</p>
-                      <p className="mt-1 text-sm text-black/45">Listed event capacity</p>
-                    </div>
-                  </div>
+                <div>
+                  <label
+                    htmlFor="attendee-email"
+                    className="mb-2 block text-[10px] font-bold uppercase tracking-[0.16em] text-white/60"
+                  >
+                    Email address
+                  </label>
+                  <input
+                    id="attendee-email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    maxLength={254}
+                    value={attendee.email}
+                    onChange={(e) => updateAttendee("email", e.target.value)}
+                    placeholder="you@example.com"
+                    className="w-full border border-white/10 bg-[#090909] px-4 py-4 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-[#b6ff00]"
+                  />
+                  <p className="mt-2 text-[10px] text-white/35">
+                    Booking updates would be sent to this email once a backend is connected.
+                  </p>
                 </div>
 
-                {bookingDone ? (
-                  <div className="bg-[#f2f2f2] p-4">
-                    <p className="font-semibold">Registration demo complete</p>
-                    <p className="mt-2 text-sm leading-6 text-black/60">
-                      Connect your backend to save registrations and confirm bookings.
+                <div>
+                  <label
+                    htmlFor="attendee-phone"
+                    className="mb-2 block text-[10px] font-bold uppercase tracking-[0.16em] text-white/60"
+                  >
+                    Phone number
+                  </label>
+                  <input
+                    id="attendee-phone"
+                    type="tel"
+                    autoComplete="tel"
+                    required
+                    maxLength={15}
+                    value={attendee.phone}
+                    onChange={(e) => updateAttendee("phone", e.target.value)}
+                    placeholder="+91 98765 43210"
+                    className="w-full border border-white/10 bg-[#090909] px-4 py-4 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-[#b6ff00]"
+                  />
+                </div>
+              </div>
+            </section>
+          </div>
+
+          {/* Right side summary */}
+          <aside className="booking-reveal lg:sticky lg:top-6">
+            <div className="border border-white/10 bg-[#101010]">
+              <div className="flex items-center justify-between border-b border-white/10 p-5 sm:p-6">
+                <div>
+                  <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.24em] text-[#b6ff00]">
+                    ALMOST THERE
+                  </p>
+                  <h3 className="text-2xl font-black tracking-tight">
+                    YOUR ORDER
+                  </h3>
+                </div>
+                <div className="flex h-11 w-11 items-center justify-center border border-white/10">
+                  <Ticket size={20} className="text-[#b6ff00]" />
+                </div>
+              </div>
+
+              <div className="p-5 sm:p-6">
+                <div className="mb-6 flex gap-4">
+                  <div className="h-24 w-20 shrink-0 overflow-hidden bg-white/5">
+                    <img
+                      src={event.image}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div className="min-w-0 py-1">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#b6ff00]">
+                      {event.category}
+                    </p>
+                    <h4 className="mt-2 text-lg font-black leading-tight">
+                      {event.title}
+                    </h4>
+                    <p className="mt-2 text-[10px] leading-5 text-white/45">
+                      {event.date}
+                      <br />
+                      {event.venue}, {event.location}
                     </p>
                   </div>
-                ) : (
-                  <button
-                    onClick={() => setBookingDone(true)}
-                    className="flex w-full items-center justify-between bg-black px-5 py-4 font-medium text-white transition hover:bg-black/80"
-                  >
-                    {selectedEvent.price === 0 ? "Register for free" : "Book your spot"}
-                    <FiArrowUpRight size={20} />
-                  </button>
-                )}
-
-                <p className="mt-4 text-center text-xs leading-5 text-black/40">
-                  Demo registration. Payment and confirmation are not connected yet.
-                </p>
-              </div>
-            </aside>
-          </div>
-        </section>
-      ) : (
-        <>
-          <section className="w-full px-5 pb-8 pt-12 sm:px-8 sm:pt-16 lg:px-10 lg:pt-20">
-            <div className="booking-heading">
-              <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-                <h1 className="max-w-5xl text-5xl font-semibold leading-[0.96] tracking-[-0.06em] sm:text-7xl lg:text-[clamp(4rem,8vw,8rem)]">
-                  Find your
-                  <br />
-                  next experience<span className="text-black/30">.</span>
-                </h1>
-
-                <p className="max-w-xs text-sm leading-6 text-black/55 sm:text-base">
-                  Ideas worth sharing. People worth meeting. Things worth building.
-                </p>
-              </div>
-
-              <div className="mt-10 flex min-h-[65px] w-full items-center gap-4 border-b-2 border-black pb-2">
-                <FiSearch size={24} className="shrink-0" />
-
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search events, topics or cities"
-                  className="min-w-0 flex-1 bg-transparent py-3 text-lg outline-none placeholder:text-black/35 sm:text-2xl"
-                />
-
-                {search && (
-                  <button onClick={() => setSearch("")} aria-label="Clear search">
-                    <span className="sr-only">Clear search</span>
-                    <FiArrowLeft size={19} className="rotate-180" />
-                  </button>
-                )}
-              </div>
-            </div>
-          </section>
-
-          <section className="w-full px-5 pb-8 sm:px-8 lg:px-10">
-            <div className="flex flex-col gap-5 border-b border-black/15 pb-6">
-              <div className="flex flex-wrap gap-2">
-                {categories.map((item) => (
-                  <button
-                    key={item}
-                    onClick={() => setCategory(item)}
-                    className={`rounded-full border px-4 py-2 text-sm transition ${
-                      category === item
-                        ? "border-black bg-black text-white"
-                        : "border-black/15 bg-white text-black/65 hover:border-black hover:text-black"
-                    }`}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-
-              <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-black/45">
-                <span>{filteredEvents.length} events to explore</span>
-
-                <div className="flex items-center gap-3">
-                  {(search || category !== "All events") && (
-                    <button
-                      onClick={() => {
-                        setSearch("");
-                        setCategory("All events");
-                      }}
-                      className="underline underline-offset-4 hover:text-black"
-                    >
-                      Reset filters
-                    </button>
-                  )}
-
-                  <select
-                    value={sort}
-                    onChange={(e) => setSort(e.target.value)}
-                    aria-label="Sort events"
-                    className="rounded-full border border-black/15 bg-white px-4 py-2.5 text-sm text-black outline-none"
-                  >
-                    <option>Featured</option>
-                    <option>Name A–Z</option>
-                    <option>Free first</option>
-                  </select>
                 </div>
+
+                <div className="mb-5 flex items-center justify-between border-y border-dashed border-white/15 py-4">
+                  <span className="text-xs text-white/55">Tickets</span>
+                  <span className="text-xs font-bold">
+                    {quantity} × {money(event.price)}
+                  </span>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex justify-between gap-4 text-xs">
+                    <span className="text-white/45">Subtotal</span>
+                    <span className="font-bold tabular-nums">{money(subtotal)}</span>
+                  </div>
+                  <div className="flex justify-between gap-4 text-xs">
+                    <span className="text-white/45">Booking fee (2%)</span>
+                    <span className="font-bold tabular-nums">{money(bookingFee)}</span>
+                  </div>
+                </div>
+
+                <div className="my-6 border-t border-white/10" />
+
+                <div className="flex items-end justify-between gap-3">
+                  <div>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40">
+                      Total amount
+                    </p>
+                    <p className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">
+                      {formattedTotal}
+                    </p>
+                  </div>
+                  <span className="pb-1 text-[10px] text-white/40">INR</span>
+                </div>
+
+                <div className="mt-6 border border-[#b6ff00]/20 bg-[#b6ff00]/5 p-4">
+                  <div className="flex gap-3">
+                    <ShieldCheck
+                      size={18}
+                      className="mt-0.5 shrink-0 text-[#b6ff00]"
+                    />
+                    <div>
+                      <p className="text-xs font-bold">No hidden surprises.</p>
+                      <p className="mt-1 text-[10px] leading-5 text-white/45">
+                        The displayed total includes the demo booking fee.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <label className="mt-6 flex cursor-pointer items-start gap-3">
+                  <input
+                    type="checkbox"
+                    checked={agreed}
+                    onChange={(e) => {
+                      setAgreed(e.target.checked);
+                      setError("");
+                    }}
+                    className="mt-1 h-4 w-4 shrink-0 accent-[#b6ff00]"
+                  />
+                  <span className="text-[10px] leading-5 text-white/55">
+                    I agree to the booking terms and understand that this is a
+                    demo booking, not a paid ticket purchase.
+                  </span>
+                </label>
+
+                {error && (
+                  <div
+                    role="alert"
+                    className="mt-5 flex items-start gap-2 border border-red-500/25 bg-red-500/5 p-3 text-xs leading-5 text-red-300"
+                  >
+                    <X size={15} className="mt-0.5 shrink-0" />
+                    {error}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  className="group mt-6 flex w-full items-center justify-between gap-3 bg-[#b6ff00] px-5 py-5 text-left text-black transition duration-300 hover:bg-white"
+                >
+                  <span>
+                    <span className="block text-sm font-black uppercase tracking-widest">
+                      Confirm demo booking
+                    </span>
+                    <span className="mt-1 block text-[10px] text-black/60">
+                      {formattedTotal} · No payment collected
+                    </span>
+                  </span>
+                  <ArrowUpRight
+                    size={22}
+                    className="shrink-0 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
+                  />
+                </button>
+
+                <p className="mt-4 text-center text-[9px] leading-5 text-white/30">
+                  Demo only. Real checkout requires server-side ticket
+                  availability checks and verified payment processing.
+                </p>
               </div>
             </div>
-          </section>
 
-          <section className="w-full px-5 pb-20 sm:px-8 lg:px-10 lg:pb-28">
-            {filteredEvents.length > 0 ? (
-              <div className="masonry-grid grid w-full grid-cols-1 items-start gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                {filteredEvents.map((event) => {
-                  const originalIndex = events.findIndex(
-                    (item) => item.id === event.id
-                  );
+            <div className="mt-4 flex items-center justify-center gap-2 py-3 text-[10px] text-white/35">
+              <CheckCircle2 size={14} className="text-[#b6ff00]" />
+              Simple checkout · No account needed
+            </div>
+          </aside>
+        </form>
+      </section>
 
-                  return (
-                    <article
-                      key={event.id}
-                      className={`masonry-card group min-w-0 ${gridSizes[originalIndex]}`}
-                    >
-                      <button
-                        onClick={() => openEvent(event)}
-                        className="block w-full text-left"
-                      >
-                        <div
-                          className={`relative w-full overflow-hidden bg-[#efefef] ${imageHeights[originalIndex]}`}
-                        >
-                          <img
-                            src={event.image}
-                            alt={event.title}
-                            loading={originalIndex > 5 ? "lazy" : "eager"}
-                            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                          />
-                        </div>
-                      </button>
+      {/* Bottom CTA */}
+      <section className="booking-scroll-reveal border-t border-white/10 px-5 py-12 sm:px-8 sm:py-16 lg:px-12">
+        <div className="flex flex-col justify-between gap-7 sm:flex-row sm:items-end">
+          <div>
+            <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-[#b6ff00]">
+              PLANS CHANGE. MEMORIES STAY.
+            </p>
+            <h2 className="max-w-2xl text-4xl font-black leading-[0.95] tracking-tight sm:text-6xl">
+              MAKE ROOM
+              <br />
+              FOR A GOOD NIGHT<span className="text-[#b6ff00]">.</span>
+            </h2>
+          </div>
+          <Link
+            to="/events"
+            className="inline-flex items-center gap-3 self-start border border-white/20 px-5 py-4 text-xs font-bold uppercase tracking-widest transition hover:border-[#b6ff00] hover:text-[#b6ff00] sm:self-auto"
+          >
+            Explore more events <ArrowRight size={15} />
+          </Link>
+        </div>
+      </section>
 
-                      <div className="flex items-start justify-between gap-3 py-4 sm:gap-4">
-                        <div className="min-w-0 flex-1">
-                          <div className="mb-2 flex flex-wrap items-center gap-2 text-[10px] font-medium uppercase tracking-[0.13em] text-black/45 sm:text-[11px]">
-                            <span>{event.category}</span>
-                            <span>·</span>
-                            <span>{event.type}</span>
-                          </div>
-
-                          <button
-                            onClick={() => openEvent(event)}
-                            className="text-left"
-                          >
-                            <h2 className="text-xl font-semibold leading-tight tracking-tight sm:text-2xl">
-                              {event.title}
-                            </h2>
-                          </button>
-
-                          <p className="mt-3 text-sm leading-6 text-black/60">
-                            {event.description}
-                          </p>
-
-                          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-black/50 sm:text-sm">
-                            <span>{event.date}</span>
-                            <span>·</span>
-                            <span>{event.city}</span>
-                          </div>
-
-                          <p className="mt-3 text-sm font-semibold text-black">
-                            {event.price === 0 ? "Free entry" : `₹${event.price}`}
-                          </p>
-                        </div>
-
-                        <button
-                          onClick={() => openEvent(event)}
-                          aria-label={`Explore ${event.title}`}
-                          className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-black/15 transition hover:bg-black hover:text-white sm:h-10 sm:w-10"
-                        >
-                          <FiArrowUpRight size={19} />
-                        </button>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="py-24 text-center">
-                <h2 className="text-3xl font-semibold tracking-tight">
-                  Nothing here just yet.
-                </h2>
-                <p className="mt-3 text-black/50">
-                  Try a different search or category.
-                </p>
-                <button
-                  onClick={() => {
-                    setSearch("");
-                    setCategory("All events");
-                  }}
-                  className="mt-6 rounded-full bg-black px-6 py-3 text-sm text-white transition hover:bg-black/75"
-                >
-                  View all events
-                </button>
-              </div>
-            )}
-          </section>
-        </>
-      )}
+      {/* Footer */}
+      <footer className="border-t border-white/10 px-5 py-7 sm:px-8 lg:px-12">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <Link to="/events" className="text-2xl font-black tracking-tight">
+            MDNT<span className="text-[#b6ff00]">.</span>
+          </Link>
+          <p className="text-[10px] uppercase tracking-[0.16em] text-white/35">
+            GOOD PEOPLE. GREAT PLANS. NO ORDINARY NIGHTS.
+          </p>
+          <div className="flex gap-5 text-[10px] font-bold uppercase tracking-widest text-white/45">
+            <Link to="/events" className="hover:text-[#b6ff00]">
+              Events
+            </Link>
+            <Link to="/contact" className="hover:text-[#b6ff00]">
+              Contact
+            </Link>
+          </div>
+        </div>
+        <div className="mt-6 flex flex-col gap-2 border-t border-white/10 pt-5 text-[9px] text-white/25 sm:flex-row sm:justify-between">
+          <span>© 2026 MDNT. ALL RIGHTS RESERVED.</span>
+          <span>DEMO CHECKOUT · NO REAL PAYMENTS</span>
+        </div>
+      </footer>
     </main>
   );
 }

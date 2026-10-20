@@ -1,94 +1,47 @@
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { gsap } from "gsap";
+import { ArrowUpRight } from "lucide-react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import {
-  ArrowDownRight,
-  ArrowRight,
-  ChevronDown,
-  Maximize2,
-  Menu,
-} from "lucide-react";
+import { Link } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
 
-
-const EventExperiences = () => {
+const AboutStatement = () => {
   const sectionRef = useRef(null);
-
-  const events = [
-    {
-      number: "01",
-      category: "ART & CREATIVITY",
-      title: "Pottery & Chai",
-      description:
-        "Get your hands messy, make something beautiful, and meet creative people.",
-      date: "SAT, 24 OCT",
-      price: "₹599 onwards",
-      location: "Studio in the City",
-      image:
-        "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=800&q=85",
-    },
-    {
-      number: "02",
-      category: "MEET NEW PEOPLE",
-      title: "The Rooftop Social",
-      description:
-        "Golden hour conversations, good music, and strangers who feel like friends.",
-      date: "SAT, 24 OCT",
-      price: "₹399 onwards",
-      location: "Rooftop · City Centre",
-      image:
-        "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=85",
-    },
-    {
-      number: "03",
-      category: "MUSIC & CULTURE",
-      title: "Live & Unplugged",
-      description:
-        "An intimate evening of live music, new artists, and unforgettable vibes.",
-      date: "SUN, 25 OCT",
-      price: "₹499 onwards",
-      location: "The Listening Room",
-      image:
-        "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=800&q=85",
-    },
-    {
-      number: "04",
-      category: "FOOD & DISCOVERY",
-      title: "The Local Food Walk",
-      description:
-        "Explore hidden food spots, discover local favourites, and eat your way around town.",
-      date: "SUN, 25 OCT",
-      price: "₹299 onwards",
-      location: "Old City Streets",
-      image:
-        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=85",
-    },
-  ];
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".experience-heading", {
-        y: 35,
+      gsap.from(".statement-icon", {
         opacity: 0,
-        duration: 0.8,
-        ease: "power3.out",
+        scale: 0.5,
+        duration: 0.6,
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 80%",
+          start: "top 75%",
         },
       });
 
-      gsap.from(".experience-card", {
-        y: 65,
+      gsap.from(".statement-heading span", {
+        y: 35,
         opacity: 0,
-        duration: 0.85,
-        stagger: 0.16,
+        duration: 0.7,
+        stagger: 0.08,
         ease: "power3.out",
         scrollTrigger: {
-          trigger: ".experience-grid",
-          start: "top 82%",
+          trigger: sectionRef.current,
+          start: "top 70%",
+        },
+      });
+
+      gsap.from(".statement-copy", {
+        y: 18,
+        opacity: 0,
+        duration: 0.7,
+        delay: 0.2,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 70%",
         },
       });
     }, sectionRef);
@@ -99,748 +52,825 @@ const EventExperiences = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-white px-5 pb-24 pt-14 text-[#49413f] sm:px-8 lg:px-[5.4%] lg:pb-32 lg:pt-20"
+      id="about"
+      className="flex min-h-[580px] items-center justify-center bg-black px-5 py-24 text-center text-white sm:min-h-[620px] sm:px-10 lg:min-h-[683px] lg:px-16"
     >
-      {/* Soft oversized background graphic */}
-      <div className="pointer-events-none absolute -right-36 top-20 h-[780px] w-[780px] rounded-full border-[90px] border-[#f6f5f5] opacity-90" />
+      <div className="mx-auto flex w-full max-w-[1450px] flex-col items-center">
+        <div className="statement-icon mb-8 grid size-5 place-items-center">
+          <span className="relative block size-[15px] rounded-full border-[3px] border-white">
+            <span className="absolute left-1/2 top-1/2 size-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white" />
+          </span>
+        </div>
 
-      <div className="experience-heading relative z-10 mx-auto mb-12 max-w-3xl text-center sm:mb-16">
-        <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#96877a] sm:text-xs">
-          A little something for everyone
-        </p>
-
-        <h2 className="font-display text-[clamp(2.2rem,4.5vw,3.6rem)] leading-[1.12] tracking-[-0.025em]">
-          Find your kind of
-          <span className="block italic text-[#928985]">
-            unforgettable.
+        <h2 className="statement-heading event-display max-w-[1380px] text-[clamp(2rem,4.45vw,4.55rem)] font-black uppercase leading-[1.08] tracking-[-0.045em]">
+          <span className="block">
+            We bring people together through
+          </span>
+          <span className="block">
+            <span className="text-white">unforgettable events that </span>
+            <span className="text-[#c4ff00]">spark joy,</span>
+          </span>
+          <span className="block">
+            <span className="text-[#c4ff00]">build connections, </span>
+            <span className="text-white">and create</span>
+          </span>
+          <span className="block">
+            <span className="text-white">lasting </span>
+            <span className="text-[#c4ff00]">memories.</span>
           </span>
         </h2>
 
-        <p className="mx-auto mt-4 max-w-lg text-sm leading-6 text-[#817a76] sm:text-base">
-          From creative afternoons to spontaneous nights out, there’s always
-          something worth showing up for.
+        <p className="statement-copy mt-7 max-w-[750px] text-[14px] leading-[1.65] text-white/85 sm:text-[16px]">
+          From discovering new experiences to meeting people who share your
+          interests, we make it easier to show up, connect, and be part of
+          something memorable.
         </p>
-      </div>
-
-      {/* Event cards */}
-      <div className="experience-grid relative z-10 mx-auto grid max-w-[1500px] grid-cols-1 items-start gap-5 sm:grid-cols-2 xl:grid-cols-4 xl:gap-[18px]">
-        {events.map((event, index) => (
-          <article
-            key={event.number}
-            className={`experience-card group rounded-[23px] bg-[#f6f6f0] p-[15px] transition-shadow duration-300 hover:shadow-[0_15px_45px_rgba(57,45,35,0.08)] sm:p-[18px] ${
-              index % 2 === 1 ? "xl:mt-8" : "xl:mt-0"
-            }`}
-          >
-            <div className="mb-4 flex justify-center">
-              <span className="grid size-[34px] place-items-center rounded-full bg-[#fffce8] text-[13px] text-[#93897a]">
-                {event.number}
-              </span>
-            </div>
-
-            <p className="mb-2 text-center text-[9px] font-semibold tracking-[0.17em] text-[#9a897a] sm:text-[10px]">
-              {event.category}
-            </p>
-
-            <h3 className="text-center font-display text-[23px] leading-tight sm:text-[25px]">
-              {event.title}
-            </h3>
-
-            <p className="mx-auto mb-5 mt-3 min-h-[60px] max-w-[300px] text-center text-[13px] leading-[1.55] text-[#69615d] sm:text-[14px]">
-              {event.description}
-            </p>
-
-            <div className="relative overflow-hidden rounded-[11px]">
-              <img
-                src={event.image}
-                alt={event.title}
-                loading="lazy"
-                className="aspect-[4/4.5] w-full object-cover transition-transform duration-700 group-hover:scale-[1.045]"
-              />
-
-              <span className="absolute left-3 top-3 rounded-full bg-[#fff9e9] px-3 py-1.5 text-[10px] font-semibold text-[#49413f]">
-                {event.date}
-              </span>
-            </div>
-
-            <div className="px-1 pb-1 pt-4">
-              <div className="mb-3 flex items-center justify-between gap-2 text-[11px] text-[#817873]">
-                <span className="truncate">{event.location}</span>
-                <span className="shrink-0 font-semibold text-[#49413f]">
-                  {event.price}
-                </span>
-              </div>
-
-              <a
-                href="#all-events"
-                className="group/link flex items-center justify-center gap-2 py-2 text-[13px] font-semibold underline decoration-[#a79b90] underline-offset-4 transition-colors hover:text-[#9a7050]"
-              >
-                Explore event
-                <span className="transition-transform group-hover/link:translate-x-1">
-                  →
-                </span>
-              </a>
-            </div>
-          </article>
-        ))}
-      </div>
-
-      <div className="relative z-10 mt-12 flex justify-center">
-        <a
-          id="all-events"
-          href="/events"
-          className="inline-flex min-h-[50px] items-center gap-3 rounded-[7px] bg-[#49413f] px-7 text-sm font-semibold text-white transition-colors hover:bg-[#675850]"
-        >
-          Explore all events <span>→</span>
-        </a>
       </div>
     </section>
   );
 };
 
+const EventServices = () => {
+  const [activeImage, setActiveImage] = useState(null);
 
-const EventDiscoveryCarousel = () => {
-  const [activeIndex, setActiveIndex] = useState(1);
-  const [touchStart, setTouchStart] = useState(null);
-
-  const events = [
+  const services = [
     {
-      category: "ART & CREATIVITY",
-      title: "Make Something Beautiful",
-      description: "A hands-on pottery workshop, good music, and new creative friends.",
-      image: "photo-1565193566173-7a0ee3dbe261",
-      tag: "Creative Workshop",
-      place: "Art Studio",
-      date: "24 OCT",
+      eyebrow: "FOR BRANDS",
+      title: (
+        <>
+          IN-<span className="text-[#8b00ff]">REAL</span>-LIFE
+          <br />
+          (IRL)
+          <br />
+          BRANDED
+          <br />
+          <span className="text-[#8b00ff]">EXPERIENCES</span>
+        </>
+      ),
+      image:
+        "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=90",
+      href: "#brand-events",
+      darkButton: true,
     },
     {
-      category: "SOCIAL & COMMUNITY",
-      title: "Meet Your Kind of People",
-      description: "Leave the small talk behind. Find your people over conversations that actually matter.",
-      image: "photo-1528605248644-14dd04022da1",
-      tag: "Community Meetup",
-      place: "The Social Club",
-      date: "24 OCT",
+      eyebrow: "FOR EVENTS",
+      title: (
+        <>
+          EVENT
+          <br />
+          OPERATIONS
+          <br />
+          <span className="text-[#8b00ff]">YOU</span> CAN
+          <br />
+          <span className="text-[#8b00ff]">COUNT ON</span>
+        </>
+      ),
+      image:
+        "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1200&q=90",
+      href: "#event-operations",
+      darkButton: false,
     },
-    {
-      category: "MUSIC & NIGHTLIFE",
-      title: "An Evening of Live Music",
-      description: "Discover independent artists and enjoy an intimate night of live performances.",
-      image: "photo-1501386761578-eac5c94b800a",
-      tag: "Live Music",
-      place: "The Listening Room",
-      date: "25 OCT",
-    },
-    {
-      category: "FOOD & DRINKS",
-      title: "The Great Food Walk",
-      description: "Find hidden food gems, taste local favourites, and explore your city differently.",
-      image: "photo-1517248135467-4c7edcad34c4",
-      tag: "Food Experience",
-      place: "Old City",
-      date: "25 OCT",
-    },
-    {
-      category: "OUTDOORS & NATURE",
-      title: "Sunrise, Slow Mornings",
-      description: "Start your day with an easy morning walk, fresh air, and lovely company.",
-      image: "photo-1470252649378-9c29740c9fa8",
-      tag: "Outdoor Meetup",
-      place: "City Park",
-      date: "26 OCT",
-    },
-    {
-      category: "COFFEE & CONVERSATIONS",
-      title: "Coffee With Strangers",
-      description: "One table, good coffee, and conversations with people you have yet to meet.",
-      image: "photo-1445116572660-236099ec97a0",
-      tag: "Coffee Social",
-      place: "Neighbourhood Café",
-      date: "26 OCT",
-    },
-    {
-      category: "WELLNESS & MINDFULNESS",
-      title: "Pause, Breathe, Reset",
-      description: "Unwind with a beginner-friendly mindfulness session in a calm setting.",
-      image: "photo-1506126613408-eca07ce68773",
-      tag: "Wellness Session",
-      place: "The Quiet Space",
-      date: "31 OCT",
-    },
-    {
-      category: "GAMES & FUN",
-      title: "Game Night, Anyone?",
-      description: "Board games, friendly competition, and the kind of laughs you remember.",
-      image: "photo-1528605248644-14dd04022da1",
-      tag: "Game Night",
-      place: "The Playroom",
-      date: "31 OCT",
-    },
-    {
-      category: "PHOTOGRAPHY & DESIGN",
-      title: "See Your City Differently",
-      description: "Explore street photography with a creative group and fresh perspectives.",
-      image: "photo-1452587925148-ce544e77e70d",
-      tag: "Photo Walk",
-      place: "Arts District",
-      date: "01 NOV",
-    },
-    {
-      category: "CULTURE & DISCOVERY",
-      title: "A Little Local Adventure",
-      description: "Discover cultural corners, local stories, and places you never knew existed.",
-      image: "photo-1519608487953-e999c86e7455",
-      tag: "City Experience",
-      place: "City Centre",
-      date: "01 NOV",
-    },
-  ];
-
-  const getIndex = (index) =>
-    (index + events.length) % events.length;
-
-  const goTo = (index) => setActiveIndex(getIndex(index));
-
-  const visibleCards = [
-    { event: events[getIndex(activeIndex - 1)], position: "side" },
-    { event: events[activeIndex], position: "center" },
-    { event: events[getIndex(activeIndex + 1)], position: "side" },
   ];
 
   return (
-    <section className="relative overflow-hidden bg-[#f6f5ef] px-5 pb-20 pt-16 text-[#49413f] sm:px-8 sm:pt-20 lg:px-[5.4%]">
-      <div className="pointer-events-none absolute -right-48 top-40 h-[850px] w-[850px] rounded-full border-[100px] border-white/70" />
-
-      <div className="relative z-10 mx-auto mb-10 max-w-3xl text-center sm:mb-12">
-        <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#96877a] sm:text-xs">
-          Find your next experience
-        </p>
-
-        <h2 className="font-display text-[clamp(2.1rem,4.5vw,3.6rem)] leading-[1.12] tracking-[-0.025em]">
-          There's a place for you,
-          <span className="block italic text-[#928985]">
-            wherever you are.
-          </span>
-        </h2>
+    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-white px-6 py-20 text-black sm:px-10 lg:px-[11.45%] lg:py-0">
+      {/* Fixed central image, revealed on hover */}
+      <div
+        className={`pointer-events-none absolute left-1/2 top-1/2 z-[1] hidden h-[78svh] max-h-[760px] w-[min(41vw,680px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[4px] transition-all duration-500 ease-out md:block ${
+          activeImage
+            ? "scale-100 opacity-100"
+            : "scale-[0.96] opacity-0"
+        }`}
+      >
+        {services.map((service, index) => (
+          <img
+            key={service.image}
+            src={service.image}
+            alt=""
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
+              activeImage === index ? "opacity-100" : "opacity-0"
+            }`}
+          />
+        ))}
       </div>
 
-      {/* Carousel */}
-      <div
-        className="relative z-10 mx-auto grid max-w-[1450px] grid-cols-1 items-stretch gap-5 md:grid-cols-[0.85fr_1.8fr_0.85fr] md:gap-[18px]"
-        onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
-        onTouchEnd={(e) => {
-          if (touchStart === null) return;
-          const distance = e.changedTouches[0].clientX - touchStart;
-          if (Math.abs(distance) > 45) {
-            goTo(activeIndex + (distance < 0 ? 1 : -1));
-          }
-          setTouchStart(null);
-        }}
-      >
-        {visibleCards.map(({ event, position }, index) => (
+      <div className="relative z-10 mx-auto grid w-full max-w-[1280px] grid-cols-1 items-center gap-16 md:grid-cols-2 md:gap-[15%]">
+        {services.map((service, index) => (
           <article
-            key={`${event.title}-${activeIndex}-${index}`}
-            className={`group relative isolate min-h-[420px] overflow-hidden rounded-[22px] bg-[#ddd3c6] md:min-h-[480px] ${
-              position === "center"
-                ? "md:min-h-[530px]"
-                : "hidden md:block md:mt-0"
+            key={service.href}
+            onMouseEnter={() => setActiveImage(index)}
+            onMouseLeave={() => setActiveImage(null)}
+            className={`relative ${
+              index === 1 ? "md:pl-0" : ""
             }`}
           >
-            <img
-              src={`https://images.unsplash.com/${event.image}?auto=format&fit=crop&w=1200&q=85`}
-              alt={event.title}
-              loading="lazy"
-              className="absolute inset-0 -z-20 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-
-            <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#211b19]/85 via-[#211b19]/15 to-[#211b19]/10" />
-
-            {position === "center" && (
-              <span className="absolute left-5 top-5 rounded-full bg-[#fff8e8] px-4 py-2 text-[10px] font-semibold uppercase tracking-wider text-[#49413f] sm:left-8 sm:top-8">
-                {event.tag}
-              </span>
-            )}
-
-            {position === "side" && (
-              <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1.5 text-[10px] font-semibold text-[#49413f]">
-                {event.date}
-              </span>
-            )}
-
-            <div className={`absolute inset-x-0 bottom-0 p-5 text-white sm:p-7 ${
-              position === "side" ? "md:p-5" : "md:p-8"
-            }`}>
-              <p className="mb-2 text-[9px] font-semibold tracking-[0.2em] text-white/80 sm:text-[10px]">
-                {event.category}
-              </p>
-
-              <h3 className={`font-display leading-[1.12] ${
-                position === "center"
-                  ? "text-[clamp(1.8rem,3vw,2.7rem)]"
-                  : "text-[25px] md:text-[21px] lg:text-[25px]"
-              }`}>
-                {event.title}
-              </h3>
-
-              {position === "center" && (
-                <p className="mt-3 max-w-lg text-[13px] leading-[1.6] text-white/90 sm:text-sm">
-                  {event.description}
-                </p>
-              )}
-
-              <div className="mt-4 flex items-center justify-between gap-2 border-t border-white/25 pt-3">
-                <span className="truncate text-[11px] text-white/85 sm:text-xs">
-                  {event.place} · {event.date}
-                </span>
-
-                <a
-                  href="/events"
-                  aria-label={`Explore ${event.title}`}
-                  className="grid size-9 shrink-0 place-items-center rounded-full bg-[#fff8e8] text-[#49413f] transition-transform hover:scale-105"
-                >
-                  →
-                </a>
-              </div>
+            <div className="mb-8 flex items-center gap-4 overflow-hidden whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.05em]">
+              <span className="text-[#8b00ff]">●</span>
+              <span>{service.eyebrow}</span>
+              <span className="text-[#8b00ff]">●</span>
+              <span>{service.eyebrow}</span>
+              <span className="text-[#8b00ff]">●</span>
             </div>
+
+            <h2 className="event-display relative text-[clamp(2.8rem,5.25vw,5.3rem)] font-black uppercase leading-[0.86] tracking-[-0.045em]">
+              {service.title}
+            </h2>
+
+            <a
+              href={service.href}
+              onFocus={() => setActiveImage(index)}
+              onBlur={() => setActiveImage(null)}
+              className={`mt-10 inline-flex h-[49px] items-center gap-3 rounded-[6px] border px-6 text-[14px] font-medium uppercase transition-colors duration-200 ${
+                service.darkButton
+                  ? "border-[#292929] bg-[#292929] text-white hover:bg-[#8b00ff] hover:border-[#8b00ff]"
+                  : "border-[#dedede] bg-white text-black shadow-sm hover:bg-[#8b00ff] hover:text-white hover:border-[#8b00ff]"
+              }`}
+            >
+              Learn more
+              <span className="text-[#8b00ff]">●</span>
+            </a>
           </article>
         ))}
       </div>
 
-      {/* Navigation controls */}
-      <div className="relative z-10 mt-5 flex items-center justify-center gap-3">
-        <button
-          type="button"
-          onClick={() => goTo(activeIndex - 1)}
-          aria-label="Previous event"
-          className="grid size-12 place-items-center rounded-full border border-[#d8d5cd] bg-[#e7e5df] text-[#49413f] transition-colors hover:bg-[#49413f] hover:text-white"
-        >
-          <svg viewBox="0 0 24 24" fill="none" className="size-5" stroke="currentColor" strokeWidth="1.5">
-            <path d="m15 18-6-6 6-6" />
-          </svg>
-        </button>
-
-        <span className="min-w-[60px] text-center text-xs tabular-nums text-[#827a74]">
-          {String(activeIndex + 1).padStart(2, "0")} / 10
-        </span>
-
-        <button
-          type="button"
-          onClick={() => goTo(activeIndex + 1)}
-          aria-label="Next event"
-          className="grid size-12 place-items-center rounded-full border border-[#d8d5cd] bg-[#e7e5df] text-[#49413f] transition-colors hover:bg-[#49413f] hover:text-white"
-        >
-          <svg viewBox="0 0 24 24" fill="none" className="size-5" stroke="currentColor" strokeWidth="1.5">
-            <path d="m9 18 6-6-6-6" />
-          </svg>
-        </button>
-      </div>
-
-      <div className="relative z-10 mt-10 text-center">
-        <p className="font-display text-xl sm:text-2xl">
-          Your next favourite memory is out there.
-        </p>
-        <p className="mt-2 text-sm text-[#827a74]">
-          Ten ways to get out, explore, and connect.
-        </p>
-      </div>
+      {/* Mobile image preview */}
+      {activeImage !== null && (
+        <div className="pointer-events-none fixed inset-x-6 bottom-6 z-20 h-44 overflow-hidden rounded-md md:hidden">
+          <img
+            src={services[activeImage].image}
+            alt=""
+            className="h-full w-full object-cover"
+          />
+        </div>
+      )}
     </section>
   );
 };
 
+const projects = [
+  {
+    title: "RED BULL JUKEBOX",
+    category: "BRANDS",
+    description:
+      "Engaged over 500 consumers in person, providing a polished show-day experience.",
+    image:
+      "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=2000&q=90",
+  },
+  {
+    title: "LIVE MUSIC FESTIVAL",
+    category: "LIVE EVENTS",
+    description:
+      "Bringing music, culture and communities together through unforgettable live experiences.",
+    image:
+      "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=2000&q=90",
+  },
+  {
+    title: "CULTURE IN MOTION",
+    category: "EXPERIENTIAL",
+    description:
+      "Turning creative ideas into immersive moments that audiences remember long after the event.",
+    image:
+      "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=2000&q=90",
+  },
+];
 
-export default function Home() {
-  const heroRef = useRef(null);
+const FeaturedProjects = () => {
+  const sectionRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-      tl.from(".nav-item", {
-        y: -18,
+      gsap.from(".projects-heading > *", {
+        y: 70,
         opacity: 0,
-        duration: 0.7,
-        stagger: 0.09,
-      })
-        .from(
-          ".hero-title-line",
-          {
-            y: 55,
-            opacity: 0,
-            duration: 1,
-            stagger: 0.16,
-          },
-          "-=0.25"
-        )
-        .from(
-          ".hero-copy, .hero-cta",
-          {
-            y: 20,
-            opacity: 0,
-            duration: 0.7,
-            stagger: 0.15,
-          },
-          "-=0.45"
-        )
-        .from(
-          ".floating-preview",
-          {
-            x: 45,
-            opacity: 0,
-            duration: 0.9,
-          },
-          "-=0.6"
-        );
-
-      gsap.to(".hero-background", {
-        scale: 1.06,
-        ease: "none",
+        duration: 1,
+        stagger: 0.15,
+        ease: "power4.out",
         scrollTrigger: {
-          trigger: heroRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
+          trigger: ".projects-heading",
+          start: "top 85%",
         },
       });
-    }, heroRef);
+
+      gsap.utils.toArray(".project-item").forEach((project) => {
+        const image = project.querySelector(".project-image");
+        const details = project.querySelector(".project-details");
+
+        gsap.fromTo(
+          image,
+          {
+            y: 100,
+            opacity: 0,
+            scale: 0.92,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1.1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: project,
+              start: "top 80%",
+            },
+          }
+        );
+
+        gsap.fromTo(
+          details,
+          {
+            y: 45,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            delay: 0.15,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: project,
+              start: "top 72%",
+            },
+          }
+        );
+      });
+    }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
+  return (
+    <section
+      ref={sectionRef}
+      className="w-full overflow-hidden bg-black px-5 py-24 text-white sm:px-8 lg:px-20 lg:py-28"
+    >
+      {/* Section heading */}
+      <div className="projects-heading flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">
+        <div>
+          <h2 className="max-w-3xl text-5xl font-extrabold leading-[0.98] tracking-[-0.055em] sm:text-6xl lg:text-[5.4rem]">
+            From <span className="text-[#c6ff00]">pop-ups</span> to
+            <br className="hidden sm:block" /> large-scale
+            <br />
+            <span className="text-[#c6ff00]">productions</span>.
+          </h2>
 
-const CommunitySection = () => {
-  const stats = [
-    {
-      icon: "chart",
-      title: "For every kind of vibe",
-      description: "From laid-back meetups to unforgettable experiences",
-    },
-    {
-      icon: "people",
-      title: "11,000+ people connecting",
-      description: "Finding their people, one event at a time",
-    },
-    {
-      icon: "community",
-      title: "A community that feels like you",
-      description: "Real connections, shared interests, lasting memories",
-    },
-  ];
+          <p className="mt-6 text-sm text-white/85 sm:text-base">
+            We turn ideas into moments that people actually talk about.
+          </p>
+        </div>
 
-  const logos = [
-    "VOGUE",
-    "VANITY FAIR",
-    "ELLE",
-    "madame",
-    "marie claire",
-    "Gala",
-  ];
+        <a
+          href="#our-work"
+          className="shrink-0 rounded-md border border-white/80 px-6 py-3 text-sm font-medium transition-colors duration-300 hover:bg-white hover:text-black"
+        >
+          VIEW OUR WORK
+        </a>
+      </div>
+
+      {/* Project images */}
+      <div id="our-work" className="mt-28 space-y-28 lg:mt-36 lg:space-y-36">
+        {projects.map((project, index) => (
+          <article key={project.title} className="project-item mx-auto max-w-5xl">
+            <a
+              href="#contact"
+              className="group relative block overflow-hidden rounded-md"
+            >
+              <div className="project-image relative aspect-[1.55/1] overflow-hidden rounded-md bg-neutral-900">
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  loading={index === 0 ? "eager" : "lazy"}
+                />
+
+                <div className="absolute inset-0 bg-black/10 transition-colors duration-500 group-hover:bg-black/20" />
+
+                <span className="absolute bottom-6 left-6 rounded-full bg-white px-5 py-2 text-xs font-semibold italic text-black">
+                  <span className="mr-2 inline-block h-2 w-2 rounded-full bg-[#8b19ff]" />
+                  {project.category}
+                </span>
+
+                <span className="absolute right-8 top-1/2 -translate-y-1/2 rotate-[-8deg] rounded-md bg-[#8b19ff] px-5 py-4 text-xs font-bold text-white opacity-0 shadow-xl transition-all duration-300 group-hover:translate-y-[-60%] group-hover:opacity-100 sm:px-7 sm:py-5 sm:text-sm">
+                  VIEW PROJECT ↗
+                </span>
+              </div>
+            </a>
+
+            <div className="project-details mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 md:items-start md:gap-12">
+              <h3 className="text-3xl font-extrabold leading-none tracking-[-0.04em] sm:text-4xl lg:text-5xl">
+                {project.title}
+              </h3>
+
+              <p className="max-w-xl text-sm leading-relaxed text-white/85 sm:text-base">
+                {project.description}
+              </p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+const eventMoments = [
+  {
+    year: "2025",
+    location: "Mumbai, India",
+    title: "Live Music & Festival Culture",
+    image:
+      "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=900&q=85",
+  },
+  {
+    year: "2024",
+    location: "Bengaluru, India",
+    title: "Creative Community Meetups",
+    image:
+      "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=900&q=85",
+  },
+  {
+    year: "2025",
+    location: "Delhi, India",
+    title: "Experiential Brand Events",
+    image:
+      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=900&q=85",
+  },
+  {
+    year: "2024",
+    location: "Pune, India",
+    title: "Music, Art & Culture",
+    image:
+      "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=900&q=85",
+  },
+  {
+    year: "2025",
+    location: "Jaipur, India",
+    title: "People & Experiences",
+    image:
+      "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=900&q=85",
+  },
+  {
+    year: "2024",
+    location: "Hyderabad, India",
+    title: "The Afterparty",
+    image:
+      "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=900&q=85",
+  },
+];
+
+const EventMoments = () => {
+  const trackRef = useRef(null);
+  const animationRef = useRef(null);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    let animation;
+    let resizeObserver;
+
+    const setupLoop = () => {
+      animation?.kill();
+
+      const halfWidth = track.scrollWidth / 2;
+      if (!halfWidth) return;
+
+      animation = gsap.to(track, {
+        x: -halfWidth,
+        duration: 42,
+        ease: "none",
+        repeat: -1,
+      });
+
+      animationRef.current = animation;
+    };
+
+    const images = [...track.querySelectorAll("img")];
+    Promise.all(
+      images.map(
+        (img) =>
+          img.complete
+            ? Promise.resolve()
+            : new Promise((resolve) => {
+                img.addEventListener("load", resolve, { once: true });
+                img.addEventListener("error", resolve, { once: true });
+              })
+      )
+    ).then(setupLoop);
+
+    resizeObserver = new ResizeObserver(setupLoop);
+    resizeObserver.observe(track);
+
+    return () => {
+      animation?.kill();
+      resizeObserver?.disconnect();
+    };
+  }, []);
+
+  const repeatedMoments = [...eventMoments, ...eventMoments];
 
   return (
-    <section className="relative overflow-hidden bg-white text-[#49413f]">
-      {/* Press / featured-in strip */}
-      <div className="mx-auto grid max-w-[1600px] grid-cols-2 items-center gap-y-8 px-6 py-16 sm:grid-cols-3 sm:gap-y-10 lg:grid-cols-6 lg:px-12 lg:py-[100px]">
-        {logos.map((logo, index) => (
-          <div
-            key={logo}
-            className={`text-center text-[#49413f] ${
-              index === 1
-                ? "font-display text-[23px] tracking-[-0.06em] sm:text-[27px]"
-                : index === 2
-                  ? "font-serif text-[26px] tracking-[0.28em] sm:text-[30px]"
-                  : index === 3
-                    ? "font-serif text-[26px] italic sm:text-[30px]"
-                    : index === 4
-                      ? "font-display text-[22px] tracking-[-0.06em] sm:text-[27px]"
-                      : index === 5
-                        ? "font-serif text-[29px] italic sm:text-[34px]"
-                        : "font-serif text-[28px] tracking-[-0.07em] sm:text-[34px]"
-            }`}
-          >
-            {logo}
-          </div>
-        ))}
+    <section className="w-full overflow-hidden bg-white py-24 text-black sm:py-28 lg:py-32">
+      {/* Heading */}
+      <div className="px-6 sm:px-10 lg:px-20">
+        <div className="mb-5 flex items-center gap-3 overflow-hidden whitespace-nowrap text-xs font-medium uppercase tracking-wide">
+          <span>Follow us</span>
+          <span className="h-2 w-2 shrink-0 rounded-full bg-[#8b19ff]" />
+          <span>Follow us</span>
+          <span className="h-2 w-2 shrink-0 rounded-full bg-[#8b19ff]" />
+          <span>Follow the moments</span>
+          <span className="h-2 w-2 shrink-0 rounded-full bg-[#8b19ff]" />
+        </div>
+
+        <h2 className="max-w-4xl text-5xl font-extrabold leading-[0.94] tracking-[-0.055em] sm:text-6xl lg:text-[5.5rem]">
+          Enter the world{" "}
+          <span className="text-[#8b19ff]">we create</span> after dark.
+        </h2>
+
+        <p className="mt-7 max-w-2xl text-base leading-relaxed text-neutral-800 sm:text-lg">
+          From live gigs and college festivals to creative pop-ups and
+          unforgettable nights out, discover the people and moments shaping
+          India's event scene.
+        </p>
       </div>
 
-      {/* Community stats */}
-      <div className="mx-auto grid max-w-[1050px] grid-cols-1 gap-12 px-6 pb-20 pt-5 sm:grid-cols-3 sm:gap-8 lg:pb-24">
-        {stats.map((stat) => (
-          <div key={stat.title} className="flex flex-col items-center text-center">
-            <div className="mb-3 flex size-[78px] items-center justify-center rounded-full bg-[#49413f] text-[#fff8e7]">
-              {stat.icon === "chart" && (
-                <svg
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  className="size-9"
-                  stroke="currentColor"
-                  strokeWidth="1.7"
-                >
-                  <path d="M5 33h30M9 33V18h8v15M17 33V8h8v25M25 33V23h7v10" />
-                </svg>
-              )}
-
-              {stat.icon === "people" && (
-                <svg
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  className="size-10"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                >
-                  <circle cx="20" cy="11" r="5" />
-                  <path d="M10 28c0-5 4-8 10-8s10 3 10 8-20 7-20 0Z" />
-                  <path d="M9 10a4 4 0 0 0 0 8M5 26c0-3 2-5 5-6M31 10a4 4 0 0 1 0 8M35 26c0-3-2-5-5-6" />
-                </svg>
-              )}
-
-              {stat.icon === "community" && (
-                <svg
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  className="size-9"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                >
-                  <circle cx="19" cy="20" r="15" />
-                  <circle cx="19" cy="15" r="5" />
-                  <path d="M9 30c1-5 5-8 10-8s9 3 10 8M28 10l3 3 5-6" />
-                </svg>
-              )}
-            </div>
-
-            <h3 className="max-w-[260px] font-display text-[22px] leading-[1.25]">
-              {stat.title}
-            </h3>
-
-            <p className="mt-2 max-w-[240px] text-[15px] leading-[1.5] text-[#827b78]">
-              {stat.description}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* Heading with oversized background graphic */}
-      <div className="relative flex min-h-[300px] items-start justify-center overflow-hidden px-5 pb-24 pt-8 text-center sm:min-h-[330px] sm:pt-10 lg:min-h-[370px]">
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 850 500"
-          fill="none"
-          className="pointer-events-none absolute -bottom-[310px] left-1/2 w-[720px] max-w-none -translate-x-1/2 text-[#f5f4f4] sm:-bottom-[340px] sm:w-[850px] lg:-bottom-[400px] lg:w-[1000px]"
+      {/* Infinite moving image gallery */}
+      <div className="mt-20 overflow-hidden sm:mt-28">
+        <div
+          ref={trackRef}
+          className="flex w-max items-start"
+          style={{ willChange: "transform" }}
         >
-          <path
-            d="M80 500C80 260 190 80 420 80C545 80 640 120 710 160L830 105V500H80Z"
-            stroke="currentColor"
-            strokeWidth="100"
-          />
-        </svg>
+          {repeatedMoments.map((event, index) => (
+            <a
+              key={`${event.title}-${index}`}
+              href="#events"
+              className="group relative w-[76vw] shrink-0 border-r border-neutral-200 px-5 sm:w-[46vw] sm:px-7 lg:w-[27vw] lg:px-7"
+            >
+              <div className="mb-7 flex items-center justify-between text-sm">
+                <span>{event.year}</span>
+                <span className="text-neutral-700">{event.location}</span>
+              </div>
 
-        <div className="relative z-10 max-w-[760px]">
-          <h2 className="font-display text-[clamp(2.1rem,4vw,3.2rem)] leading-[1.15] tracking-[-0.025em]">
-            A world of experiences,
-            <span className="block italic text-[#918986]">
-              made to bring us together
-            </span>
-          </h2>
+              <div className="relative aspect-[0.78/1] overflow-hidden rounded-sm bg-neutral-100">
+                <img
+                  src={event.image}
+                  alt={event.title}
+                  loading={index < eventMoments.length ? "eager" : "lazy"}
+                  draggable="false"
+                  className="h-full w-full object-cover grayscale transition duration-700 ease-out group-hover:scale-[1.04] group-hover:grayscale-0"
+                />
+
+                <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
+
+                <div className="absolute inset-x-0 bottom-0 translate-y-3 p-5 text-white opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 sm:p-6">
+                  <p className="text-xs uppercase tracking-widest">
+                    Discover the experience
+                  </p>
+                  <h3 className="mt-2 text-xl font-bold sm:text-2xl">
+                    {event.title}
+                  </h3>
+                </div>
+              </div>
+
+              <h3 className="mt-5 text-lg font-semibold sm:text-xl">
+                {event.title}
+              </h3>
+            </a>
+          ))}
         </div>
       </div>
     </section>
   );
 };
 
+function TogetherFooter() {
+  const sectionRef = useRef(null);
+  const circleRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Infinite anticlockwise rotation
+      gsap.to(circleRef.current, {
+        rotation: -360,
+        duration: 22,
+        repeat: -1,
+        ease: "none",
+        transformOrigin: "50% 50%",
+      });
+
+      gsap.from(".footer-content", {
+        y: 35,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.15,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const letters = "TOGETHER".split("");
+
+  return (
+    <footer
+      ref={sectionRef}
+      className="relative overflow-hidden bg-black text-white"
+    >
+      {/* Circular rotating text */}
+      {/* Center CTA */}
+<section className="relative min-h-[650px] overflow-hidden bg-black text-white">
+  <div className="relative mx-auto flex min-h-[650px] max-w-7xl items-center justify-center px-5">
+    {/* Rotating circular text */}
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+      <svg
+        viewBox="0 0 600 600"
+        className="h-[min(88vw,580px)] w-[min(88vw,580px)] overflow-visible"
+        aria-hidden="true"
+      >
+        <defs>
+          <path
+            id="footer-circle"
+            d="M 300,300 m -225,0 a 225,225 0 1,1 450,0 a 225,225 0 1,1 -450,0"
+          />
+        </defs>
+
+        <text
+          fill="white"
+          fontSize="49"
+          fontWeight="800"
+          letterSpacing="4"
+        >
+          <textPath
+            href="#footer-circle"
+            className="footer-orbit-text"
+          >
+            SOMETHING TOGETHER • SOMETHING TOGETHER •
+          </textPath>
+        </text>
+      </svg>
+    </div>
+
+    {/* Center content */}
+    <div className="relative z-10 -mt-3 max-w-[440px] text-center">
+      <h2 className="font-display text-[clamp(1.5rem,3vw,2.6rem)] leading-[1.04] tracking-tight text-white">
+        Tell us what you're
+        <br />
+        working on. We'll show
+        <br />
+        you what's possible.
+      </h2>
+
+      <a
+        href="#contact"
+        className="mt-7 inline-flex min-h-12 items-center gap-3 rounded-md border border-white bg-white px-6 py-3 text-sm font-semibold text-black shadow-[0_2px_0_#aaa] transition-colors duration-200 hover:border-black hover:bg-black hover:text-white"
+      >
+        GET IN TOUCH
+        <span className="text-[#922BFF]">●</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+      {/* Lime divider */}
+      <div className="mx-5 border-t border-[#b8ff00] sm:mx-10" />
+
+      {/* Footer information */}
+      <section className="grid grid-cols-1 gap-12 px-5 py-14 sm:px-10 md:grid-cols-2 lg:grid-cols-3">
+        <div className="footer-content space-y-8 text-sm leading-6">
+          <div>
+            <p className="font-bold">ADDRESS:</p>
+            <p className="mt-1">KANPUR, INDIA</p>
+          </div>
+
+          <div>
+            <p className="font-bold">CONTACT:</p>
+            <a
+              href="mailto:hello@togro.in"
+              className="mt-1 inline-block transition-colors hover:text-[#b8ff00]"
+            >
+              HELLO@TOGRO.IN
+            </a>
+          </div>
+        </div>
+
+        <nav className="footer-content grid grid-cols-2 gap-x-8 gap-y-6 text-sm font-bold">
+          <a className="text-[#9228ff]" href="/">
+            HOME
+          </a>
+          <a className="transition-colors hover:text-[#b8ff00]" href="#brands">
+            FOR BRANDS
+          </a>
+          <a className="transition-colors hover:text-[#b8ff00]" href="#contact">
+            WORK WITH US
+          </a>
+          <a className="transition-colors hover:text-[#b8ff00]" href="#events">
+            FOR EVENTS
+          </a>
+          <a className="transition-colors hover:text-[#b8ff00]" href="#contact">
+            GET IN TOUCH
+          </a>
+          <a className="transition-colors hover:text-[#b8ff00]" href="#community">
+            OUR COMMUNITY
+          </a>
+        </nav>
+
+        <div className="footer-content flex items-start justify-start lg:justify-end">
+          <a
+            href="#top"
+            className="inline-flex items-center gap-2 border border-white/40 px-5 py-3 text-sm transition-colors hover:border-[#b8ff00] hover:text-[#b8ff00]"
+          >
+            BACK TO TOP <ArrowUpRight size={16} />
+          </a>
+        </div>
+      </section>
+
+      <div className="px-5 pb-6 text-xs text-white/40 sm:px-10">
+        © {new Date().getFullYear()} TOGRO. MADE FOR REAL-LIFE CONNECTIONS.
+      </div>
+    </footer>
+  );
+}
 
 
+const Home = () => {
+  const pageRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".top-item", {
+        y: -14,
+        opacity: 0,
+        duration: 0.65,
+        stagger: 0.08,
+        ease: "power2.out",
+      });
+
+      gsap.from(".headline-line", {
+        y: 35,
+        opacity: 0,
+        duration: 0.75,
+        stagger: 0.1,
+        delay: 0.2,
+        ease: "power3.out",
+      });
+
+      gsap.from(".bottom-content", {
+        y: 18,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.12,
+        delay: 0.55,
+        ease: "power2.out",
+      });
+    }, pageRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const brands = [
+    "COMMON GROUND",
+    "Daily Social",
+    "NIGHTLIGHT®",
+    "AFTERHOURS",
+    "CITY CULTURE",
+  ];
 
   return (
     <div>
-      <main className="min-h-screen bg-[#f8f6f0] text-white">
-      <section
-        ref={heroRef}
-        className="event-hero relative isolate flex min-h-[calc(100svh-58px)] flex-col overflow-hidden"
-      >
-        {/* Hero background */}
-        <div className="hero-background absolute inset-0 -z-20">
-          <img
-            src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=2400&q=90"
-            alt="Friends gathered together at a lively outdoor event"
-            className="h-full w-full object-cover object-center"
-          />
-        </div>
+      <main
+      ref={pageRef}
+      id="home"
+      className="relative min-h-[900px] h-[100svh] overflow-hidden bg-black text-white"
+    >
+      {/* Full-screen concert background */}
+      <div className="absolute inset-0">
+        <img
+          src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=2400&q=95"
+          alt="Crowd at a live music event"
+          className="h-full w-full object-cover object-center"
+        />
+      </div>
 
-        {/* Warm cinematic overlay */}
-        <div className="absolute inset-0 -z-10 bg-[#392c25]/35" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#342820]/60 via-[#342820]/15 to-transparent" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#281e18]/35 via-transparent to-[#211b17]/20" />
+      {/* Match the reference image's pink-purple atmosphere */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#49123e]/65 via-[#a3299b]/25 to-[#70217f]/45" />
+      <div className="absolute inset-0 bg-fuchsia-500/15 mix-blend-color" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black" />
 
-        {/* Navigation */}
-        <header className="relative z-20 flex h-[84px] shrink-0 items-center justify-between border-b border-white/10 bg-[#40352f]/55 px-6 backdrop-blur-[3px] md:px-12 lg:px-[5.6%]">
-          <nav className="hidden items-center gap-7 lg:flex">
-            <a href="#experience" className="nav-item nav-link">
-              Discover <ChevronDown size={14} />
-            </a>
-            <a href="#community" className="nav-item nav-link">
-              For you <ChevronDown size={14} />
-            </a>
-            <a href="#events" className="nav-item nav-link">
-              Our events <ChevronDown size={14} />
-            </a>
-          </nav>
-
-          <button
-            className="nav-item flex items-center gap-1 lg:hidden"
-            aria-label="Open navigation"
-          >
-            <Menu size={25} />
-          </button>
-
-          <a
-            href="#home"
-            className="nav-item absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center"
-          >
-            <span className="block font-display text-[25px] leading-[0.9] tracking-wide">
-              tog.ro
-            </span>
-            <span className="mt-1 block text-[8px] tracking-[0.24em]">
-              FIND YOUR PEOPLE
-            </span>
-          </a>
-
-          <div className="hidden items-center gap-8 lg:flex">
-            <button className="nav-item text-sm font-medium">
-              EN <span className="mx-1 text-white/50">/</span> HI
-            </button>
-            <a href="#login" className="nav-item text-sm font-medium">
-              Log in
-            </a>
-            <a
-              href="#events"
-              className="nav-item flex h-[54px] min-w-[215px] items-center justify-center rounded-[10px] border border-white/75 px-6 text-sm font-semibold transition-colors hover:bg-white hover:text-[#43362f]"
-            >
-              Explore events <ArrowRight className="ml-2" size={16} />
-            </a>
-          </div>
-
-          <a
-            href="#events"
-            className="nav-item rounded-md border border-white/70 px-3 py-2 text-xs font-semibold sm:px-5 lg:hidden"
-          >
-            Explore
-          </a>
-        </header>
-
-        {/* Hero content */}
-        <div
-          id="home"
-          className="relative flex flex-1 items-center px-6 pb-28 pt-24 md:px-12 md:pb-24 lg:px-[5.6%]"
-        >
-          <div className="w-full max-w-[610px]">
-            <p className="hero-copy mb-5 text-[10px] font-semibold uppercase tracking-[0.28em] text-white/90 sm:text-xs">
-              Good people. Real moments. New stories.
-            </p>
-
-            <h1 className="font-display text-[clamp(3.4rem,7.2vw,6.8rem)] leading-[0.94] tracking-[-0.035em]">
-              <span className="hero-title-line block">Life is better</span>
-              <span className="hero-title-line block text-[#fff4d4]">
-                together.
-              </span>
-            </h1>
-
-            <p className="hero-copy mt-7 max-w-[410px] text-[14px] leading-[1.65] text-white/95 sm:text-[16px]">
-              Discover experiences around you, meet people who get you, and
-              turn an ordinary day into a story worth telling.
-            </p>
-
-            <div className="hero-cta mt-8 flex flex-wrap items-center gap-4">
-              <a
-                href="#events"
-                className="group inline-flex min-h-[54px] min-w-[230px] items-center justify-center gap-3 rounded-[7px] bg-[#fff9df] px-7 text-[14px] font-semibold text-[#44372f] transition-all duration-300 hover:bg-white"
-              >
-                Find your next moment
-                <ArrowRight
-                  size={17}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                />
-              </a>
-              <a
-                href="#experience"
-                className="inline-flex items-center gap-2 text-sm text-white/95 transition-opacity hover:opacity-70"
-              >
-                Discover more <ArrowDownRight size={16} />
-              </a>
-            </div>
-          </div>
-
-          {/* Floating event preview */}
-          <a
-            href="#events"
-            className="floating-preview group absolute bottom-8 right-6 hidden w-[290px] overflow-hidden rounded-[20px] bg-[#f7f2e8] text-[#342a24] shadow-2xl sm:block md:bottom-12 md:right-12 md:w-[310px] lg:bottom-[9%] lg:right-[5.6%] lg:w-[345px]"
-          >
-            <div className="relative h-[180px] overflow-hidden md:h-[195px]">
-              <img
-                src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=900&q=85"
-                alt="An intimate outdoor gathering"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <span className="absolute left-4 top-4 rounded-full bg-[#fff9e8] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider">
-                Near you
-              </span>
-              <span className="absolute bottom-3 right-3 grid size-9 place-items-center rounded-lg bg-[#fff9e8]">
-                <Maximize2 size={15} />
-              </span>
-            </div>
-            <div className="flex items-center justify-between gap-3 px-5 py-4">
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-[#8b796a]">
-                  This weekend · Social
-                </p>
-                <h2 className="mt-1 font-display text-lg leading-tight">
-                  The Sunday Social
-                </h2>
-                <p className="mt-1 text-xs text-[#7d6c5f]">
-                  Good coffee, better company.
-                </p>
-              </div>
-              <span className="grid size-10 shrink-0 place-items-center rounded-full border border-[#d8cdbb] transition-colors group-hover:bg-[#3e332c] group-hover:text-white">
-                <ArrowRight size={17} />
-              </span>
-            </div>
-          </a>
-
-          <div className="absolute bottom-5 left-6 flex items-center gap-3 text-[10px] uppercase tracking-[0.18em] text-white/75 md:left-12 lg:left-[5.6%]">
-            <span className="h-px w-9 bg-white/70" />
-            Your city, your people, your kind of fun
-          </div>
-        </div>
-      </section>
-
-      {/* Small transition strip beneath the hero */}
-      <section
-        id="experience"
-        className="flex min-h-[90px] flex-wrap items-center justify-between gap-4 px-6 py-6 text-[#40352e] md:px-12 lg:px-[5.6%]"
-      >
-        <p className="font-display text-xl sm:text-2xl">
-          Make room for something different.
-        </p>
+      {/* Header */}
+      <header className="absolute left-0 right-0 top-0 z-20 flex h-[82px] items-center justify-between px-6 sm:px-10 lg:px-[5%]">
         <a
-          href="#events"
-          className="inline-flex items-center gap-2 text-sm font-semibold"
+          href="#home"
+          className="top-item text-[37px] font-black leading-none tracking-[-0.085em] sm:text-[42px]"
         >
-          Explore experiences <ArrowRight size={16} />
+          TGRO
         </a>
+
+        <nav className="top-item absolute left-1/2 top-[9px] hidden h-[64px] -translate-x-1/2 items-center gap-7 rounded-[5px] bg-[#57465f]/65 px-6 backdrop-blur-md lg:flex xl:gap-8 xl:px-6">
+          <Link to="/" className="whitespace-nowrap text-[14px] font-semibold uppercase">
+            Home
+          </Link>
+          <Link to="/events" className="whitespace-nowrap text-[14px] font-semibold uppercase">
+            Events
+          </Link>
+          <Link to="/contacts" className="whitespace-nowrap text-[14px] font-semibold uppercase">
+            Contacts
+          </Link>
+          <Link to="/booking" className="whitespace-nowrap text-[14px] font-semibold uppercase">
+            Booking
+          </Link>
+        </nav>
+
+        <Link
+          to="/contacts"
+          className="top-item hidden h-[49px] min-w-[193px] items-center justify-center gap-3 rounded-[6px] bg-white px-5 text-[15px] font-medium uppercase text-black transition-colors hover:bg-[#c4ff00] sm:flex"
+        >
+          Get in touch
+          <span className="size-[7px] rounded-full bg-[#9228e9]" />
+        </Link>
+
+        <div className="top-item flex items-center gap-3 text-[10px] font-bold uppercase sm:hidden">
+          <Link to="/">Home</Link>
+          <Link to="/events">Events</Link>
+          <Link to="/contacts">Contacts</Link>
+          <Link to="/booking">Booking</Link>
+        </div>
+      </header>
+
+      {/* Headline: same left alignment and stacked uppercase style */}
+      <section className="absolute inset-x-0 top-[19%] z-10 px-6 sm:px-10 lg:left-[5%] lg:right-auto lg:w-[900px] lg:px-0">
+        <h1 className="event-display text-[clamp(2.65rem,5.45vw,5.5rem)] font-black uppercase leading-[0.87] tracking-[-0.065em]">
+          <span className="headline-line block">We connect people</span>
+          <span className="headline-line block">through incredible</span>
+          <span className="headline-line block">events and</span>
+          <span className="headline-line block text-[#c4ff00]">
+            real-life experiences
+          </span>
+        </h1>
       </section>
 
-      {/* Following section anchor */}
-      <section id="community" className="sr-only">
-        Find your community through shared experiences.
-      </section>
-      <section id="login" className="sr-only">
-        Sign in to your account.
-      </section>
-      <section id="events" className="sr-only">
-        Browse upcoming events.
-      </section>
+      {/* Bottom-right copy and CTA */}
+      <div className="absolute bottom-[6.2%] right-6 z-10 w-[min(440px,calc(100%-48px))] sm:right-10 lg:right-[5%] lg:w-[415px]">
+        <p className="bottom-content max-w-[420px] text-[16px] leading-[1.55] sm:text-[18px]">
+          TOGRO brings people together through experiences they love and
+          moments they actually talk about.
+        </p>
+
+        <div className="bottom-content mt-7 flex flex-wrap gap-4">
+          <a
+            href="#contact"
+            className="inline-flex h-[50px] items-center justify-center gap-3 rounded-[6px] bg-[#282828] px-6 text-[14px] font-semibold uppercase transition-colors hover:bg-[#454545]"
+          >
+            Get in touch
+            <span className="size-[7px] rounded-full bg-[#9228e9]" />
+          </a>
+
+          <a
+            href="#events"
+            className="inline-flex h-[50px] items-center justify-center gap-2 rounded-[6px] border border-white px-5 text-[14px] font-medium uppercase transition-colors hover:bg-white hover:text-black"
+          >
+            View our events
+            <ArrowUpRight size={16} />
+          </a>
+        </div>
+      </div>
+
+      {/* Bottom black brand strip */}
+      <div className="absolute bottom-0 left-0 right-0 z-[5] h-[116px] bg-black">
+        <div className="mx-auto flex h-full max-w-[1800px] items-center px-6 sm:px-10 lg:px-[5%]">
+          <div className="grid w-full grid-cols-3 items-center gap-x-5 gap-y-5 sm:grid-cols-5 lg:grid-cols-5 lg:gap-x-12">
+            {brands.map((brand, index) => (
+              <div
+                key={brand}
+                className={`bottom-content text-center text-white/50 ${
+                  index === 1
+                    ? "font-display text-[22px] italic tracking-tight sm:text-[27px]"
+                    : index === 2
+                      ? "text-[12px] font-black tracking-[0.02em] sm:text-[15px]"
+                      : index === 3
+                        ? "text-[12px] font-extrabold tracking-[0.13em] sm:text-[14px]"
+                        : "text-[10px] font-extrabold tracking-[0.08em] sm:text-[12px]"
+                }`}
+              >
+                {brand}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </main>
-    <CommunitySection />
-    <EventExperiences />
-    <EventDiscoveryCarousel />
+    <AboutStatement />
+    <EventServices />
+    <FeaturedProjects />
+    <EventMoments />
+    <TogetherFooter />
     </div>
     
   );
-}
+};
+
+export default Home;

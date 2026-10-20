@@ -157,3 +157,24 @@ html {
     transition-duration: 0.01ms !important;
   }
 }
+
+
+.footer-orbit-text {
+  transform-origin: 300px 300px;
+  animation: footerOrbit 24s linear infinite;
+}
+
+@keyframes footerOrbit {
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: -360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-orbit-text {
+    animation: none;
+  }
+}

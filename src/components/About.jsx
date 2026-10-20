@@ -10,6 +10,8 @@ import {
   FiGlobe,
   FiCheckCircle,
 } from "react-icons/fi";
+import { Link } from "react-router-dom";
+import Navbar from "./Navbar";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -107,7 +109,7 @@ export default function About() {
       ref={pageRef}
       className="min-h-screen overflow-hidden bg-white text-black"
     >
-      {/* Keep your existing Togro navbar here */}
+      <Navbar light />
 
       {/* HERO */}
       <section className="px-5 pb-16 pt-5 sm:px-8 sm:pb-24 sm:pt-24 lg:px-10 lg:pt-28">
@@ -127,13 +129,13 @@ export default function About() {
               something bigger.
             </p>
 
-            <a
-              href="/booking"
+            <Link
+              to="/events"
               className="group inline-flex w-fit shrink-0 items-center gap-4 rounded-full bg-black px-6 py-4 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
             >
               Explore events
               <FiArrowUpRight className="text-lg transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -389,13 +391,13 @@ export default function About() {
             </p>
           </div>
 
-          <a
-            href="/booking"
+          <Link
+            to="/events"
             className="group inline-flex shrink-0 items-center gap-5 rounded-full bg-white px-7 py-5 text-sm font-semibold text-black transition-colors hover:bg-neutral-200"
           >
             Find your next event
             <FiArrowUpRight className="text-xl transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -407,4 +409,3 @@ export default function About() {
 function AboutPage() {
   return <About />;
 }
-
